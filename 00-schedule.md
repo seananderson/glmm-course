@@ -1,5 +1,7 @@
 # Day 1
 
+Time  | Topic
+----- | ---------------------------
 9:00  | introduction + overview presentation .5
 9:30  | visualization: ggplot .5
 10:00 | data manipulation: dplyr + tidyr .75
@@ -16,6 +18,8 @@
 
 # Day 2
 
+Time  | Topic
+----- | ---------------------------
 9:00  | recap + overview presentation .25
 9:15  | GLM primer .5
 9:45  | binomial GLMMs .75
@@ -31,6 +35,6 @@
 2:45  | extra time, summary + extras presentation, question time 1
 3:45  | feedback form .25
 
+Too add:
 p-values and CIs
-functions as part of dplyr?
-philosophy: hadleyverse... simulate to understand... plot, plot, plot... build from simple to complex
+quick functions backgrounder needed?
