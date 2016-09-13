@@ -24,7 +24,7 @@ d <- data.frame(x = c(1:8, 1:8), y = runif(16),
   group1 = rep(gl(2, 4, labels = c("a", "b")), 2),
   group2 = gl(2, 8))
 head(d)
-ggplot(data = d) + geom_point(aes(x, y, colour = group1)) +
+ggplot(data = d) + geom_point(aes(x = x, y = y, colour = group1)) +
   facet_grid(~group2)
 ```
 
@@ -149,7 +149,7 @@ ggplot(morph, aes(wingl, beakh)) +
 
 ## Your turn
 
-Explore the `morph` dataset yourself by applying some aesthetics. You can see all the available aesthetics for a give geom by looking at the documentation, e.g. `?geom_point`, or at <http://docs.ggplot2.org/current/>.
+Explore the `morph` dataset yourself by applying some aesthetics. You can see all the available aesthetics for a given geom by looking at the documentation, e.g. `?geom_point`, or at <http://docs.ggplot2.org/current/>.
 
 Try the same scatterplot but show upper beak length (`ubeakl`) with size. I've started the code:
 
