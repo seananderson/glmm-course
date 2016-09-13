@@ -1,0 +1,12 @@
+---
+Title: ggplot2 for rapid data and model visualization
+---
+
+See <http://seananderson.ca/ggplot2-FISH554/>
+
+# Goals
+
+- Understand the basic grammar of ggplot2 (data, geoms, aesthetics, facets)
+- Learn to make quick exploratory plots with ggplot2
+- Know how to find help on ggplot2 when you run into problems
+

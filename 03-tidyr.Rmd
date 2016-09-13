@@ -1,0 +1,133 @@
+---
+Title: Manipulating data with tidyr
+---
+
+# Goals
+
+- Be able to identify wide- and long-format data and why we might need one or
+  the other
+- Be able to convert between the two formats with the tidyr package
+
+# Introduction
+
+Wide data has a column for each variable.
+
+```{r, include=FALSE, echo=FALSE}
+library(dplyr)
+air <- airquality # built into R
+names(air) <- tolower(names(air))
+air <- as_data_frame(air) %>% select(-ozone, -solar.r, -wind)
+```
+
+For example, this is long-format data:
+
+```{r}
+air
+```
+
+And this is wide-format data:
+
+```{r}
+spread(air, month, temp)
+```
+
+Long-format data has a column or columns identifying the rows of data and a column
+for the values of those variables. In wide data, the values of those identifiers form columns themselves.
+
+It turns out that you need wide-format data for some types of data analysis and long-format data for others. In reality, you need long-format data much more commonly than wide-format data. For example, ggplot2 requires long-format data,`dplyr::group_by()` requires long-format data, and most modelling functions (such as `lm()`, `lmer()`, `glm()`, and `gam()`) require long-format data (except for the predictors themselves). But people often find it easier to record their data in wide format.
+
+# tidyr
+
+tidyr is a successor to the reshape2 package. It doesn't do everything that the reshape2 package does (and if you need that, see my blog post here: TODO). But it covers the majority of data reshaping and it does it more elegantly than reshape2 (read: it works nicely with the data pipe, `%>%`).
+
+tiyr is based around two key functions: `gather()` and `spread()`.
+
+`gather` goes from wide-format data and *gathers* it into fewer columns.
+
+`spread` takes long-format data and *spreads* it out wide.
+
+We'll sometimes end up having to use these to get data formatted for fitting mixed effects models and for manipulating the output.
+
+# tidyr::spread
+
+`spread` takes in order a data frame, the name of the 'key' column (the column that gets 'swung' up to made the new identifying columns), and the name of the 'value' column (the column that fills the wide dataset with values).
+
+The tidyr package functions take bare (unquoted) column names. This saves typing and makes the functions work well with pipes. E.g. `spread(data, x, y)` *not* `spread(data, "x", "y"))`.
+
+Let's take our `air` data and make it wide:
+
+```{r}
+air_wide <- spread(air, month, temp)
+air_wide
+```
+
+# tidyr::gather
+
+`gather` takes wide data and makes it long.
+
+The first argument is the data, the second argument represents whatever we want to call the ID columns in the long dataset, and the rest of the (unnamed) arguments use the syntax from the `dplyr::select` function to specify which columsn to gather (i.e. all non ID columns.)
+
+As an example: let's turn `air_wide` back into `air`.
+
+```{r}
+gather(air_wide, month, temp, -day)
+```
+
+What will the following do?
+
+```{r}
+gather(air_wide, zebra, aligator, -day)
+```
+
+Is this the same as above?
+
+```{r}
+gather(air_wide, month, temp, 2:6)
+```
+
+Why doesn't the following work?
+
+```{r}
+gather(air_wide, month, temp)
+```
+
+# Your turn
+
+Make the following dataset (stock prices for stocks X, Y, and Z) long with columns for time, stock ID, and price. Save the output into `stocks_long`.
+
+```{r}
+# from ?tidyr::spread
+stocks <- data.frame(
+  time = as.Date('2009-01-01') + 0:9,
+  X = rnorm(10, 0, 1),
+  Y = rnorm(10, 0, 2),
+  Z = rnorm(10, 0, 4)
+)
+```
+
+Answer:
+
+```{r}
+stocks_long <- stocks %>% gather(key = stock, value = price, -time)
+stocks_long
+```
+
+Make `stocks_long` wide again with `spread()`:
+
+```{r}
+stocks_long %>% spread(key = stock, value = price)
+```
+
+*Extension*: There's another possible wide format for this dataset. How could you use `spread` to have a column for each time and a row for each stock?
+
+Answer:
+
+```{r}
+stocks_long %>% spread(key = time, value = price)
+```
+
+# Further information
+
+Parts of the following exercise are modified from:
+
+See <> (r4ds)

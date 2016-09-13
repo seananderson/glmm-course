@@ -1,0 +1,172 @@
+---
+title: "Linear mixed effects models"
+output: html_document
+---
+
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(broom)
+library(tidyr)
+library(readr)
+library(lme4)
+```
+
+```{r}
+d <- read_tsv("data/raw/BiodepthStability/TemporalCVs.txt")
+names(d) <- tolower(names(d))
+glimpse(d)
+d <- filter(d, level == "Community")
+```
+
+```{r}
+ggplot(d, aes(sr, log(tempcv)), colour = site) + 
+  geom_point() + geom_smooth(method = "lm", se = FALSE)
+
+m1 <- lm(log(tempcv) ~ sr, data = d)
+
+ggplot(d, aes(sr, log(tempcv))) + 
+  geom_point() + facet_wrap(~site) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_abline(intercept = coef(m1)[1], slope = coef(m1)[2])
+```
+
+```{r}
+est_separate <- d %>% group_by(site) %>%
+  do(mod = lm(log(tempcv) ~ sr, data = .)) %>%
+  mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
+  select(-mod)
+
+est_separate
+m_separate <- lm(log(tempcv) ~ factor(site)*sr - 1, data = d)
+coef(m_separate)[["sr"]] + coef(m_separate)[["factor(site)Switzerland:sr"]]
+
+gather(est_separate, term, value, int, slope) %>%
+  ggplot(aes(value, site)) + geom_point() + facet_wrap(~term, scales = "free_x")
+```
+
+```{r}
+m3 <- lmer(log(tempcv) ~ sr + (1|site), data = d)
+arm::display(m3)
+m4 <- lmer(log(tempcv) ~ sr + (1 + sr|site), data = d)
+arm::display(m4)
+
+tidy(m3)
+tidy(m4)
+
+re_slopes <- fixef(m4)[["sr"]] + 
+  t(sapply(arm::se.ranef(m4)[["site"]][,"sr"], function(x) (x * c(-2, 2)))) %>%
+  as.data.frame() %>%
+  rename(l = V1, u = V2)
+
+fe <- fixef(m4)[[2]]
+re <- ranef(m4)[["site"]][,"sr"]
+se <- arm::se.ranef(m4)[["site"]][,"sr"]
+
+re_slopes <- data.frame(est = coef(m4)$site[,"sr"])
+re_slopes$site <- row.names(ranef(m4)$site)
+re_slopes$u <- fe + re + 2 * se
+re_slopes$l <- fe + re - 2 * se
+
+ggplot(re_slopes, aes(site, est, ymin = l, ymax = u))+ geom_pointrange() +
+  coord_flip() + geom_hline(yintercept = 0, lty = 2)
+
+# lattice::dotplot(ranef(m4, condVar = TRUE))
+
+est_global <- data_frame(
+  int = coef(m1)[[1]], 
+  slope = coef(m1)[[2]],
+  site = est_separate$site,
+  method = "Global")
+
+est_vary_int <- data_frame(
+  int = coef(m3)$site[,1], 
+  slope = coef(m3)$site[,2], 
+  method = "Varying intercepts",
+  site = est_separate$site)
+
+est_vary_int_slopes <- data_frame(
+  int = coef(m4)$site[,1], 
+  slope = coef(m4)$site[,2], 
+  method = "Varying int. + slopes",
+   site = est_separate$site)
+
+all <- bind_rows(est_global, est_separate, est_vary_int, est_vary_int_slopes)
+
+ggplot(d) + facet_grid(method~site) +
+  geom_point(aes(sr, log(tempcv)), alpha = 0.3) +
+  geom_abline(data = all, aes(intercept = int, slope = slope, colour = method), 
+    lwd = 1.5)
+
+ggplot(d) + 
+  facet_wrap(~site) +
+  geom_point(aes(sr, log(tempcv)), alpha = 0.3) +
+  geom_abline(
+    data = filter(all, method %in% c("Separate", "Varying int. + slopes")),
+    aes(intercept = int, slope = slope, colour = method), 
+    lwd = 1.5)
+
+filter(all, method %in% c("Separate", "Varying int. + slopes")) %>% 
+  select(-int) %>% 
+  spread(method, slope) %>% 
+  ggplot(aes(x = "Separate", xend = "Varying int. + slopes", 
+    y = Separate, yend = `Varying int. + slopes`, colour = site)) + 
+  geom_segment() +
+  geom_point() + 
+  geom_point(aes(x = "Varying int. + slopes", y = `Varying int. + slopes`)) + 
+  ylab("Slope coefficient") + xlab("")
+```
+
+Critize model:
+
+```{r}
+# plot(m4)
+m3_aug <- augment(m3)
+m4_aug <- augment(m4)
+m4_aug$tempmean <- d$tempmean
+glimpse(m4_aug)
+ggplot(m4_aug, aes(.fitted, .resid, colour = site)) + geom_point(alpha = 0.4) +
+  geom_hline(yintercept = 0, lty = 2)
+
+ggplot(m4_aug, aes(.fitted, .resid, colour = site)) + geom_point(alpha = 0.4) +
+  facet_wrap(~site, scales = "free") + geom_hline(yintercept = 0, lty = 2)
+
+ggplot(m3_aug, aes(sr, .resid, colour = site)) + geom_point(alpha = 0.4) +
+  facet_wrap(~site, scales = "free") + geom_hline(yintercept = 0, lty = 2) +
+  geom_smooth(method = "lm", se = FALSE, colour = "black")
+
+ggplot(m4_aug, aes(sr, .resid, colour = site)) + geom_point(alpha = 0.4) +
+  geom_hline(yintercept = 0, lty = 2) +
+  facet_wrap(~site, scales = "free")
+
+ggplot(m4_aug, aes(tempmean, .resid, colour = site)) + geom_point(alpha = 0.4) +
+  geom_hline(yintercept = 0, lty = 2)
+
+ggplot(m4_aug, aes(tempmean, .resid, colour = site)) + geom_point(alpha = 0.4) +
+  geom_hline(yintercept = 0, lty = 2) + facet_wrap(~site, scales = "free")
+
+```
+
+```{r}
+AIC(m3)
+AIC(m4)
+MuMIn::r.squaredGLMM(m3)
+MuMIn::r.squaredGLMM(m4)
+```
+
+```{r}
+tidy(m4, conf.int = TRUE) %>%
+  ggplot(aes(estimate, term)) + geom_point() +
+  geom_segment(aes(x = conf.low, xend = conf.high, y = term, yend = term)) +
+    geom_vline(xintercept=0,lty=2)
+```
+
+```{r}
+# s <- simulate(m4, 2, use.u = TRUE)
+# d$s1 <- s[,1]
+# d$s2 <- s[,2]
+# p1 <- ggplot(d, aes(sr, log(tempcv))) + geom_point() + facet_wrap(~site, ncol = 1)
+# p2 <- ggplot(d, aes(sr, s1)) + geom_point() + facet_wrap(~site, ncol = 1)
+# p3 <- ggplot(d, aes(sr, s2)) + geom_point() + facet_wrap(~site, ncol = 1)
+# gridExtra::grid.arrange(p1, p2, p3, ncol = 3)
+```

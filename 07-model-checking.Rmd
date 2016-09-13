@@ -1,0 +1,5 @@
+take earlier examples... check the heck out of
+prediction types
+residual types
+random effect normality...
+R2s

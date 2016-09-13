@@ -1,0 +1,185 @@
+---
+title: "Scaling predictors"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+set.seed(1)
+b0 <- 1.4 # intercept
+b1 <- 0.6 # continuous slope
+sigma <- 0.5 # residual standard deviation
+N <- 100 # number of data points
+x1 <- runif(N, -2, 20) # continuous predictor data
+
+# generate response data:
+y <- rnorm(N, mean = b0 + b1 * x1, sd = sigma)
+dat <- data.frame(x1, y)
+head(dat)
+```
+
+Let's look at the data we created:
+
+```{r cent1, fig.width=6, fig.height=4}
+library(ggplot2)
+g <- ggplot(dat, aes(x1, y)) + geom_point() +
+  geom_vline(xintercept = 0, lty = 2)
+print(g)
+```
+
+```{r}
+m <- lm(y ~ x1, data = dat)
+coef(m)
+g <- g + geom_abline(intercept = coef(m)[1], slope = coef(m)[2]) +
+  geom_hline(yintercept = coef(m)[1], lty = 2)
+print(g)
+```
+
+```{r}
+dat <- mutate(dat, x1_centered = x1 - mean(x1))
+g_centered <- ggplot(dat, aes(x1_centered, y)) + geom_point() +
+  geom_vline(xintercept = 0, lty = 2)
+print(g_centered)
+m_centered <- lm(y ~ x1_centered, data = dat)
+coef(m_centered)
+
+g_centered <- g_centered + 
+  geom_hline(yintercept = coef(m_centered)[1], lty = 2) +
+  geom_abline(intercept = coef(m_centered)[1], slope = coef(m_centered)[2])
+print(g_centered)
+```
+
+
+
+```{r}
+scale2sd <- function(x) {
+  x <- x - mean(x)
+  x / (2 * sd(x))
+}
+dat$x1_scaled <- scale2sd(x1)
+g_scaled <- ggplot(dat, aes(x1_scaled, y)) + geom_point() +
+  geom_vline(xintercept = 0, lty = 2)
+print(g_scaled)
+m_scaled <- lm(y ~ x1_scaled, data = dat)
+coef(m_scaled)
+int <- coef(m_scaled)[1][[1]]
+slope <- coef(m_scaled)[2][[1]]
+
+slope / (2*sd(x1))
+coef(m)[2]
+
+g_scaled <- g_scaled + 
+  geom_hline(yintercept = coef(m_scaled)[1], lty = 2) +
+  geom_abline(intercept = coef(m_scaled)[1], slope = coef(m_scaled)[2])
+print(g_scaled)
+```
+
+```{r}
+gridExtra::grid.arrange(g, g_centered, g_scaled, ncol = 1)
+```
+
+```{r}
+set.seed(1)
+b0 <- 1.4 # intercept
+b1 <- 0.4 # continuous slope
+b2 <- 2
+sigma <- 1.5 # residual standard deviation
+N <- 100 # number of data points
+x1 <- runif(N, -2, 20) # continuous predictor data
+x2 <- runif(N, -2, 20) # continuous predictor data
+
+# generate response data:
+y <- rnorm(N, mean = b0 + b1 * x1 + b2 * x2, sd = sigma)
+dat <- data.frame(x1, x2 = x2 * 1000, y)
+head(dat)
+```
+
+```{r}
+m <- lm(y ~ x1 + x2, data = dat)
+coef(m)
+arm::coefplot(m)
+
+# arm::coefplot(arm::standardize(m))
+```
+
+
+```{r}
+dat <- mutate(dat, x1_scaled = scale2sd(x1), x2_scaled = scale2sd(x2))
+m_scaled <- lm(y ~ x1_scaled + x2_scaled, data = dat)
+arm::coefplot(m_scaled)
+coef(m_scaled)
+```
+
+Interactions and binary predictors:
+
+```{r}
+set.seed(999)
+b0 <- 1.4 # intercept
+b1 <- 0.2 # continuous slope
+b2 <- 1.7 # factor level 1 coefficient
+b1.2 <- 0.5 # interaction between b1 and b2
+sigma <- 0.6 # residual standard deviation
+N <- 25 # number of data points
+
+x1 <- runif(N, 0, 20) # continuous predictor data
+x2 <- rbinom(N, size = 1, prob = 0.4) # binary predictor data
+
+# generate response data:
+y <- rnorm(N, mean = b0 +
+  b1 * x1 +
+  b2 * x2 +
+  x1 * x2 * b1.2,
+  sd = sigma)
+dat <- data.frame(x1, x2 = x2, y)
+head(dat)
+```
+
+Let's look at the data we created:
+
+```{r cent1, fig.width=6, fig.height=4}
+ggplot(dat, aes(x1, y, colour = as.factor(x2))) + geom_point()
+```
+
+Now, we'll fit a model with and without an interaction and look at the coefficients:
+
+```{r}
+m <- lm(y ~ x1 * x2, data = dat)
+m_no_inter <- lm(y ~ x1 + x2, data = dat)
+m2 <- lm(y ~ x1 + x1:x2, data = dat)
+round(coef(m), 2)
+round(coef(m_no_inter), 2)
+```
+
+Notice how the main effects (everything except the interaction) change dramatically when the interaction is removed. This is because when the interaction is included the main effects are relevant to when the other predictors are equal to 0. I.e. `x1 = 0` or the binary predictor `x2` is at its reference `0` level. But, when the interaction is excluded the main effects are relevant when the other predictors are at their mean values. So, if we center, the main effects will represent the same thing in both cases:
+
+```{r}
+dat <- mutate(dat, x2_cent = x2 - mean(x2), x1_cent = x1 - mean(x1))
+select(dat, x2, x2_cent) %>% head()
+```
+
+```{r}
+m_center <- lm(y ~ x1_cent * x2_cent, data = dat)
+m_center_no_inter <- lm(y ~ x1_cent + x2_cent, data = dat)
+round(coef(m_center), 2)
+round(coef(m_center_no_inter), 2)
+```
+
+Notice that the intercept, `x1`, and `x2` coefficient estimates are now similar regardless of whether the interaction is included. Now, because we've centered the predictors, the predictors equal zero at their mean. So, the main effects are estimating approximately the same thing regardless of whether we include the interaction. In other words, adding the interaction adds more predictive information but doesn't modify the meaning of the main effects.
+
+```{r}
+g1 <- ggplot(dat, aes(x1, y, colour = as.factor(x2))) + geom_point() +
+  geom_abline(
+    intercept = coef(m_no_inter)[1], 
+    slope = coef(m_no_inter)[2]) +
+  ggtitle("Raw predictors, no interaction")
+g2 <- ggplot(dat, aes(x1_cent, y, colour = as.factor(x2))) + geom_point() +
+  geom_abline(
+    intercept = coef(m_center_no_inter)[1], 
+    slope = coef(m_center_no_inter)[2]) +
+  ggtitle("Centered, no interaction")
+gridExtra::grid.arrange(g1, g2)
+```
+
+The same concepts apply to ...
+
+

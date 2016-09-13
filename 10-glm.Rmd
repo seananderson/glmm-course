@@ -1,0 +1,3 @@
+gamma, log
+logistic regression example
+poisson, negbin

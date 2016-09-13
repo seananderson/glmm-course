@@ -1,0 +1,12 @@
+AIC, AICc
+REML, ML
+testing
+touch on averaging
+cross-validation
+
+The process of building up models
+Plot, plot, plot
+Iterative
+Build from simple
+Simulate
+Gelman approach plus Bolker and Zuur lists
