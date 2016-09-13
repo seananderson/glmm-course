@@ -88,10 +88,8 @@ Open the ggplot2 web documentation <http://docs.ggplot2.org/> and keep it open t
 First, let's experiment with some geoms using the `morph` dataset that you downloaded and cleaned up above. I'll start by setting up a basic scatterplot of beak height vs. wing length:
 
 ```{r geom0}
-ggplot(morph, aes(wingl, beakh)) + geom_point(alpha = 0.4)
+ggplot(morph, aes(wingl, beakh)) + geom_point()
 ```
-
-Because there's lots of overplotting, I've set the alpha (opacity) value to 40%. Alternatively, we could have added some jittering. We'll do that below.
 
 ## Your turn
 
