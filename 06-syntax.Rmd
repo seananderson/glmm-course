@@ -1,5 +1,5 @@
 ---
-Title: R formula syntax
+Title: R formula and random effect grouping syntax
 ---
 
 # Goals
@@ -11,6 +11,29 @@ Title: R formula syntax
 
 # Formula syntax
 
+A formula in R uses the `~` character. E.g.
+
+```{r}
+f <- y ~ x
+class(f)
+```
+
+## Your turn
+
+For this course, I'm assuming you're already somewhat familiar with R formulas. Let's review some more edge-case R formula syntax quickly. Read `?formula` if needed.
+
+Re-write the following in shortform:
+
+```{r}
+y ~ x1 + x2 + x1:x2
+```
+
+Answer:
+
+```{r}
+y ~ x1 * x2 # exercise
+```
+
 What is a shorthand way of writing the following?
 
 ```{r}
@@ -20,19 +43,7 @@ y ~ x1 + x2 + x3 + x4 + x1:x2 + x2:x3 + x1:x3 + x1:x4 + x2:x4 + x3:x4
 Answer:
 
 ```{r}
-y ~ (x1 + x2 + x3 + x4)^2
-```
-
-What does the following simplify to?
-
-```{r}
-y ~ x1 + x1 + x1*x2
-```
-
-Answer:
-
-```{r}
-y ~ x1*x2
+y ~ (x1 + x2 + x3 + x4)^2 # exercise
 ```
 
 Are the following the same? Why or why not?
@@ -42,25 +53,59 @@ y ~ x^2
 y ~ I(x^2)
 ```
 
-# Random effect syntax
-
-A group of grad students are trying to model log(frog density) as a function of soil characteristics. What might their model look like in the following cases (using lmer)?
-
-Jerry measures frog density and soil characteristics from 1 transect within 6 separate ponds.
+What is `y ~ x^2` actually mean in simplified form?
 
 ```{r}
-log(frog_dens) ~ soil + (1 | pond)
-log(frog_dens) ~ soil + (1 + soil | pond)
-log(frog_dens) ~ soil + (soil | pond)
+y ~ x # exercise
+```
+
+What are 2 ways to remove the intercept in an R formula? Hint: read `?formula`.
+
+```{r}
+y ~ -1 + x # exercise
+y ~ 0 + x # exercise
+```
+
+# Random effect syntax
+
+We'll cover random effect syntax in the slides. Below are some exercises.
+
+## Your turn 1
+
+A group of grad students are trying to model log(frog density) as a function of soil characteristics. What might their model look like in the following cases (using lmer)? Give cases with random intercepts only and cases with random intercepts and slopes.
+
+Jerry measures frog density and soil characteristics from 1 transect (`transect`) within 6 separate ponds (`pond`).
+
+```{r}
+log(frog_dens) ~ soil + 
+  (1 | pond) # exercise
+log(frog_dens) ~ soil + 
+  (1 + soil | pond) # exercise
 ```
 
 Emily measures frog density and soil characteristics from 5 transects within 1 pond.
 
 ```{r}
-log(frog_dens) ~ soil + (1 | transect)
-log(frog_dens) ~ soil + (1 + soil | transect)
-log(frog_dens) ~ soil + (soil | transect)
+log(frog_dens) ~ soil + 
+  (1 | transect) # exercise
+log(frog_dens) ~ soil + 
+  (1 + soil | transect) # exercise
 ```
+
+Bonus: what are 2 ways you can write the above models that have a random slope? Hint: do you need to specify the random intercept explicitely? Are there advantages/disadvantages to each syntax?
+
+```{r}
+log(frog_dens) ~ soil + (1 + soil | transect) # exercise
+log(frog_dens) ~ soil + (soil | transect) # exercise
+```
+
+Bonus 2: How can you specify one of the above models with a random slope but no random intercept. Hint, see the examples in `?lmer`. When might you use this?
+
+```{r}
+log(frog_dens) ~ soil + (0 + soil | transect) # exercise
+```
+
+## Your turn 2
 
 Jane measures frog density and soil characteristics from 5 transects (`transect`) within 6 ponds (`pond`). Assume her data are structured like this:
 
@@ -78,35 +123,48 @@ d
 What is one way she could write the model with a random intercept?
 
 ```{r}
-log(frog_dens) ~ soil + (1 | pond/transect)
+log(frog_dens) ~ soil + 
+  (1 | pond/transect) # exercise
 ```
 
 What's another way to write the same model?
 
 ```{r}
-log(frog_dens) ~ soil + (1 | pond) + (1 | pond:transect)
+log(frog_dens) ~ soil + 
+  (1 | pond) + (1 | pond:transect) # exercise
 ```
 
 What if she had coded her transects as in the `transect2` column? She could write her model the same way as above with `transect`, but she has one new option. What is that?
 
 ```{r}
-log(frog_dens) ~ soil + (1 | pond) + (1 | transect2)
+log(frog_dens) ~ soil + 
+  (1 | pond) + (1 | transect2) # exercise
 ```
 
-Let's paste those into `lmer()` for proof that they are the same:
+Let's paste those into `lmer()` for proof that they are all the same. First, fill in the last line with the answer to the last exercise. Note that the surrounding parentheses just cause R to print the output while running the line.
 
 ```{r}
 library(lme4)
 (m1 <- lmer(log(frog_dens) ~ soil + (1 | pond/transect), data = d))
 (m2 <- lmer(log(frog_dens) ~ soil + (1 | pond) + (1 | transect:pond), data = d))
-(m4 <- lmer(log(frog_dens) ~ soil + (1 | pond) + (1 | transect2), data = d))
+(m3 <- lmer(log(frog_dens) ~ soil +  
+    (1 | pond) + (1 | transect2), data = d)) # exercise 
 ```
 
-But the following *is not* the same, and is probably *not* what you want to do. Why is that? What does this one mean?
+Bonus: but the following *is not* the same, and is probably *not* what you want to do. Why is that? What does this one mean?
 
 ```{r}
 (m_wrong <- lmer(log(frog_dens) ~ soil + (1 | pond) + (1 | transect), data = d))
 ```
+
+Bonus 2: can you show what `m_wrong` is estimating as random effects for `transect`? Compare that to `m3`. Why is this happening?
+
+```{r}
+ranef(m_wrong)$transect # exercise
+ranef(m3)$transect # exercise
+```
+
+## Your turn 3
 
 For practice, how can we write the following model using `nlme::lme()` syntax?
 
@@ -119,7 +177,8 @@ lme4:
 nlme:
 
 ```{r}
-(m_nlme <- nlme::lme(log(frog_dens) ~ soil, random =  ~ 1 | pond/transect, data = d))
+(m_nlme <- nlme::lme(log(frog_dens) ~ soil, 
+  random =  ~ 1 | pond/transect, data = d)) # exercise
 ```
 
 Compare the output. Are they the same?
