@@ -1,6 +1,20 @@
+---
+Title: Distribution playground
+---
+
+# Goals
+
+- Review the most common probability distributions used in GLMs and GLMMs
+- Get a feeling for how the parameters affect the distribution shapes
+- Have an interactive resource to come back to as needed
+
+# Continuous distributions
+
+## Normal
+
+```{r}
 library(manipulate)
 
-# Continuous distributions:
 x <- seq(-10, 10, length.out = 300)
 manipulate({
   y <- dnorm(
@@ -11,7 +25,11 @@ manipulate({
     main = "Normal")},
   mean = slider(-10, 10, 0),
   sd = slider(0.1, 10, 2))
+```
 
+## Log normal
+
+```{r}
 x <- seq(0, 100, length.out = 300)
 manipulate({
   y <- dlnorm(
@@ -22,12 +40,19 @@ manipulate({
     main = "Lognormal")},
   meanlog = slider(0.1, 10, 3),
   sdlog = slider(0.01, 2, 1))
+```
 
-# What happens if the Gamma shape parameter is large and the scale parameter
-# is small?
-# What happens if the Gamma *scale* parameter is large and the *shape* parameter
-# is small?
-# What distributions do these resemble?
+## Gamma
+
+What happens if the Gamma shape parameter is large and the scale parameter
+is small?
+
+What happens if the Gamma *scale* parameter is large and the *shape* parameter
+is small?
+
+What distributions do these resemble?
+
+```{r}
 x <- seq(0, 100, length.out = 300)
 manipulate({
   y <- dgamma(
@@ -38,11 +63,15 @@ manipulate({
     main = "Gamma")},
   shape = slider(0.1, 10, 3),
   scale = slider(0.1, 60, 2))
+```
 
+# Discrete distributions
 
-# Discrete distributions:
+## Poisson
 
-# What happens to the width of the Poisson as the mean (lambda) increases?
+What happens to the width of the Poisson as the mean (lambda) increases?
+
+```{r}
 x <- seq(0, 100)
 manipulate({
   y <- dpois(x,
@@ -50,7 +79,11 @@ manipulate({
   plot(x = x, y = y, type = "h", xlim = c(0, 60), ylim = c(0, max(y)),
     main = "Poisson")},
   lambda = slider(0.1, 30, 3))
+```
 
+## Negative binomial
+
+```{r}
 # TODO: reparameterize dnbinom?
 x <- seq(0, 100)
 manipulate({
@@ -62,9 +95,13 @@ manipulate({
     main = "Negative binomial")},
   size = slider(0.1, 10, 1),
   mu = slider(0.1, 60, 4))
+```
 
-# Read the help ?dbinom and play with the sliders. What do `size` and `prob`
-# arguments mean?
+## Binomial
+
+Read the help `?dbinom` and play with the sliders. What do `size` and `prob` arguments mean?
+
+```{r}
 x <- seq(0, 10)
 manipulate({
   y <- dbinom(x,
@@ -74,5 +111,4 @@ manipulate({
     main = "Binomial")},
   size = slider(1, 7, initial = 1, step = 1),
   prob = slider(0, 1, initial = 0.5, step = 0.1))
-
-# TODO: emdbook::dzinbinom(x, mu, size, zprob, log=FALSE)
+```

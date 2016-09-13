@@ -4,3 +4,5 @@ demo again - can get a lot of zeros
 hurdle, zero-inflation parameter
 
 what if continuous with zeros? link to blog
+
+TODO: emdbook::dzinbinom(x, mu, size, zprob, log=FALSE)
