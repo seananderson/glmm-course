@@ -1,5 +1,5 @@
 ---
-Title: ggplot2 for rapid data and model visualization
+Title: An introduction to ggplot2 for rapid data and model visualization
 ---
 
 # Goals
@@ -46,7 +46,7 @@ We're going to work with morphological data from Galapagos finches, which is ava
 
 Before we get started, we're going to clean the data up a bit. I've removed some columns and made the column names lower case. I've also removed all but one island. You can do that with this code:
 
-```{r}
+```{r load-data}
 morph <- read.csv("data/raw/Morph_for_Sato.csv", stringsAsFactors = FALSE)
 names(morph) <- tolower(names(morph)) # make columns names lowercase
 morph <- filter(morph, islandid == "Flor_Chrl") # take only one island
@@ -87,7 +87,7 @@ Open the ggplot2 web documentation <http://docs.ggplot2.org/> and keep it open t
 
 First, let's experiment with some geoms using the `morph` dataset that you downloaded and cleaned up above. I'll start by setting up a basic scatterplot of beak height vs. wing length:
 
-```{r geom1}
+```{r geom0}
 ggplot(morph, aes(wingl, beakh)) + geom_point(alpha = 0.4)
 ```
 
@@ -95,29 +95,34 @@ Because there's lots of overplotting, I've set the alpha (opacity) value to 40%.
 
 ## Your turn
 
-Experiment with ggplot2 geoms. Try applying some different geoms to the `morph` dataset. For example, try showing the distribution of wing length with `geom_histogram()`:
+Try showing the distribution of wing length for male and female birds by using `geom_violin()`:
 
-```{r}
-ggplot(morph, aes(wingl)) + geom_histogram() # exercise
+```{r geom1}
+ggplot(morph, aes(sex, wingl)) + 
+  geom_violin() # exercise
 ```
 
-You could also try showing the distribution of wing length for male and female birds by using `geom_violin()` (hint: `sex` will be the `x` aesthetic):
+Try showing the distribution of wing length with `geom_histogram()` (note that histograms only require an `x` aesthetic):
 
-```{r}
-ggplot(morph, aes(sex, wingl)) + geom_violin() # exercise
+```{r geom2}
+ggplot(morph, aes(wingl)) + 
+  geom_histogram() # exercise
 ```
 
 Try making a boxplot with `taxon` on the x axis and `wingl` on the y axis.
 
-```{r}
-ggplot(morph, aes(taxon, wingl)) + geom_boxplot() # exercise
+```{r geom3}
+ggplot(morph, aes(taxon, wingl)) + 
+  geom_boxplot() # exercise
 ```
 
 Bonus: If you've made it this far, try flipping the axes on your previous plot so the labels are readable. (Hint: see `?coord_flip`)
 
-```{r}
+```{r geom4}
 ggplot(morph, aes(taxon, wingl)) + geom_boxplot() + coord_flip() # exercise
 ```
+
+And if you made it this far, try cleaning up the plots above by setting appropriate x and y axis labels. There are multiple ways to do this. Can you find 2 ways?
 
 # Aesthetics
 
@@ -125,53 +130,53 @@ Aesthetics refer to the attributes of the data you want to display. They map the
 
 As an example, the aesthetics available for `geom_point()` are: `x`, `y`, `alpha`, `colour`, `fill`, `shape`, and `size`. Read the help files to see the aesthetic options for the geom you’re using. They’re generally self explanatory. Aesthetics can be specified within the main `ggplot()` function or within a `geom()`. If they’re specified within the main `ggplot()` function then they apply to all geoms you specify.
 
-Note the important difference between specifying characteristics like colour and shape inside or outside the `aes()` function: those inside the `aes()` function are assigned the colour or shape automatically based on the data. If characteristics like colour or shape are defined outside the `aes()` function, then the characteristic is not mapped to data. Here’s an example:
+Note the important difference between specifying characteristics like colour and shape inside or outside the `aes()` function: those inside the `aes()` function are assigned the colour or shape automatically based on the data.
 
-```{r}
+```{r aes1}
 ggplot(mpg, aes(cty, hwy)) + geom_point(aes(colour = class))
 ```
 
-```{r}
+If characteristics like colour or shape are defined outside the `aes()` function, then the characteristic is not mapped to data:
+
+```{r aes2}
 ggplot(mpg, aes(cty, hwy)) + geom_point(colour = "red")
 ```
 
-Let's play with mapping some of our data to aesthetics. I'll start with one example. I'm going to map the male/female value to a colour in our scatterplot of wing length and beak height. This time I'll use jittering instead of transparency to deal with overplotting:
+Let's play with mapping some of our data to aesthetics. I'm going to map the male/female value to a colour in our scatterplot of wing length and beak height:
 
-```{r}
+```{r aes3}
 ggplot(morph, aes(wingl, beakh)) +
   geom_point(aes(colour = sex))
 ```
 
 ## Your turn
 
-Explore the `morph` dataset yourself by applying some aesthetics. You can see all the available aesthetics for a give geom by looking at the documentation. Either see [the website](http://docs.ggplot2.org/current/) or, for example, `?geom_point`
-
-Some suggestions:
+Explore the `morph` dataset yourself by applying some aesthetics. You can see all the available aesthetics for a give geom by looking at the documentation, e.g. `?geom_point`, or at <http://docs.ggplot2.org/current/>.
 
 Try the same scatterplot but show upper beak length (`ubeakl`) with size. I've started the code:
 
-```{r aes-exercise-1}
+```{r aes1-ex}
 ggplot(morph, aes(wingl, beakh)) +
   geom_point(aes(size = ubeakl)) # exercise
 ```
 
 Try the same scatterplot but show the taxon with colour:
 
-```{r aes2, fig.width=9, bootstrap.show.code=FALSE}
+```{r aes2-ex}
 ggplot(morph, aes(wingl, beakh)) +
   geom_point(aes(colour = taxon)) # exercise
 ```
 
 Try the same scatterplot but show the upper beak length with colour (note how ggplot treats `ubeakl` differently than `taxon` when it picks a colour scale -- why is that?):
 
-```{r aes2, fig.width=9, bootstrap.show.code=FALSE}
+```{r aes2-ex}
 ggplot(morph, aes(wingl, beakh)) +
   geom_point(aes(colour = ubeakl)) # exercise
 ```
 
 Bonus: If you've gotten this far, try combining colour for taxon, shape for sex, and size for upper beak length. This last version is a bit silly, but it illustrates how quickly you can explore multiple dimensions with ggplot2.
 
-```{r aes4, bootstrap.show.code=FALSE}
+```{r aes4-ex}
 ggplot(morph, aes(wingl, beakh)) +
   geom_point(aes(shape = sex, size = ubeakl, colour = taxon), # exercise
     alpha = 0.4) # exercise
@@ -187,21 +192,21 @@ To specify the data frame columns that are mapped to the rows and columns of fac
 
 Try a scatterplot of beak height against wing length with a different panel for each taxon. I've started it for your. Use `facet_wrap()` (hint: the synatax is `+ facet_wrap(~column_name)`:
 
-```{r facet1, bootstrap.show.code=FALSE}
+```{r facet1}
 ggplot(morph, aes(wingl, beakh)) + geom_point() + 
   facet_wrap(~taxon) # exercise
 ```
 
 In some cases, it's useful to let the x or y axes have different scales for each panel. Try giving each panel a different axis here using `scales = "free"` in your call to `facet_wrap()`:
 
-```{r facet2, fig.width=10, fig.height=8, bootstrap.show.code=FALSE}
+```{r facet2}
 ggplot(morph, aes(wingl, beakh)) + geom_point() +
   facet_wrap(~taxon, scales = "free") # exercise
 ```
 
 Now try using `facet_grid` to explore the same scatterplot for each combination of sex and taxa.
 
-```{r facet3, fig.width=10, fig.height=7, bootstrap.show.code=FALSE}
+```{r facet3}
 ggplot(morph, aes(wingl, beakh)) + geom_point() + 
   facet_grid(sex~taxon) # exercise
 ```
@@ -212,7 +217,7 @@ A great way to visualize coefficients from models is with dot and line plots.
 
 To illustrate how to make this style of plot, let's make a plot that shows a dot for the median and line segment for the quantiles. First, we'll calculate these values. For now, just run this code. We'll learn about dplyr next.
 
-```{r manipulate}
+```{r calc-medians}
 morph_quant <- morph %>%
   group_by(taxon) %>%
   summarise(
@@ -227,14 +232,14 @@ morph_quant <- morph %>%
 
 Now we'll make the plot. Start by adding the geom `geom_pointrange` to the following code:
 
-```{r}
+```{r coef-plot}
 ggplot(morph_quant, aes(x = taxon, y = m, ymin = l, ymax = u)) +
   geom_pointrange() # exercise
 ```
 
 The final plot should have the taxa listed down the y-axis and the wing length value on the x axis so we can read the labels, so you'll need to rotate the whole plot by adding `+ coord_flip()`:
 
-```{r}
+```{r coord-flip}
 ggplot(morph_quant, aes(x = taxon, y = m, ymin = l, ymax = u)) +
   ylab("Wing length") + xlab("") +
   geom_pointrange() + # exercise
