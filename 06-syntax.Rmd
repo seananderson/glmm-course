@@ -6,7 +6,7 @@ Title: R formula and random effect grouping syntax
 
 - review R formula syntax including some lesser known shortcuts
 - be able to identify possible random effect grouping structures
-- be able to write out random effect formulas for `lme4::lmer()` in multiple ways
+- be able to write out random effect formulas for `lme4::lmer()`
 - be able to convert `lme4::lmer()` random effect syntax to `nlme::lme()` syntax
 
 # Formula syntax
@@ -53,7 +53,7 @@ y ~ x^2
 y ~ I(x^2)
 ```
 
-What is `y ~ x^2` actually mean in simplified form?
+What does `y ~ x^2` actually mean in simplified form?
 
 ```{r}
 y ~ x # exercise
@@ -72,7 +72,7 @@ We'll cover random effect syntax in the slides. Below are some exercises.
 
 ## Your turn 1
 
-A group of grad students are trying to model log(frog density) as a function of soil characteristics. What might their model look like in the following cases (using lmer)? Give cases with random intercepts only and cases with random intercepts and slopes.
+A group of grad students are trying to model log(frog density) as a function of soil characteristics. What might their model look like in the following cases (using `lme4::lmer`)? Give cases with random intercepts only and cases with random intercepts and slopes.
 
 Jerry measures frog density and soil characteristics from 1 transect (`transect`) within 6 separate ponds (`pond`).
 
@@ -99,7 +99,7 @@ log(frog_dens) ~ soil + (1 + soil | transect) # exercise
 log(frog_dens) ~ soil + (soil | transect) # exercise
 ```
 
-Bonus 2: How can you specify one of the above models with a random slope but no random intercept. Hint, see the examples in `?lmer`. When might you use this?
+Bonus 2: How can you specify one of the above models with a random slope but no random intercept? Hint, see the examples in `?lmer`. When might you use this?
 
 ```{r}
 log(frog_dens) ~ soil + (0 + soil | transect) # exercise
@@ -107,11 +107,11 @@ log(frog_dens) ~ soil + (0 + soil | transect) # exercise
 
 ## Your turn 2
 
-Jane measures frog density and soil characteristics from 5 transects (`transect`) within 6 ponds (`pond`). Assume her data are structured like this:
+Jane measures frog density and soil characteristics from 2 transects (`transect`) within 4 ponds (`pond`). Assume her data are structured like this:
 
 ```{r}
 set.seed(99)
-d <- tibble(
+d <- tibble::tibble(
   frog_dens = rlnorm(100), 
   soil = rnorm(100), 
   pond = gl(25, 4), # generates factor levels
@@ -119,6 +119,8 @@ d <- tibble(
   transect2 = gl(50, 2)) # ignore transect2 for now
 d
 ```
+
+Ignoring that Jane probably hasn't sampled enough transects to get much benefit from a mixed effect model:
 
 What is one way she could write the model with a random intercept?
 
