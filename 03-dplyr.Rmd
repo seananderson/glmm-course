@@ -7,12 +7,6 @@ Title: Manipulating data with dplyr and pipes
 - Become familiar with the 5 dplyr verbs of data manipulation
 - Be comfortable chaining multiple R commands with the `%>%` (pipe) symbol
 
-# References
-
-Parts of the following exercise are modified from:
-
-See <> (r4ds)
-
 # dplyr
 
 dplyr is built around 5 verbs. These verbs make up the majority of the data manipulation you tend to do. You might need to:
@@ -35,25 +29,26 @@ We're going to work with a dataset of mammal life-history, geography, and ecolog
 
 Jones, K.E., *et al*. PanTHERIA: a species-level database of life history, ecology, and geography of extant and recently extinct mammals. Ecology 90:2648. <http://esapubs.org/archive/ecol/E090/184/>
 
-First we'll download the data:
+You can download the data from here:
 
 ```{r download-data, eval=FALSE}
 pantheria <-
   "http://esapubs.org/archive/ecol/E090/184/PanTHERIA_1-0_WR05_Aug2008.txt"
-download.file(pantheria, destfile = "data/generated/mammals.txt")
+download.file(pantheria, destfile = "data/raw/mammals.txt")
 ```
 
-We'll load the dplyr and readr packages:
+I've cached the file in `data/raw/` as well.
+
+We'll load the dplyr package:
 
 ```{r, message=FALSE}
 library(dplyr)
-library(readr)
 ```
 
 Next we'll read it in and simplify it. This gets a bit ugly, but you can safely just run this code chunk and ignore the details. Later you might want to come back and work through the code if any looks new to you. This type of data cleaning is commonly required:
 
 ```{r}
-mammals <- read_tsv("data/generated/mammals.txt")
+mammals <- readr::read_tsv("data/generated/mammals.txt")
 names(mammals) <- sub("[0-9._-]+", "", names(mammals))
 names(mammals) <- sub("MSW", "", names(mammals))
 mammals <- select(mammals, Order, Binomial, AdultBodyMass_g, 
@@ -176,9 +171,9 @@ Let's try a single-pipe dplyr example. We'll pipe the `mammals` data frame to th
 mammals %>% arrange(adult_body_mass_g)
 ```
 
-# An awesome example
+# A better example
 
-OK, here's where it gets cool. We can chain dplyr functions in succession. This lets us write data manipulation steps in the order we think of them and avoid creating temporary variables in the middle to capture the output. This works because the output from every dplyr function is a data frame and the first argument of every dplyr function is a data frame.
+Here's where it gets interesting We can chain dplyr functions in succession. This lets us write data manipulation steps in the order we think of them and avoid creating temporary variables in the middle to capture the output. This works because the output from every dplyr function is a data frame and the first argument of every dplyr function is a data frame.
 
 Say we wanted to find the species with the highest body-mass-to-length ratio:
 
@@ -211,29 +206,49 @@ mammals %>% group_by(order) %>%
   summarise(median_litter = median(litter_size, na.rm = TRUE))
 ```
 
-Your turn now. Take what I started and add a line that keeps only the rows where
-`median_litter` is less than 3:
+## Your turn 1
+
+Take what I started and add a line that keeps only the rows where `median_litter` is less than 3:
 
 ```{r}
 mammals %>% group_by(order) %>%
-  summarise(median_litter = median(litter_size, na.rm = TRUE)) # <- add a %>% here
-  # <- add a line of code here with the `filter()` function
+  summarise(median_litter = median(litter_size, na.rm = TRUE)) %>%
+  filter(median_litter < 3) # exercise
 ```
 
-*Extension*: for bonus points, arrange the data frame by `median_litter` and select only the columns `order` and `median_litter` by adding two more lines.
+Bonus: also arrange the data frame by `median_litter` from largest to smallest and select only the columns `order` and `median_litter`:
 
-Again, your turn: make the following piece of code easier to read by converting it to use pipes:
+```{r}
+mammals %>% group_by(order) %>%
+  summarise(median_litter = median(litter_size, na.rm = TRUE)) %>%
+  filter(median_litter < 3) %>% # exercise
+  select(order, median_litter) %>% # exercise
+  arrange(-median_litter) # exercise
+```
+
+## Your turn 2
+
+Again, your turn: make the following piece of code easier to read by converting it to use pipes (hint: work from the inside out):
 
 ```{r}
 summarise(
   group_by(
     select(mammals, order, adult_body_mass_g), 
     order), 
-  mean_body_mass = mean(adult_body_mass_g))
+  mean_body_mass = mean(adult_body_mass_g, na.rm = TRUE))
 ```
 
 Answer:
 
 ```{r}
-
+mammals %>% select(order, adult_body_mass_g) %>% # exercise
+  group_by(order) %>% # exercise
+  summarise(mean_body_mass = mean(adult_body_mass_g, na.rm = TRUE)) # exercise
 ```
+
+# Resources
+
+Parts of this exercise were modified from: <http://seananderson.ca/2014/09/13/dplyr-intro.html>
+
+<http://r4ds.had.co.nz/transform.html>
+<http://r4ds.had.co.nz/pipes.html>
