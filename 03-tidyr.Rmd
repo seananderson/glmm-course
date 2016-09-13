@@ -12,11 +12,12 @@ Title: Manipulating data with tidyr
 
 Wide data has a column for each variable.
 
-```{r, include=FALSE, echo=FALSE}
+```{r}
 library(dplyr)
 air <- airquality # built into R
 names(air) <- tolower(names(air))
-air <- as_data_frame(air) %>% select(-ozone, -solar.r, -wind)
+air <- as_data_frame(air) %>% 
+  select(-ozone, -solar.r, -wind)
 ```
 
 For example, this is long-format data:
@@ -73,6 +74,10 @@ As an example: let's turn `air_wide` back into `air`.
 gather(air_wide, month, temp, -day)
 ```
 
+## Your turn 1
+
+Try and answer the following questions before running the code:
+
 What will the following do?
 
 ```{r}
@@ -85,17 +90,17 @@ Is this the same as above?
 gather(air_wide, month, temp, 2:6)
 ```
 
-Why doesn't the following work?
+Why doesn't the following do what we want?
 
-```{r}
+```{r, eval=FALSE}
 gather(air_wide, month, temp)
 ```
 
-# Your turn
+## Your turn 2
 
-Make the following dataset (stock prices for stocks X, Y, and Z) long with columns for time, stock ID, and price. Save the output into `stocks_long`.
+Make this fake dataset:
 
-```{r}
+```{r fake-data}
 # from ?tidyr::spread
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
@@ -105,29 +110,34 @@ stocks <- data.frame(
 )
 ```
 
+Now make the dataset (stock prices for stocks X, Y, and Z) long with columns for time, stock ID, and price. Save the output into `stocks_long`.
+
 Answer:
 
 ```{r}
-stocks_long <- stocks %>% gather(key = stock, value = price, -time)
-stocks_long
+stocks_long <- stocks %>% 
+  gather(
+    key = stock, value = price, -time) # exercise
 ```
 
 Make `stocks_long` wide again with `spread()`:
 
 ```{r}
-stocks_long %>% spread(key = stock, value = price)
+stocks_long %>% spread(
+  key = stock, value = price) # exercise
 ```
 
-*Extension*: There's another possible wide format for this dataset. How could you use `spread` to have a column for each time and a row for each stock?
-
-Answer:
+Bonus: There's another possible wide format for this dataset. Can you figure it out and make it with `spread()`? Hint: there's a row for each stock.
 
 ```{r}
-stocks_long %>% spread(key = time, value = price)
+stocks_long %>% spread(
+  key = time, value = price) # exercise
 ```
 
 # Further information
 
-Parts of the following exercise are modified from:
+Parts of this exercise were modified from <http://seananderson.ca/2013/10/19/reshape.html>, which uses the older, more powerful, but less pipe friendly reshape2 package.
 
-See <> (r4ds)
+<http://r4ds.had.co.nz/tidy-data.html>
+
+<https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf>

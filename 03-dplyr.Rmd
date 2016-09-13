@@ -250,5 +250,10 @@ mammals %>% select(order, adult_body_mass_g) %>% # exercise
 
 Parts of this exercise were modified from: <http://seananderson.ca/2014/09/13/dplyr-intro.html>
 
+<https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html>
+
+<https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf>
+
 <http://r4ds.had.co.nz/transform.html>
+
 <http://r4ds.had.co.nz/pipes.html>
