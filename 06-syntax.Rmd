@@ -18,6 +18,8 @@ f <- y ~ x
 class(f)
 ```
 
+We covered R's formula syntax in the slides. Below are some exercises to solidify your understanding. 
+
 ## Your turn
 
 For this course, I'm assuming you're already somewhat familiar with R formulas. Let's review some more edge-case R formula syntax quickly. Read `?formula` if needed.
@@ -34,16 +36,16 @@ Answer:
 y ~ x1 * x2 # exercise
 ```
 
-What is a shorthand way of writing the following?
+What is the longhand way of writing the following?
 
 ```{r}
-y ~ x1 + x2 + x3 + x4 + x1:x2 + x2:x3 + x1:x3 + x1:x4 + x2:x4 + x3:x4
+y ~ (x1 + x2 + x3)^2
 ```
 
 Answer:
 
 ```{r}
-y ~ (x1 + x2 + x3 + x4)^2 # exercise
+y ~ x1 + x2 + x3 + x1:x2 + x2:x3 + x1:x3 # exercise
 ```
 
 Are the following the same? Why or why not?
@@ -59,7 +61,7 @@ What does `y ~ x^2` actually mean in simplified form?
 y ~ x # exercise
 ```
 
-What are 2 ways to remove the intercept in an R formula? Hint: read `?formula`.
+What are 2 ways to remove the intercept in an R formula? Hint: read `?formula`. When might you want to do this? 
 
 ```{r}
 y ~ -1 + x # exercise
@@ -72,74 +74,81 @@ We'll cover random effect syntax in the slides. Below are some exercises.
 
 ## Your turn 1
 
-A group of grad students are trying to model log(frog density) as a function of soil characteristics. What might their model look like in the following cases (using `lme4::lmer`)? Give cases with random intercepts only and cases with random intercepts and slopes.
+A group of grad students are trying to model log(frog density) as a function of vegetation characteristics. What might their model look like in the following cases (using `lme4::lmer`)? Give cases with random intercepts only and cases with random intercepts and slopes.
 
-Jerry measures frog density and soil characteristics from 1 transect (`transect`) within 6 separate ponds (`pond`).
+Jerry measures frog density and vegetation characteristics from 1 transect (`transect`) within 6 separate ponds (`pond`).
 
 ```{r}
-log(frog_dens) ~ soil + 
+# random intercepts
+log(frog_dens) ~ vegetation + 
   (1 | pond) # exercise
-log(frog_dens) ~ soil + 
-  (1 + soil | pond) # exercise
+# random slopes and intercepts:
+log(frog_dens) ~ vegetation + 
+  (1 + vegetation | pond) # exercise
 ```
 
-Emily measures frog density and soil characteristics from 5 transects within 1 pond.
+Emily measures frog density and vegetation characteristics from 5 transects within 1 pond.
 
 ```{r}
-log(frog_dens) ~ soil + 
+log(frog_dens) ~ vegetation + 
   (1 | transect) # exercise
-log(frog_dens) ~ soil + 
-  (1 + soil | transect) # exercise
+log(frog_dens) ~ vegetation + 
+  (1 + vegetation | transect) # exercise
 ```
 
 Bonus: what are 2 ways you can write the above models that have a random slope? Hint: do you need to specify the random intercept explicitely? Are there advantages/disadvantages to each syntax?
 
 ```{r}
-log(frog_dens) ~ soil + (1 + soil | transect) # exercise
-log(frog_dens) ~ soil + (soil | transect) # exercise
+log(frog_dens) ~ vegetation + (1 + vegetation | transect) # exercise
+log(frog_dens) ~ vegetation + (vegetation | transect) # exercise
 ```
 
 Bonus 2: How can you specify one of the above models with a random slope but no random intercept? Hint, see the examples in `?lmer`. When might you use this?
 
 ```{r}
-log(frog_dens) ~ soil + (0 + soil | transect) # exercise
+log(frog_dens) ~ vegetation + (0 + vegetation | transect) # exercise
 ```
 
 ## Your turn 2
 
-Jane measures frog density and soil characteristics from 2 transects (`transect`) within 4 ponds (`pond`). Assume her data are structured like this:
+Jane measures frog density and vegetation characteristics from 2 transects (`transect`) within 4 ponds (`pond`). Assume her data are structured like this:
 
 ```{r}
 set.seed(99)
 d <- tibble::tibble(
   frog_dens = rlnorm(100), 
-  soil = rnorm(100), 
+  vegetation = rnorm(100), 
   pond = gl(25, 4), # generates factor levels
-  transect = rep(gl(2, 2), 25),
-  transect2 = gl(50, 2)) # ignore transect2 for now
+  transect = rep(gl(2, 2), 25))
 d
 ```
 
-Ignoring that Jane probably hasn't sampled enough transects to get much benefit from a mixed effect model:
+*Ignoring* that Jane probably hasn't sampled enough transects to get much benefit from a mixed effect model (we're trying to keep this example data set small):
 
-What is one way she could write the model with a random intercept?
+What is one way she could write the model with a random intercept for transects nested within ponds?
 
 ```{r}
-log(frog_dens) ~ soil + 
+log(frog_dens) ~ vegetation + 
   (1 | pond/transect) # exercise
 ```
 
 What's another way to write the same model?
 
 ```{r}
-log(frog_dens) ~ soil + 
+log(frog_dens) ~ vegetation + 
   (1 | pond) + (1 | pond:transect) # exercise
 ```
 
-What if she had coded her transects as in the `transect2` column? She could write her model the same way as above with `transect`, but she has one new option. What is that?
+What if she had coded her transects as in the `transect2` column in the following code chunk?
 
 ```{r}
-log(frog_dens) ~ soil + 
+d <- d %>% mutate(transect2 = gl(50, 2))
+```
+
+She could write her model the same way as above with `transect`, but she has one new option. What is that?
+
+```{r}
+log(frog_dens) ~ vegetation + 
   (1 | pond) + (1 | transect2) # exercise
 ```
 
@@ -147,23 +156,23 @@ Let's paste those into `lmer()` for proof that they are all the same. First, fil
 
 ```{r}
 library(lme4)
-(m1 <- lmer(log(frog_dens) ~ soil + (1 | pond/transect), data = d))
-(m2 <- lmer(log(frog_dens) ~ soil + (1 | pond) + (1 | transect:pond), data = d))
-(m3 <- lmer(log(frog_dens) ~ soil +  
+(m1 <- lmer(log(frog_dens) ~ vegetation + (1 | pond/transect), data = d))
+(m2 <- lmer(log(frog_dens) ~ vegetation + (1 | pond) + (1 | transect:pond), data = d))
+(m3 <- lmer(log(frog_dens) ~ vegetation +  
     (1 | pond) + (1 | transect2), data = d)) # exercise 
 ```
 
 Bonus: but the following *is not* the same, and is probably *not* what you want to do. Why is that? What does this one mean?
 
 ```{r}
-(m_wrong <- lmer(log(frog_dens) ~ soil + (1 | pond) + (1 | transect), data = d))
+(m_wrong <- lmer(log(frog_dens) ~ vegetation + (1 | pond) + (1 | transect), data = d))
 ```
 
 Bonus 2: can you show what `m_wrong` is estimating as random effects for `transect`? Compare that to `m3`. Why is this happening?
 
 ```{r}
-ranef(m_wrong)$transect # exercise
-ranef(m3)$transect # exercise
+ranef(m_wrong) # exercise
+ranef(m3) # exercise
 ```
 
 ## Your turn 3
@@ -173,13 +182,13 @@ For practice, how can we write the following model using `nlme::lme()` syntax?
 lme4:
 
 ```{r}
-(m_lmer <- lmer(log(frog_dens) ~ soil + (1 | pond/transect), data = d))
+(m_lmer <- lmer(log(frog_dens) ~ vegetation + (1 | pond/transect), data = d))
 ```
 
 nlme:
 
 ```{r}
-(m_nlme <- nlme::lme(log(frog_dens) ~ soil, 
+(m_nlme <- nlme::lme(log(frog_dens) ~ vegetation, 
   random =  ~ 1 | pond/transect, data = d)) # exercise
 ```
 
