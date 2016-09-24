@@ -1,0 +1,55 @@
+```{r, eval=FALSE}
+d$predict_separate <- predict(m_separate)
+
+m_int <- lmer(log(beakh) ~ log(wingl) + (1 | taxon), data = d)
+
+
+
+pred_lmer <- function(fit) {
+    predict(fit, d)
+}
+bb <- bootMer(m_int, nsim=200, FUN=pred_lmer, seed=1)
+d$boot <- apply(bb$t, 2, mean)
+plot(d$boot, d$predict_re_int)
+
+ggplot(d, aes(log(wingl))) + geom_point(aes(y = log(beakh), colour = taxon)) +
+  facet_wrap(~taxon) +
+  geom_line(aes(y = predict_re_int))
+
+m_slope <- lmer(log(beakh) ~ log(wingl) + (1 + log(wingl) | taxon), data = d)
+d$predict_re_slope <- predict(m_slope)
+
+preds <- merTools::predictInterval(m_slope, newdata = d, level = 0.95, stat = "median", n.sims = 2000, type = )
+plot(d$predict_re_slope, preds$lwr)
+
+ggplot(d, aes(log(wingl))) + geom_point(aes(y = log(beakh), colour = taxon)) +
+  facet_wrap(~taxon) +
+  # geom_line(aes(y = predict_re_int), lty = 2) +
+  geom_line(aes(y = predict_re_slope), lty = 1) +
+   geom_line(aes(y = predict_separate), lty = 3)
+  
+d <- morph %>% mutate(
+  log_beakh_cent = log(beakh) - mean(log(beakh)),
+  log_wingl_cent = log(wingl) - mean(log(wingl))
+  )
+
+m <- lmer(log_beakh_cent ~ log_wingl_cent + (log_wingl_cent | genus/species) + 
+    (log_wingl_cent | islandid), data = d)
+
+m <- lmer(log_beakh_cent ~ log_wingl_cent + (1 | genus/species) + 
+    (1 | islandid), data = d)
+
+arm::display(m)
+
+d$pred <- predict(m)
+
+d %>%
+  ggplot(aes(x = log_wingl_cent, group = paste(genus, species))) + 
+  geom_point(aes(y = log_beakh_cent, colour = paste(genus, species)), 
+    alpha = 0.2) +
+  facet_wrap(~islandid) + guides(colour = FALSE) +
+  geom_line(aes(y = pred)) +
+  geom_smooth(aes(y = log_beakh_cent), method = "lm", 
+    lty = 1, se = FALSE, colour = "darkgrey")
+
+```
