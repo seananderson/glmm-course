@@ -10,7 +10,7 @@ Title: Introduction to random intercepts
 
 # Data
 
-We're going to work with morphological data from Galapagos finches, which is available from BIRDD: Beagle Investigation Return with Darwinian Data at <http://bioquest.org/birdd/morph.php>. It is originally from Sato et al. 2000 Mol. Biol. Evol. <http://mbe.oxfordjournals.org/content/18/3/299.full>.
+We are going to work with morphological data from Galapagos finches, which is available from BIRDD: Beagle Investigation Return with Darwinian Data at <http://bioquest.org/birdd/morph.php>. It is originally from Sato et al. 2000 Mol. Biol. Evol. <http://mbe.oxfordjournals.org/content/18/3/299.full>.
 
 We'll start by reading in and simplifying the data set for the purposes of this exercise. You can run the following code to do this.
 
@@ -55,7 +55,7 @@ ggplot(d, aes(log(wingl), log(beakh))) +
   geom_smooth(method = "lm")
 ```
 
-Notice that I moved `aes(colour = taxon)` within the function `geom_point()`. What would happen if I hadn't done that? That illustrates another way we could model these data. 
+Notice that I moved `aes(colour = taxon)` within the function `geom_point`. What would happen if I hadn't done that? That illustrates another way we could model these data. 
 
 ```{r}
 ggplot(d, aes(log(wingl), log(beakh),colour = taxon)) +
@@ -93,7 +93,7 @@ Notice the new piece `+ (1 | taxon)`. The `1` it refers to "intercept" and the `
 
 # Plotting the predictions
 
-Let's look at what we just did. Will start by plotting the predictions. To do that, will use the `predict` function. Because we are applying it an object of class `merMod` (meaning it was created by the `lmer` function), we can get details on that function at `?predict.merMod`.
+Let's look at what we just did. We'll start by plotting the predictions. To do that, will use the `predict` function. Because we are applying it an object of class `merMod` (meaning it was created by the `lmer` function), we can get details on that function at `?predict.merMod`.
 
 ```{r}
 d$predict_lmer <- predict(m_lmer)
@@ -109,13 +109,13 @@ ggplot(d, aes(log(wingl), log(beakh), colour = taxon)) +
 
 What do you notice about the intercepts? What do you notice about the slopes? How does this compare to the previous 2 models we fit?
 
-There is another kind of prediction we can make with a mixed effects model. We can make a prediction at the "population" level. This is our expectation if we sampled a new taxon of unknown identity:
+There is another kind of prediction we can make with a mixed effects model. We can make a prediction at the "population" level. This is our expectation if we sampled a new taxon of unknown identity. With the lme4 package, we can do that by adding the argument `re.form = NA` to the `predict` function:
 
 ```{r}
 d$predict_lmer_population <- predict(m_lmer, re.form = NA)
 ```
 
-Let's add the population prediction to the plot:
+Let's add the population prediction to the plot in black with a thicker line:
 
 ```{r}
 ggplot(d, aes(log(wingl), log(beakh), colour = taxon)) +
@@ -164,13 +164,13 @@ We can get the intercept estimates for each taxon in a couple of ways. Let's try
 fixef(m_lmer)[[1]] + ranef(m_lmer)$taxon
 ```
 
-Or we can use the function `coef()` to combine them for us.
+Or we can use the function `coef` to combine them for us.
 
 ```{r}
 coef(m_lmer)
 ```
 
-As with most modelling functions in R, we can get details on the model fit with the function `summary()`, in this case we are actually calling `summary.merMod`. Let's look at the output and figure out what it means. 
+As with most modelling functions in R, we can get details on the model fit with the function `summary`, in this case we are actually calling `summary.merMod`. Let's look at the output and figure out what it means. 
 
 ```{r}
 summary(m_lmer)
@@ -203,7 +203,7 @@ Correlation of Fixed Effects:
 log(wingl) -0.951
 ```
 
-This tells us that our intercept and slope are highly correlated. This isn't a great, and if this correlation is very strong and our model is complicated it might result in computational problems. Later we will talk about ways of solving this (hint: we'll "center" the predictor). 
+This tells us that our intercept and slope are highly correlated. This isn't a great, and if this correlation is very strong and our model is complicated it might result in computational problems. Later we will talk about ways of solving this (hint: we'll "center" the predictor by subtracting the mean). 
 
 There are a lot of details in the output from `summary.merMod` and usually a lot more decimal points than are necessary. 
 
@@ -213,7 +213,7 @@ A nice alternative is the function `arm::display` which focuses on the important
 arm::display(m_lmer)
 ```
 
-We will tend to use this function throughout the workshop. I tend not to load the package arm, and instead call its functions directly (e.g. `arm::display()`) because it loads many other functions and packages.
+We will tend to use this function throughout the workshop. I tend not to load the package arm, and instead call its functions directly (e.g. `arm::display`) because the package loads many other functions and packages.
 
 # Interpreting the model predictions
 
@@ -229,11 +229,11 @@ Remember that we are modelling a log(predictor) and a log(response). So we are a
 
 Here, our slope indicates that a 1% change in wing length corresponds to a `r slope`% change in beak length.
 
-What does our intercept mean? Will in this case, it's not very meaningful. It's the expected log(beak length) when log(wing length) = 0. In other words, we would expect a bird with a wing length of 1 to have a beak length of `round(exp(fixef(m_lmer)[[1]]), 2)`.
+What does our intercept mean? Will in this case, it's not very meaningful. It's the expected log(beak length) when log(wing length) = 0. In other words, we would expect a bird with a wing length of 1 to have a beak length of `r round(exp(fixef(m_lmer)[[1]]), 2)`.
 
 How might we make the intercept more meaningful if we were to refit this model?
 
-# Conclusion
+# Addendum
 
 George Box, a famous statistician, once wrote "...all models are wrong, but some are useful".
 
