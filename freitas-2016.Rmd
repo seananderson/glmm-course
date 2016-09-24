@@ -1,0 +1,300 @@
+```{r, eval=FALSE}
+
+library(tidyverse)
+d <- readr::read_csv("data/raw/freitas-2016/Cod_daily_depth_data.csv")
+d <- mutate(d, date = lubridate::dmy(date)) %>%
+  rename(temperature = Temperature_1m) %>%
+  na.omit %>% as_data_frame() %>%
+  arrange(fish, date)
+
+ggplot(d, aes(temperature, log(depth_mean_day))) + geom_point() +
+  facet_wrap(~fish)
+
+# ggplot(d, aes(log(temperature), log(depth_mean_night))) + geom_point() +
+  # facet_wrap(~fish)
+
+# TODO maybe center predictor first? (very high correlation) no log
+
+library(nlme)
+
+m <- lme(log(depth_mean_day)~temperature, data = d, random = ~ 1 | fish)
+
+summary(m)
+pred <- broom::augment(m)
+
+ggplot(pred, aes(date, .resid)) + geom_point() +
+  facet_wrap(~fish)
+
+m1 <- lme(log(depth_mean_day)~temperature, data = d, random = ~ 1 | fish, 
+  correlation = corAR1())
+
+summary(m)
+summary(m1)
+
+pred1 <- broom::augment(m1)
+
+pred1$resid1 <- residuals(m1, type = "normalized")
+
+ggplot(pred1, aes(date, resid1)) + geom_point() +
+  facet_wrap(~fish)
+
+m2 <- lme(log(depth_mean_day)~temperature, data = d, random = ~ 1 | fish, 
+  correlation = corARMA(p = 1, q = 1))
+
+pred1$resid2 <- residuals(m2, type = "normalized")
+ggplot(pred1, aes(date, resid2)) + geom_point() +
+  facet_wrap(~fish)
+
+m3 <- lme(log(depth_mean_day)~temperature, data = d, random = ~ 1 | fish, 
+  correlation = corARMA(p = 2, q = 1))
+
+pred1$resid3 <- residuals(m3, type = "normalized")
+ggplot(pred1, aes(date, resid3)) + geom_point() +
+  facet_wrap(~fish)
+
+# not much better
+# m4 <- lme(log(depth_mean_day)~log(temperature), data = d, random = ~ 1 | fish, 
+#   correlation = corARMA(p = 1, q = 2))
+# m5 <- lme(log(depth_mean_day)~log(temperature), data = d, random = ~ 1 | fish, 
+#   correlation = corARMA(p = 2, q = 2))
+summary(m4)
+summary(m5)
+AIC(m)
+AIC(m1)
+AIC(m2)
+AIC(m3)
+AIC(m4)
+AIC(m5)
+
+##### here:
+d <- d %>% mutate(temperature_centered = temperature - mean(temperature))
+
+# why might we log response?
+# why x? why not?
+# why scale, why not? units? meaning?
+
+m99 <- lme(log(depth_mean_day)~temperature_centered, data = d, 
+  random = ~ 1 | fish, 
+  correlation = corAR1())
+
+summary(m99)
+# correlation better!
+
+# what does this beta mean?
+
+# how would we write out the model?
+
+# which ARMA? why? does it matter?
+
+m99s <- lme(log(depth_mean_day)~temperature_centered, data = d, 
+  random = ~ 1 + temperature_centered | fish, 
+  correlation = corAR1())
+
+
+est <- d %>% group_by(fish) %>%
+  do(mod = 
+      gls(log(depth_mean_day) ~ temperature_centered, data = . , 
+        correlation = corAR1(value = 0.82, fixed = TRUE))) %>%
+  mutate(slope = coef(mod)[2]) %>%
+  select(-mod)
+
+AIC(m99)
+AIC(m99s)
+
+est$re_slope <- ranef(m99s)[,2]
+est$re_int <- ranef(m99s)[,1]
+
+est %>% gather(type, slope, slope, re_slope) %>%
+  ggplot(aes(type, slope, group = fish)) + geom_point(alpha = 0.5) +
+  geom_line(alpha = 0.3)
+
+d$pred <- predict(m99s)
+
+d <- group_by(d, fish) %>% mutate(n = n(), mean_temp = mean(temperature_centered)) %>%
+  ungroup()
+
+d %>%
+  ggplot(aes(temperature, group = fish)) + 
+  # geom_point(aes(y = depth_mean_day), alpha = 0.05) +
+  geom_line(aes(y = exp(pred)), alpha = 0.6)
+
+g <- group_by(d, fish) %>% summarise(n = n(), mean_temp = mean(temperature))
+g <- inner_join(g, est)
+
+ggplot(g, aes(mean_temp, re_slope)) + geom_point()
+
+ggplot(g, aes(mean_temp, re_int)) + geom_point()
+
+# prob not:
+m99se <- lme(log(depth_mean_day)~temperature_centered + mean_temp, data = d, 
+  random = ~ 1 + temperature_centered | fish, 
+  correlation = corAR1())
+summary(m99se)
+
+d <- d %>% mutate(day = as.numeric(date) - min(as.numeric(d$date))) %>%
+  mutate(day_scaled = (day - mean(day)) / sd(day)) %>%
+  mutate(temperature_scaled = temperature_centered / sd(temperature_centered)) %>%
+  mutate(mean_temp_scaled = mean_temp / sd(mean_temp))
+d$mean_temp_scaled <- d$mean_temp / sd(d$mean_temp) #??
+
+
+m99se1 <- lme(log(depth_mean_day) ~ temperature_scaled + day_scaled, 
+  data = d, 
+  random = ~ 1 + temperature_centered | fish, 
+  correlation = corAR1())
+summary(m99se1)
+
+g <- group_by(d, fish) %>% summarise(n = n(), mean_temp = mean(temperature))
+g <- inner_join(g, est)
+g$re_slope <- ranef(m99se1)[,2]
+g$re_int <- ranef(m99se1)[,1]
+
+ggplot(g, aes(mean_temp, re_int)) + geom_point()
+
+m99se2 <- lme(log(depth_mean_day) ~ temperature_scaled + day_scaled + mean_temp_scaled, 
+  data = d, 
+  random = ~ 1 + temperature_scaled | fish, 
+  correlation = corAR1())
+summary(m99se2)
+
+# look at re int sd change
+
+d$resid_m99 <- residuals(m99se2, type = "normalized")
+ggplot(d, aes(date, resid_m99)) + geom_point() +
+  facet_wrap(~fish)
+
+# pred
+
+p <- expand.grid(
+  fish = unique(d$fish), 
+  temperature_scaled = 
+    seq(min(d$temperature_scaled), max(d$temperature_scaled), length.out = 50),
+  mean_temp_scaled = 0,
+  day_scaled = 0) %>%
+  mutate(temperature = temperature_scaled * sd(d$temperature_centered) + 
+      mean(d$temperature)) %>%
+  as_data_frame()
+
+
+p$pred <- predict(m99se2, newdata = p)
+
+d$pred <- predict(m99se2)
+
+ggplot(p, aes(group = fish)) + geom_line(aes(temperature, -exp(pred)), alpha = 0.5) +
+  ylab("Depth (m)")
+# extrapolating - not ideal
+
+ggplot(p, aes(group = fish)) + geom_line(aes(temperature, exp(pred))) +
+  geom_point(data = d, aes(x = temperature, y = depth_mean_day), alpha = 0.1)
+
+ggplot(d, aes(group = fish)) + geom_line(aes(temperature, exp(pred))) +
+  geom_point(data = d, aes(x = temperature, y = depth_mean_day), alpha = 0.1)
+
+# with real mean temp
+p$mean_temp_scaled <- NULL
+p$mean_temp <- NULL
+p <- inner_join(p, unique(select(d, fish, mean_temp_scaled, mean_temp)))
+
+p$pred2 <- predict(m99se2, newdata = p)
+d$pred2 <- predict(m99se2, newdata = d)
+ggplot(d, aes(group = fish, colour = mean_temp)) + 
+  geom_line(aes(temperature, -exp(pred2)), alpha = 0.5) +
+  ylab("Depth (m)")
+
+p <- d %>% group_by(fish) %>% summarise(
+  min_temp = min(temperature_centered),
+  max_temp = max(temperature_centered)) %>%
+  group_by(fish) %>%
+  do({
+    data_frame(
+      fish = rep(.$fish, 100), 
+      temperature_centered = seq(.$min_temp, .$max_temp, length.out = 100))
+  }) %>%
+mutate(temperature = temperature_centered + mean(d$temperature))
+
+# m99se2 <- lme(log(depth_mean_day) ~ temperature_scaled + day_scaled, 
+#   data = d, 
+#   random = ~ 1 + temperature_scaled | fish, 
+#   correlation = corAR1())
+# summary(m99se2)
+
+# d$pred2 <- predict(m99se2, newdata = d)
+
+ggplot(d, aes(group = fish)) + 
+  geom_line(aes(temperature, -exp(pred2)), alpha = 0.5) +
+  ylab("Depth (m)")
+
+m99se2 <- lme(log(depth_mean_day) ~ temperature_centered,
+  data = d, 
+  random = ~ 1 + temperature_centered | fish, 
+  correlation = corAR1())
+summary(m99se2)
+plot(m99se2)
+
+plot(fitted(m99se2), residuals(m99se2, type = "normalized"))
+plot(m99se2, resid(., type = "normalized") ~ fitted(.) | fish, abline = 0)
+plot(m99se2, resid(., type = "normalized") ~ fitted(.), abline = 0)
+plot(ACF(m99se2, resType = "normalized"))
+
+phi <- coef(m99se2$modelStruct$corStruct, unconstrained = FALSE)[[1]]
+
+m99se3 <- lme(log(depth_mean_day) ~ temperature_centered,
+  data = d, 
+  random = ~ 1 + temperature_centered | fish, 
+  correlation = corAR1(value = phi, fixed = TRUE), 
+  weights = varExp(form=~temperature_centered))
+summary(m99se3)
+plot(m99se3)
+plot(fitted(m99se3), residuals(m99se3, type = "normalized"))
+
+p$pred2 <- predict(m99se2, newdata = p)
+p$pred_population <- predict(m99se2, newdata = p, level = 0)
+
+source("drafts/predict_pop_ci.R")
+pp <- predict_pop_ci(m99se2, p)
+p$lwr <- pp$lwr
+p$upr <- pp$upr
+
+ggplot(p) + 
+  geom_line(aes(temperature, -exp(pred2), group = fish), alpha = 0.5) +
+  geom_line(aes(temperature, -exp(pred_population)), colour = "red", lwd = 1) +
+  geom_ribbon(aes(temperature, ymax = -exp(upr), ymin = -exp(lwr)), 
+    fill = "red", alpha = 0.2) +
+  ylab("Depth (m)") + 
+  theme_light()
+
+
+plot(ACF(m99se2, resType = "normalized")
+```
+
+Probably drop mean_temp_scaled (maybe show once?)
+
+modelling never done, but stop
+be aware of / understand weaknesses of approach (there always are)
+
+What show?
+
+What int. mean?
+
+What else? Space?
+
+How write model?
+
+$$
+\log(D_i) = \alpha_{j[i]} + \beta T_i + \epsilon_i, 
+  \; \epsilon_i \sim \text{N}(\phi \epsilon_{i-1}, \sigma^2), 
+  \; \text{for } i = 1, ..., n, \\
+\alpha_j \sim \text{N}(\mu_\alpha, \sigma_\alpha^2),
+  \; \text{for } j = 1, ..., J, \\
+$$
+
+where...
+
+>  location.var <- varIdent(form=~1|Location)
+
+>  time.var <- varFixed(~Time)
+
+>  x <- varComb(location.var, time.var)
+
+> Model.3 <- lme(H ~ Size + Isolation + Location + Size:Isolation + Size:Location + Isolation:Location, random=~1|PATCH/TREE, weights=x, data = Herbivory)
+
