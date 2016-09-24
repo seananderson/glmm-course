@@ -5,7 +5,7 @@ Title: Manipulating data with dplyr and pipes
 # Goals
 
 - Become familiar with the 5 dplyr verbs of data manipulation
-- Be comfortable chaining multiple R commands with the `%>%` (pipe) symbol
+- Be comfortable chaining R commands with the `%>%` (pipe) symbol
 
 # dplyr
 
