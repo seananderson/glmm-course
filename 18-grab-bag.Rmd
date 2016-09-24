@@ -1,0 +1,5 @@
+---
+title: Grab bag
+---
+
+Power simulation for GLMMs: <https://rpubs.com/bbolker/11703>
