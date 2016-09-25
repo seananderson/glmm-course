@@ -37,9 +37,9 @@ It turns out that you need wide-format data for some types of data analysis and 
 
 # tidyr
 
-tidyr is a successor to the reshape2 package. It doesn't do everything that the reshape2 package does (and if you need that, see my blog post here: TODO). But it covers the majority of data reshaping and it does it more elegantly than reshape2 (read: it works nicely with the data pipe, `%>%`).
+tidyr is a successor to the reshape2 package. It doesn't do everything that the reshape2 package does (and if you need that, see my [blog post](http://seananderson.ca/2013/10/19/reshape.html)). But it covers the majority of data reshaping and it does it more elegantly than reshape2 (read: it works nicely with the data pipe, `%>%`).
 
-tiyr is based around two key functions: `gather()` and `spread()`.
+tidyr is based around two key functions: `gather()` and `spread()`.
 
 `gather` goes from wide-format data and *gathers* it into fewer columns.
 
