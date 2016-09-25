@@ -166,6 +166,20 @@ How can we include this information in our model?
 d <- left_join(d, taxa_dat, by = "taxon")
 m_slopes2 <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl +
     (1 + log_wingl_centered | taxon), data = d)
+```
+
+```{r}
+AIC(m_int, m_slopes, m_slopes2)
+bbmle::AICtab(m_int, m_slopes, m_slopes2)
+```
+
+What are those 7 parameters in `m_slopes2`? (Note that there is no unambiguous answer.)
+
+```{r}
+tidy(m_slopes2)
+```
+
+```{r}
 arm::display(m_slopes)
 arm::display(m_slopes2)
 ```
