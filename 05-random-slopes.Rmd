@@ -132,7 +132,7 @@ Hint 1: "random" intercepts are supposed to be just that: random. There shouldn'
 
 Hint 2: What do you think a plot of the intercepts against mean log(wing length) would look like?
 
-Before we dig into this, we're going to refit the models with a centered predictor. This just means we will subtract the mean log(wing length) for each taxon. In a later exercise we will dive more into this. For now, just know that this will make the rest of this exercise easier to interpret because our intercept estimates will be at `log(wingl)` = `r round(mean(log(d$wingl)), 1)` instead of `log(wingl)` = 0.
+Before we dig into this, we're going to refit the models with a centered predictor. This just means we will subtract the mean of log(wing length) from the predictor. In a later exercise we will dive more into this. For now, just know that this will make the rest of this exercise easier to interpret because our intercept estimates will be at `log(wingl)` = `r round(mean(log(d$wingl)), 1)` instead of `log(wingl)` = 0.
 
 ```{r}
 d <- d %>% mutate(log_wingl_centered = log(wingl) - mean(log(wingl)))
