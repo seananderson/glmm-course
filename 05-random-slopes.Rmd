@@ -1,0 +1,228 @@
+---
+Title: Introduction to random intercept and slope models
+---
+
+# Goals
+
+- Extend our understanding of mixed effects models to random slopes
+- Start thinking about model checking
+- Learn about group-level predictors. What are they? Why might we use them?
+- Develop an intuition about partial pooling of information/shrinkage
+
+# Data
+
+We're going to start with the same data from the random intercepts exercise and extend the model to have random slopes. 
+
+Let's read in the data we cleaned up last time. 
+
+```{r}
+library(tidyverse)
+d <- readRDS("data/generated/morph-geospiza.rds")
+```
+
+Let's plot the data to remember what they looked like. 
+
+```{r}
+ggplot(d, aes(log(wingl), log(beakh), colour = taxon)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+# Fitting a model with random intercepts and slopes
+
+Last time we assumed that the slopes were constant across taxa. The above plot suggests that they might not be. 
+
+Let's modify the mixed effects model we fit last time by allowing the slopes to vary. 
+
+```{r}
+library(lme4)
+m_int <-  lmer(log(beakh) ~ log(wingl) + (1 | taxon), data = d)
+m_slopes <-  lmer(log(beakh) ~ log(wingl) + (1 + log(wingl) | taxon), data = d)
+```
+
+We can make predictions just like before. 
+
+```{r}
+d$predict_int <- predict(m_int)
+d$predict_slopes <- predict(m_slopes)
+```
+
+We'll plot the random intercept predictions in `"grey"` and the random slope predictions in `"black"`. Add a line of code to plot the random slope predictions: 
+
+```{r}
+ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
+  geom_point(alpha = 0.1) +
+  geom_line(aes(y = predict_int), colour = "grey") +
+  geom_line(aes(y = predict_slopes), colour = "black") # exercise
+```
+
+# Interpreting the models
+
+Let's look at the output from those 2 models.
+
+```{r}
+arm::display(m_int)
+arm::display(m_slopes)
+```
+
+A useful package that we will use repeatedly is the broom package. This package provides a set of consistent functions for extracting information from nearly any type of model in R. In particular, we will use the function `broom::tidy`, which returns information about parameter estimates in a tidy data frame, and the function `broom::augment`, which returns a tidy data frame of predictions, residuals, and other useful columns.
+
+To read the documentation for the functions as they apply to `lme4`, see `broom::tidy.merMod` or `broom::augment.merMod`.
+
+```{r}
+library(broom)
+tidy(m_slopes, conf.int = TRUE)
+tidy(m_int, conf.int = TRUE)
+```
+
+Inspect the output. Do you understand what all the terms mean?
+
+What has changed? In particular, what has changed about the main effect slope estimate for `log(wingl)` and uncertainty about this estimate? Why might this be?
+
+# Criticizing the models 
+
+Let's extract residuals, predictions, and fitted values from the model objects using the `broom::augment` functions.
+
+```{r}
+aug_int <- augment(m_int)
+aug_slopes <- augment(m_slopes)
+```
+
+One important model diagnostic is plotting the residuals against the fitted values. Here (for *linear* models), "fitted" is another word for the predictions.
+
+We'll add a smoother to help visualize any issues with the residuals. 
+
+```{r, warning=FALSE}
+ggplot(aug_int, aes(.fitted, .resid)) + geom_point() + 
+  facet_wrap(~taxon, scales = "free") +
+  geom_smooth(se = FALSE)
+```
+
+Is there anything concerning with the above plot?
+
+```{r, warning=FALSE}
+ggplot(aug_slopes, aes(.fitted, .resid)) + geom_point() + 
+  facet_wrap(~taxon, scales = "free") +
+  geom_smooth(se = FALSE)
+```
+
+This looks a bit better. Why is that? But there are still some problems. The biggest issue, to me, is the curve that we see for *Geospiza forti*:
+
+```{r, warning=FALSE}
+filter(aug_slopes, taxon == "Geospiza fortis") %>%
+ggplot(aes(.fitted, .resid)) + geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+For now, we are going to move on. But how might we fix this?
+
+# Group-level predictors
+
+There is another, perhaps less obvious, issue with our model. Let's look at our model predictions overlaid with the data again:
+
+```{r}
+ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
+  geom_point(alpha = 0.1) +
+  geom_line(aes(y = predict_slopes), colour = "black")
+```
+
+Ignoring phylogenetic relatedness (some taxa are more related to each other than others), what is an issue with our model? 
+
+Hint 1: "random" intercepts are supposed to be just that: random. There shouldn't be any systematic pattern in their values that we can explain. If there is, we can include that in the model.
+
+Hint 2: What do you think a plot of the intercepts against mean log(wing length) would look like? 
+Before we dig into this, we're going to refit the models with a centered predictor. This just means we will subtract the mean log(wing length) for each taxon. In a later exercise we will dive more into this. For now, just know that this will make the rest of this exercise easier to interpret because our intercept estimates will be at `log(wingl)` = `r round(mean(log(d$wingl)), 1)` instead of `log(wingl)` = 0.
+
+```{r}
+d <- d %>% mutate(log_wingl_centered = log(wingl) - mean(log(wingl)))
+m_int <-  lmer(log(beakh) ~ log_wingl_centered + (1 | taxon), data = d)
+m_slopes <- lmer(log(beakh) ~ log_wingl_centered + (1 + log_wingl_centered | taxon), data = d)
+```
+
+Let's make a plot of the intercepts against the mean of log(wing length). 
+
+Try finishing the last line of dplyr code to calculate the mean log(wing length) for each value of the `taxon` column.
+
+```{r}
+taxa_dat <- group_by(d, taxon) %>% 
+  summarise(mean_log_wingl = 
+      mean(log_wingl_centered)) # exercise
+```
+
+In the last lesson, we learned how to extract the random effect coefficient estimates. Write a line of code below to extract the random intercept estimates from `m_slopes` including the global/main-effect intercept. Hint: use the function `coef`, the `$`, and access the correct column with `[,]`.
+
+```{r}
+re_int <- 
+  coef(m_slopes)$taxon[,1] # exercise
+taxa_dat$intercept <- re_int
+```
+
+```{r}
+ggplot(taxa_dat, aes(mean_log_wingl, intercept)) + geom_point()
+```
+
+How can we include this information in our model? 
+
+```{r}
+d <- left_join(d, taxa_dat, by = "taxon")
+m_slopes2 <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl +
+    (1 + log_wingl_centered | taxon), data = d)
+arm::display(m_slopes)
+arm::display(m_slopes2)
+```
+
+In particular, take a look at the standard deviation of the random intercepts. Notice that our model with a group-level predictor has a lower random intercept standard deviation.
+
+We have added useful information to the model to explain what was before considered "random" noise. And we have increased the partial pooling of information across groups.
+
+Let's check our random intercepts again:
+
+```{r}
+taxa_dat$intercept_with_group_predictor <- coef(m_slopes2)$taxon[,1]
+p1 <- ggplot(taxa_dat, aes(mean_log_wingl, intercept)) + geom_point() +
+  ylim(2.1, 2.8)
+p2 <- ggplot(taxa_dat, aes(mean_log_wingl, intercept_with_group_predictor)) + 
+  geom_point() + ylim(2.1, 2.8)
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+# Illustrating partial-pooling/shrinkage
+
+One of the major benefits of mixed effects modeling is something we call "shrinkage". The mixed effects model should partially pool information across groups allowing us to make better predictions for groups that we have less information about.
+
+Here are 2 quick ways we can looked at the partial pooling in our model. We'll compare our predictions from model with random intercepts, random slopes, and a group-level predictor against the prediction from separate linear models group. We'll indicate the sample size by the width of the mixed effects model prediction lines.
+
+```{r}
+d$predict_slopes2 <- predict(m_slopes2)
+d <- d %>% group_by(taxon) %>% mutate(n = n())
+ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
+  geom_point(alpha = 0.1) +
+  geom_line(aes(y = predict_slopes2, size = n), colour = "black") +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+What do you notice in the above plot? When do the predictions differ the most? Why is that? Which makes more sense?
+
+The following is a common way to show shrinkage. Hopefully it makes a bit more sense after seeing the above plot. 
+
+```{r}
+estimates <- d %>% group_by(taxon) %>%
+  do(mod = lm(log(beakh) ~ log_wingl_centered, data = .)) %>%
+  mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
+  select(-mod)
+estimates$re_int <-  coef(m_slopes2)$taxon[,1]
+estimates$re_slope <-  coef(m_slopes)$taxon[,2]
+
+sample_sizes <- d %>% group_by(taxon) %>%
+  summarise(n = n())
+estimates$n <- sample_sizes$n
+
+ggplot(estimates, aes(x = "lm()", y = slope, xend = "lmer()", yend = re_slope)) +
+  geom_segment(alpha = 0.5) +
+  geom_point(aes(size = n)) +
+  xlab("")
+```
+
+# Addendum 
+
+Our model still isn't perfect. (No model is!) What are some assumptions we are making in this model that probably aren't correct? How might we check these assumptions and how might we make the model better?
