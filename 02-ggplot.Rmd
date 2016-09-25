@@ -1,6 +1,4 @@
----
-Title: An introduction to ggplot2 for rapid data and model visualization
----
+% An introduction to ggplot2 for rapid data and model visualization
 
 # Goals
 

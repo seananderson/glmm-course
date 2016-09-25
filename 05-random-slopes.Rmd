@@ -1,6 +1,4 @@
----
-Title: Introduction to random intercept and slope models
----
+% Introduction to random intercept and slope models
 
 # Goals
 

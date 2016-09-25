@@ -4,11 +4,8 @@ output: html_document
 ---
 
 ```{r, message=FALSE}
-library(ggplot2)
-library(dplyr)
+library(tidyverse)
 library(broom)
-library(tidyr)
-library(readr)
 library(lme4)
 ```
 

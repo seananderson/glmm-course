@@ -1,6 +1,4 @@
----
-Title: Introduction to random intercepts
----
+% Introduction to random intercept models
 
 # Goals
 

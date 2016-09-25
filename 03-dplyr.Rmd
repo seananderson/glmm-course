@@ -1,6 +1,4 @@
----
-Title: Manipulating data with dplyr and pipes
----
+% Manipulating data with dplyr and pipes
 
 # Goals
 

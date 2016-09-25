@@ -1,6 +1,4 @@
----
-Title: Manipulating data with tidyr
----
+% Manipulating data with tidyr
 
 # Goals
 
@@ -13,7 +11,7 @@ Title: Manipulating data with tidyr
 Wide data has a column for each variable.
 
 ```{r}
-library(dplyr)
+library(tidyverse)
 air <- airquality # built into R
 names(air) <- tolower(names(air))
 air <- as_data_frame(air) %>% 
