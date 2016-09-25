@@ -4,9 +4,9 @@ Title: Introduction to random intercepts
 
 # Goals
 
-- Learn to fit basic random intercept models with the `lme4::lmer` function
-- Learn to interpret the output from a `lme4::lmer` model
+- Learn to fit a "random intercepts" models with the `lme4::lmer` function
 - Learn to plot the output from a `lme4::lmer` model
+- Learn to interpret the output from a `lme4::lmer` model
 
 # Data
 
@@ -20,11 +20,12 @@ morph <- read.csv("data/raw/Morph_for_Sato.csv", stringsAsFactors = FALSE,
   strip.white = TRUE)
 names(morph) <- tolower(names(morph)) # make columns names lowercase
 morph <- morph %>%
-  select(islandid, taxonorig, genusl69, speciesl69, sex, wingl, beakh, ubeakl) %>%
-  rename(taxon = taxonorig, genus = genusl69, species = speciesl69)
+  dplyr::select(islandid, taxonorig, genusl69, speciesl69, sex, wingl, beakh, ubeakl) %>%
+  dplyr::rename(taxon = taxonorig, genus = genusl69, species = speciesl69)
 morph <- data.frame(na.omit(morph)) # remove all rows with any NAs to make this simple
-morph <- filter(morph, genus == "Geospiza") %>% as_data_frame()
+morph <- dplyr::filter(morph, genus == "Geospiza") %>% as_data_frame()
 d <- morph
+saveRDS(d, file = "data/generated/morph-geospiza.rds") # save data for later
 ```
 
 # Initial plotting 

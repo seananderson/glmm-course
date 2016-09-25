@@ -2,3 +2,5 @@
 .Rproj.user
 
 *.html
+
+data/generated/morph-geospiza.rds
