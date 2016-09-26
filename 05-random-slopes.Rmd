@@ -86,29 +86,33 @@ aug_int <- augment(m_int)
 aug_slopes <- augment(m_slopes)
 ```
 
-One important model diagnostic is plotting the residuals against the fitted values. Here (for *linear* models), "fitted" is another word for the predictions.
+One important model diagnostic is plotting the residuals against the fitted values. Here, "fitted" is another word for the predictions.
 
-We'll add a smoother to help visualize any issues with the residuals. 
+We'll start with the random intercepts model:
 
 ```{r, warning=FALSE, message=FALSE}
-ggplot(aug_int, aes(.fitted, .resid)) + geom_point() + 
+ggplot(aug_int, aes(.fitted, .resid)) + 
+  geom_point(alpha = 0.6) + 
   facet_wrap(~taxon, scales = "free") +
-  geom_smooth(se = FALSE)
+  geom_hline(yintercept = 0, lty = 2)
 ```
 
 Is there anything concerning with the above plot?
 
+And now, the random intercepts and slopes model:
+
 ```{r, warning=FALSE, message=FALSE}
-ggplot(aug_slopes, aes(.fitted, .resid)) + geom_point() + 
+ggplot(aug_slopes, aes(.fitted, .resid)) + 
+  geom_point(alpha = 0.6) + 
   facet_wrap(~taxon, scales = "free") +
-  geom_smooth(se = FALSE)
+  geom_hline(yintercept = 0, lty = 2)
 ```
 
 This looks a bit better. Why is that? But there are still some problems. The biggest issue, to me, is the curve that we see for *Geospiza forti*:
 
 ```{r, warning=FALSE, message=FALSE}
 filter(aug_slopes, taxon == "Geospiza fortis") %>%
-ggplot(aes(.fitted, .resid)) + geom_point() + 
+  ggplot(aes(.fitted, .resid)) + geom_point() + 
   geom_smooth(se = FALSE)
 ```
 
@@ -116,19 +120,7 @@ For now, we are going to move on. But how might we fix this?
 
 # Group-level predictors
 
-There is another, perhaps less obvious, issue with our model. Let's look at our model predictions overlaid with the data again:
-
-```{r}
-ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
-  geom_point(alpha = 0.1) +
-  geom_line(aes(y = predict_slopes), colour = "black")
-```
-
-Ignoring phylogenetic relatedness (some taxa are more related to each other than others), what is an issue with our model? 
-
-Hint 1: "random" intercepts are supposed to be just that: random. There shouldn't be any systematic pattern in their values that we can explain. If there is, we can include that in the model.
-
-Hint 2: What do you think a plot of the intercepts against mean log(wing length) would look like?
+There is another, perhaps less obvious, issue with our model. 
 
 Before we dig into this, we're going to refit the models with a centered predictor. This just means we will subtract the mean of log(wing length) from the predictor. In a later exercise we will dive more into this. For now, just know that this will make the rest of this exercise easier to interpret because our intercept estimates will be at `log(wingl)` = `r round(mean(log(d$wingl)), 1)` instead of `log(wingl)` = 0.
 
@@ -138,9 +130,22 @@ m_int <-  lmer(log(beakh) ~ log_wingl_centered + (1 | taxon), data = d)
 m_slopes <- lmer(log(beakh) ~ log_wingl_centered + (1 + log_wingl_centered | taxon), data = d)
 ```
 
-Let's make a plot of the intercepts against the mean of log(wing length). 
+Let's look at our model predictions overlaid with the data again:
 
-Try finishing the last line of dplyr code to calculate the mean log(wing length) for each value of the `taxon` column.
+```{r}
+ggplot(d, aes(log_wingl_centered, log(beakh), colour = taxon, group = taxon)) +
+  geom_point(alpha = 0.1) +
+  geom_line(aes(y = predict_slopes), colour = "black") +
+  geom_vline(xintercept = 0, lty = 2)
+```
+
+Ignoring phylogenetic relatedness (some taxa are more related to each other than others), what is an issue with our model? 
+
+Hint 1: "random" intercepts are supposed to be just that: random. There shouldn't be any systematic pattern in their values that we can explain. If there is, we can include that in the model.
+
+Hint 2: What do you think a plot of the intercepts (where the solid prediction lines cross the dashed zero line) against mean log(wing length) would look like?
+
+Let's make a plot of the intercepts against the mean of log(wing length). Try finishing the last line of dplyr code to calculate the mean log(wing length) for each value of the `taxon` column.
 
 ```{r}
 taxa_dat <- group_by(d, taxon) %>% 
@@ -164,24 +169,25 @@ How can we include this information in our model?
 
 ```{r}
 d <- left_join(d, taxa_dat, by = "taxon")
-m_slopes2 <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl +
+d %>% select(taxon, wingl, log_wingl_centered, mean_log_wingl)
+m_slopes_gr <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl +
     (1 + log_wingl_centered | taxon), data = d)
 ```
 
 ```{r}
-AIC(m_int, m_slopes, m_slopes2)
-bbmle::AICtab(m_int, m_slopes, m_slopes2)
+AIC(m_int, m_slopes, m_slopes_gr)
+bbmle::AICtab(m_int, m_slopes, m_slopes_gr)
 ```
 
-What are those 7 parameters in `m_slopes2`? (Note that there is no unambiguous answer.)
+What are those 7 parameters in `m_slopes_gr`? (Note that there is no unambiguous answer.)
 
 ```{r}
-tidy(m_slopes2)
+tidy(m_slopes_gr)
 ```
 
 ```{r}
 arm::display(m_slopes)
-arm::display(m_slopes2)
+arm::display(m_slopes_gr)
 ```
 
 In particular, take a look at the standard deviation of the random intercepts. Notice that our model with a group-level predictor has a lower random intercept standard deviation.
@@ -191,7 +197,7 @@ We have added useful information to the model to explain what was before conside
 Let's check our random intercepts again:
 
 ```{r}
-taxa_dat$intercept_with_group_predictor <- coef(m_slopes2)$taxon[,1]
+taxa_dat$intercept_with_group_predictor <- coef(m_slopes_gr)$taxon[,1]
 p1 <- ggplot(taxa_dat, aes(mean_log_wingl, intercept)) + geom_point() +
   ylim(2.1, 2.8)
 p2 <- ggplot(taxa_dat, aes(mean_log_wingl, intercept_with_group_predictor)) + 
@@ -206,15 +212,26 @@ One of the major benefits of mixed-effects modeling is something we call "shrink
 Here are 2 quick ways we can look at the partial pooling in our model. We'll compare our predictions from the model with random intercepts, random slopes, and a group-level predictor (black) against the predictions from separate linear models (coloured). We'll indicate the sample size by the width of the mixed-effects model prediction lines.
 
 ```{r}
-d$predict_slopes2 <- predict(m_slopes2)
+d$predict_slopes_gr <- predict(m_slopes_gr)
 d <- d %>% group_by(taxon) %>% mutate(n = n())
 ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
   geom_point(alpha = 0.1) +
-  geom_line(aes(y = predict_slopes2, size = n), colour = "black") +
+  geom_line(aes(y = predict_slopes_gr, size = n), colour = "black") +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
 What do you notice in the above plot? When do the predictions differ the most? Why is that? Which makes more sense?
+
+Let's dig into two taxa. What's happening for *Geospiza scandens scandens*? Note that *Geospiza scandens scandens* is a subspecies of *Geospiza scandens*.
+
+```{r}
+filter(d, taxon %in% c("Geospiza scandens", "Geospiza scandens scandens")) %>%
+  ggplot(aes(log(wingl), log(beakh))) +
+  facet_wrap(~taxon) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(aes(colour = taxon), method = "lm", se = FALSE) +
+  geom_line(aes(y = predict_slopes_gr), colour = "black", lwd = 1.5)
+```
 
 The following is a common way to show shrinkage. Hopefully it makes a bit more sense after seeing the above plot. 
 
@@ -223,7 +240,7 @@ estimates <- d %>% group_by(taxon) %>%
   do(mod = lm(log(beakh) ~ log_wingl_centered, data = .)) %>%
   mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
   select(-mod)
-estimates$re_int <-  coef(m_slopes2)$taxon[,1]
+estimates$re_int <-  coef(m_slopes_gr)$taxon[,1]
 estimates$re_slope <-  coef(m_slopes)$taxon[,2]
 
 sample_sizes <- d %>% group_by(taxon) %>%
