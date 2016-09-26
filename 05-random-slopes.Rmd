@@ -175,17 +175,6 @@ m_slopes_gr <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl +
 ```
 
 ```{r}
-AIC(m_int, m_slopes, m_slopes_gr)
-bbmle::AICtab(m_int, m_slopes, m_slopes_gr)
-```
-
-What are those 7 parameters in `m_slopes_gr`? (Note that there is no unambiguous answer.)
-
-```{r}
-tidy(m_slopes_gr)
-```
-
-```{r}
 arm::display(m_slopes)
 arm::display(m_slopes_gr)
 ```
@@ -240,8 +229,8 @@ estimates <- d %>% group_by(taxon) %>%
   do(mod = lm(log(beakh) ~ log_wingl_centered, data = .)) %>%
   mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
   select(-mod)
-estimates$re_int <-  coef(m_slopes_gr)$taxon[,1]
-estimates$re_slope <-  coef(m_slopes)$taxon[,2]
+estimates$re_int <- coef(m_slopes_gr)$taxon[,1]
+estimates$re_slope <- coef(m_slopes)$taxon[,2]
 
 sample_sizes <- d %>% group_by(taxon) %>%
   summarise(n = n())
