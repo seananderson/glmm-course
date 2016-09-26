@@ -56,7 +56,7 @@ ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
 
 # Interpreting the models
 
-Let's look at the output from those 2 models.
+Let's look at the output from those two models.
 
 ```{r}
 arm::display(m_int)
@@ -94,7 +94,7 @@ We'll start with the random intercepts model:
 ggplot(aug_int, aes(.fitted, .resid)) + 
   geom_point(alpha = 0.6) + 
   facet_wrap(~taxon, scales = "free") +
-  geom_hline(yintercept = 0, lty = 2)
+  geom_hline(yintercept = 0, linetype = 2)
 ```
 
 Is there anything concerning with the above plot?
@@ -105,7 +105,7 @@ And now, the random intercepts and slopes model:
 ggplot(aug_slopes, aes(.fitted, .resid)) + 
   geom_point(alpha = 0.6) + 
   facet_wrap(~taxon, scales = "free") +
-  geom_hline(yintercept = 0, lty = 2)
+  geom_hline(yintercept = 0, linetype = 2)
 ```
 
 This looks a bit better. Why is that? But there are still some problems. The biggest issue, to me, is the curve that we see for *Geospiza forti*:
@@ -136,7 +136,7 @@ Let's look at our model predictions overlaid with the data again:
 ggplot(d, aes(log_wingl_centered, log(beakh), colour = taxon, group = taxon)) +
   geom_point(alpha = 0.1) +
   geom_line(aes(y = predict_slopes), colour = "black") +
-  geom_vline(xintercept = 0, lty = 2)
+  geom_vline(xintercept = 0, linetype = 2)
 ```
 
 Ignoring phylogenetic relatedness (some taxa are more related to each other than others), what is an issue with our model? 
@@ -196,9 +196,9 @@ gridExtra::grid.arrange(p1, p2, ncol = 2)
 
 # Illustrating partial-pooling/shrinkage
 
-One of the major benefits of mixed-effects modeling is something we call "shrinkage". The mixed-effects model should partially pool information across groups allowing us to make better predictions for groups that we have less information about.
+One of the major benefits of mixed-effects modeling is something we call "shrinkage". The mixed-effects model should partially pool information across groups allowing us to make better predictions for all groups, and especially for groups that we have less information about.
 
-Here are 2 quick ways we can look at the partial pooling in our model. We'll compare our predictions from the model with random intercepts, random slopes, and a group-level predictor (black) against the predictions from separate linear models (coloured). We'll indicate the sample size by the width of the mixed-effects model prediction lines.
+Here are two quick ways we can look at the partial pooling in our model. We'll compare our predictions from our full mixed-effects model (black) against the predictions from separate linear models (coloured). We'll indicate the sample size by the width of the mixed-effects model prediction lines.
 
 ```{r}
 d$predict_slopes_gr <- predict(m_slopes_gr)
