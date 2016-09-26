@@ -1,6 +1,12 @@
 *.key
 .Rproj.user
-
 *.html
-
 data/generated/morph-geospiza.rds
+data/raw/Bio*
+data/raw/franc*
+data/raw/fre*
+data/raw/sop*
+data/raw/post*
+drafts/Bio*
+exercises/*
+drafts/1230200Database_S1.txt
