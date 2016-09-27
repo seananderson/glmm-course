@@ -188,7 +188,7 @@ ggplot(newdata) +
   geom_line(aes(temperature, -exp(pred_fish), group = fish, colour = n), alpha = 0.5) +
   geom_line(aes(temperature, y = -exp(fit)), colour = "red", lwd = 1.25) +
   geom_ribbon(aes(temperature, ymax = -exp(upr), ymin = -exp(lwr)), fill = "red", alpha = 0.2) +
-  labs(ylab = "Depth (m)", xlab = "Temperature (C)", colour = "Samples") +
+  labs(y = "Depth (m)", x = "Temperature (C)", colour = "Samples") +
   theme_light() +
   scale_colour_distiller(palette = "Greys", direction = 1)
 ```
