@@ -3,7 +3,7 @@
 # Goals
 
 - Learn how to identify temporal autocorrelation in mixed effect model residuals
-- Learn to model temporal autocorrelation with the nlme package
+- Learn how to model temporal autocorrelation with the nlme package
 - Practice translating models from lme4 to nlme
 
 # Data
@@ -110,7 +110,7 @@ nlme has some built in residual plotting functions that we will use. (Alternativ
 plot(m2, resid(., type = "normalized") ~ fitted(.) | fish, abline = 0)
 ```
 
-Another useful plot to look at is an "autocorrelation function" plot (ACF). This calculates the correlation at increasingly large lags for the residuals within each group (individual tagged fish). We will be using the function `ACF.lme` Again, we will specify `resType = "normalized"`:
+Another useful plot to look at is an "autocorrelation function" plot (ACF). This calculates the correlation at increasingly large lags for the residuals within each group (individual tagged fish). We will be using the function `ACF.lme`. Again, we will specify `resType = "normalized"`:
 
 ```{r}
 plot(ACF(m2, resType = "normalized"))
