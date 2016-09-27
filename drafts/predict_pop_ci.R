@@ -17,9 +17,15 @@ predict_pop_ci <- function(model, newdata, alpha = 0.05) {
   # construct 95% Normal CIs on the link scale and
   # transform back to the response scale:
   crit <- -qnorm(alpha / 2)
-  linkinv(tibble::tibble(
-    fit = pred0,
-    lwr = pred0 - crit * pred.se,
-    upr = pred0 + crit * pred.se
-  ))
+  out <- data.frame(
+    fit = as.numeric(pred0),
+    lwr = as.numeric(pred0 - crit * pred.se),
+    upr = as.numeric(pred0 + crit * pred.se)
+  )
+  if (identical(class(model), "glmerMod")) {
+    out$fit <- linkinv(out$fit)
+    out$lwr <- linkinv(out$lwr)
+    out$upr <- linkinv(out$upr)
+  }
+  out
 }

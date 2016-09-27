@@ -1,0 +1,190 @@
+# Dealing with correlation in residuals
+
+# Goals
+
+- Learn how to identify temporal autocorrelation in mixed effect model residuals
+- Learn to model temporal autocorrelation with the nlme package
+- Practice translating models from lme4 to nlme
+
+# Data
+
+We are going to use data from:
+Freitas, C., E. M. Olsen, H. Knutsen, J. Albretsen, and E. Moland. 2016. Temperature-associated habitat selection in a cold-water marine fish. Journal of Animal Ecology 85:628–637.
+
+In this paper, the authors looked at the effect of ocean temperature on how deep individually tagged Atlantic cod dove along the Norwegian coast.
+
+Let's read in the data and clean it up a bit:
+
+```{r}
+library(tidyverse)
+d <- read_csv("data/raw/freitas-2016/Cod_daily_depth_data.csv") %>%
+  mutate(date = lubridate::dmy(date)) %>%
+  rename(temperature = Temperature_1m) %>%
+  na.omit %>% 
+  as_data_frame() %>%
+  arrange(fish, date)
+d
+```
+
+Let's plot at the data:
+
+```{r}
+ggplot(d, aes(temperature, -log(depth_mean_day))) + 
+  geom_point(alpha = 0.3) +
+  facet_wrap(~fish)
+```
+
+Why does it make sense to work with log(depth)?
+
+Let's fit a basic mixed effects model predicting dive depth from temperature that allows the intercept and sloped to vary with each fish. We are going to center the temperature predictor first to reduce correlation between the intercepts and slopes.
+
+```{r}
+d <- d %>% mutate(temperature_centered = temperature - mean(temperature))
+library(lme4)
+m1 <- lmer(log(depth_mean_day) ~ temperature_centered + 
+    (1 + temperature_centered | fish), data = d)
+arm::display(m1)
+```
+
+Let's look at the model fit.
+
+```{r}
+aug <- broom::augment(m1)
+
+ggplot(aug, aes(temperature_centered, log.depth_mean_day.)) +
+  geom_point(alpha = 0.3) +
+  facet_wrap(~fish) +
+  geom_line(aes(x = temperature_centered, y = .fitted), colour = "red")
+```
+
+And plot the residuals versus the fitted values:
+
+```{r}
+ggplot(aug, aes(.fitted, .resid)) +
+  geom_point(alpha = 0.3) +
+  facet_wrap(~fish) +
+  geom_hline(yintercept = 0, colour = "red")
+```
+
+Something looks a bit funny there with the strips of residuals, but it's not yet clear what is causing that. Can you guess what might be doing this? 
+
+We also know the day of each measurement. Let's try plotting the residuals against date with a panel for each fish. 
+
+```{r}
+aug$date <- d$date
+ggplot(aug, aes(date, .resid)) +
+  geom_point(alpha = 0.3) +
+  facet_wrap(~fish) +
+  geom_hline(yintercept = 0, colour = "red")
+```
+
+That doesn't look good! There are clear patterns in the residuals over time. We call this temporal autocorrelation.
+
+One possibility for fixing this might be to include a linear predictor for time. But that's unlikely to fix the problem here because the residual patterns look highly nonlinear. What might cause this type of pattern?
+
+We can't model the correlation in the residuals using the lme4 package. Instead, we will have to turn to the nlme package. Let's start by fitting the same model with `nlme::lme`.
+
+Your turn, rewrite the above model using `nlme::lme`:
+
+```{r}
+library(nlme)
+m2 <- lme(
+  log(depth_mean_day) ~ temperature_centered, random = ~ 1 + temperature_centered | fish, data = d) # exercise
+```
+
+Verify that the two modeling functions give us qualitatively similar answers:
+
+```{r}
+arm::display(m1)
+summary(m2)
+```
+
+nlme has some built in residual plotting functions that we will use. (Alternatively, we could easily extract the residuals like we have before and plot them with ggplot2.) Let's reproduce our last plot. It's important that we specify `type = "normalized"`. The reason will become apparent soon. The `.` it refers to our model. The syntax might look strange, but just go with it because it will save us writing a lot of code.
+
+```{r}
+plot(m2, resid(., type = "normalized") ~ fitted(.) | fish, abline = 0)
+```
+
+Another useful plot to look at is an "autocorrelation function" plot (ACF). This calculates the correlation at increasingly large lags for the residuals within each group (cod fish). We will be using the function `ACF.lme` Again, we will specify `resType = "normalized"`:
+
+```{r}
+plot(ACF(m2, resType = "normalized"))
+```
+
+So the residuals one day apart are correlated at a value of almost 0.8! That's far from our assumption of independent residuals.
+
+Let's add a temporal autocorrelation structure. We'll start with the simplest: `corAR1()`. By default, this will estimate a correlation between subsequent residuals within each fish. This correlation value will be shared across all fish and assume that our data were correctly ordered by time with no gaps. 
+
+```{r}
+m3 <- lme(log(depth_mean_day) ~ temperature_centered, 
+  random = ~ 1 + temperature_centered | fish, data = d,
+  correlation = 
+    corAR1()# exercise
+    )
+```
+
+Let's look at the residuals again:
+
+```{r}
+plot(m3, resid(., type = "normalized") ~ fitted(.) | fish, abline = 0)
+plot(ACF(m3, resType = "normalized"))
+```
+
+That looks much better. What if we hadn't specified `type = "normalized"`? Take a look at `?residuals.lme` to see what the default is. 
+
+Let's try making the plots with the default residual type.
+
+```{r}
+plot(m3, resid(.) ~ fitted(.) | fish, abline = 0)
+```
+
+The default, "response", does not incorporate the correlation structure! That's not very helpful when we are trying to tell if our correlation structure helped.
+
+# Making a more useful plot of our predictions
+
+Let's finish off by making a more finished version of our model predictions. Our model is predicting log(depth). Let's transform our predictions to depth itself as a function of temperature.
+
+Because we will be plotting a curved line, we can't rely on just making predictions at the temperatures that we observed. Instead, we need to create a data frame with a fine scale and regular series of temperatures (otherwise our lines would be jagged). We also want to make sure we don't predict outside the range of temperatures observed for any one fish. There are many ways we could create this new data frame to predict on. Below is one concise way to do it with dplyr:
+
+```{r}
+sample_size <- d %>% group_by(fish) %>%
+  summarize(n = n())
+newdata <- d %>% 
+  group_by(fish) %>% 
+  summarise(
+    min_temp = min(temperature_centered),
+    max_temp = max(temperature_centered)) %>%
+  group_by(fish) %>%
+  do({
+    data_frame(
+      fish = rep(.$fish, 50), 
+      temperature_centered = seq(.$min_temp, .$max_temp, length.out = 50))
+  }) %>%
+  mutate(temperature = temperature_centered + mean(d$temperature)) %>%
+  left_join(sample_size)
+newdata
+
+newdata$pred_fish <- predict(m3, newdata = newdata)
+```
+
+We'll also make predictions for an average or "population"-level fish. This is our prediction for a new fish of unknown identity.
+
+```{r}
+source("drafts/predict_pop_ci.R")
+pop_predictions <- predict_pop_ci(m3, newdata = newdata)
+head(pop_predictions)
+newdata <- data.frame(newdata, pop_predictions)
+```
+
+And make a fancy plot:
+
+```{r}
+ggplot(newdata) + 
+  geom_line(aes(temperature, -exp(pred_fish), group = fish, colour = n), alpha = 0.5) +
+  geom_line(aes(temperature, y = -exp(fit)), colour = "red", lwd = 1.25) +
+  geom_ribbon(aes(temperature, ymax = -exp(upr), ymin = -exp(lwr)), fill = "red", alpha = 0.2) +
+  ylab("Depth (m)") + xlab("Temperature (C)") +
+  theme_light() +
+  scale_colour_distiller(palette = "Greys", direction = 1)
+```
+
