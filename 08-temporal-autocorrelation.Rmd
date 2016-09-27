@@ -15,7 +15,7 @@ In this paper, the authors looked at the effect of ocean temperature on how deep
 
 Let's read in the data and clean it up a bit:
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 d <- read_csv("data/raw/freitas-2016/Cod_daily_depth_data.csv") %>%
   mutate(date = lubridate::dmy(date)) %>%
@@ -26,7 +26,7 @@ d <- read_csv("data/raw/freitas-2016/Cod_daily_depth_data.csv") %>%
 d
 ```
 
-Let's plot at the data:
+Let's plot the data:
 
 ```{r}
 ggplot(d, aes(temperature, -log(depth_mean_day))) + 
@@ -38,11 +38,16 @@ Why does it make sense to work with log(depth)?
 
 Let's fit a basic mixed effects model predicting dive depth from temperature that allows the intercept and sloped to vary with each fish. We are going to center the temperature predictor first to reduce correlation between the intercepts and slopes.
 
-```{r}
+```{r, message=FALSE}
 d <- d %>% mutate(temperature_centered = temperature - mean(temperature))
 library(lme4)
-m1 <- lmer(log(depth_mean_day) ~ temperature_centered + 
-    (1 + temperature_centered | fish), data = d)
+```
+
+Try filling in the following model. We want a random intercept and random `temperature_centered` slope:
+
+```{r}
+m1 <- lmer(log(depth_mean_day) ~ temperature_centered +
+    (1 + temperature_centered | fish), data = d) # exercise
 arm::display(m1)
 ```
 
@@ -86,7 +91,7 @@ We can't model the correlation in the residuals using the lme4 package. Instead,
 
 Your turn, rewrite the above model using `nlme::lme`:
 
-```{r}
+```{r, message=FALSE}
 library(nlme)
 m2 <- lme(
   log(depth_mean_day) ~ temperature_centered, random = ~ 1 + temperature_centered | fish, data = d) # exercise
@@ -105,7 +110,7 @@ nlme has some built in residual plotting functions that we will use. (Alternativ
 plot(m2, resid(., type = "normalized") ~ fitted(.) | fish, abline = 0)
 ```
 
-Another useful plot to look at is an "autocorrelation function" plot (ACF). This calculates the correlation at increasingly large lags for the residuals within each group (cod fish). We will be using the function `ACF.lme` Again, we will specify `resType = "normalized"`:
+Another useful plot to look at is an "autocorrelation function" plot (ACF). This calculates the correlation at increasingly large lags for the residuals within each group (individual tagged fish). We will be using the function `ACF.lme` Again, we will specify `resType = "normalized"`:
 
 ```{r}
 plot(ACF(m2, resType = "normalized"))
@@ -183,7 +188,7 @@ ggplot(newdata) +
   geom_line(aes(temperature, -exp(pred_fish), group = fish, colour = n), alpha = 0.5) +
   geom_line(aes(temperature, y = -exp(fit)), colour = "red", lwd = 1.25) +
   geom_ribbon(aes(temperature, ymax = -exp(upr), ymin = -exp(lwr)), fill = "red", alpha = 0.2) +
-  ylab("Depth (m)") + xlab("Temperature (C)") +
+  labs(ylab = "Depth (m)", xlab = "Temperature (C)", colour = "Samples") +
   theme_light() +
   scale_colour_distiller(palette = "Greys", direction = 1)
 ```
