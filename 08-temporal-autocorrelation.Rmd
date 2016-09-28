@@ -2,7 +2,7 @@
 
 # Goals
 
-- Learn how to identify temporal autocorrelation in mixed effect model residuals
+- Learn how to identify temporal autocorrelation in mixed-effect model residuals
 - Learn how to model temporal autocorrelation with the nlme package
 - Practice translating models from lme4 to nlme
 
@@ -143,11 +143,11 @@ Let's try making the plots with the default residual type.
 plot(m3, resid(.) ~ fitted(.) | fish, abline = 0)
 ```
 
-The default, "response", does not incorporate the correlation structure! That's not very helpful when we are trying to tell if our correlation structure helped.
+The default, "response", does not incorporate the correlation structure. That's not very helpful when we are trying to tell if our correlation structure helped.
 
 # Making a more useful plot of our predictions
 
-Let's finish off by making a more finished version of our model predictions. Our model is predicting log(depth). Let's transform our predictions to depth itself as a function of temperature.
+Let's make a more finished version of our model predictions. Our model is predicting log(depth). Let's transform our predictions to depth itself as a function of temperature.
 
 Because we will be plotting a curved line, we can't rely on just making predictions at the temperatures that we observed. Instead, we need to create a data frame with a fine scale and regular series of temperatures (otherwise our lines would be jagged). We also want to make sure we don't predict outside the range of temperatures observed for any one fish. There are many ways we could create this new data frame to predict on. Below is one concise way to do it with dplyr:
 
@@ -193,3 +193,12 @@ ggplot(newdata) +
   scale_colour_distiller(palette = "Greys", direction = 1)
 ```
 
+# Writing out our model
+
+$$
+\log(D_i) = \alpha_j + \beta_j T_i + \epsilon_i, 
+  \; \epsilon_i \sim \text{N}(\phi \epsilon_{i-1}, \sigma^2), 
+  \; \text{for } i = 1, ..., n, \\
+\alpha_j \sim \text{N}(\mu_\alpha, \sigma_\alpha^2),
+  \; \beta_j \sim \text{N}(\mu_\beta, \sigma_\beta^2),
+  \; \text{for } j = 1, ..., J.$$
