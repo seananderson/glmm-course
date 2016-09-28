@@ -202,7 +202,7 @@ summary(m_qp)
 confint(m_poisson_nb)
 ```
 
-# Quasibinomial, log link
+# Quasibinomial, logit link
 
 We can end up with overdispersed data from a binomial distribution if we have repeated trials. 
 
