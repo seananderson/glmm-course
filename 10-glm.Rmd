@@ -40,7 +40,7 @@ plot_glm <- function(model, dat) {
 
 ## Gamma, log link
 
-The Gamma distribution combined with a log link is commonly used to model continuous positive data. 
+The Gamma distribution combined with a log link is commonly used to model continuous positive data. (Therefore, this can often be used interchangeably with a linear regression where the response data are log transformed.)
 
 ```{r}
 y_true <- exp(a + b * x)
