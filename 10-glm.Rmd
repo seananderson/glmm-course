@@ -2,12 +2,12 @@
 
 # Goals
 
-- Gain familiarity with common GLMs
-- Learn to detect and deal with over dispersion
+- Gain familiarity and intuition with common GLMs
+- Learn to detect and deal with overdispersion
 
 # Data
 
-We are going to simulate our own data for this exercise. The following will be common parameters. N is the number of data points. x is our predictor variable. a is the intercept. And b is the slope.
+We are going to simulate our own data for this exercise. The following will be common parameters. `N` is the number of data points. `x` is our predictor variable. `a` is the intercept. And `b` is the slope.
 
 ```{r}
 library(ggplot2)
@@ -19,7 +19,7 @@ b <- 1.3
 d <- data.frame(x = x)
 ```
 
-We will use the following function to quickly plot the predictions from our model. 
+We will use the following function to quickly plot the predictions from our models. 
 
 ```{r}
 plot_glm <- function(model, dat) {
