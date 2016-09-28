@@ -6,6 +6,7 @@ y <- 3
 
 n <- 30
 y <- emdbook::rbetabinom(1e6, 0.5, size=n, theta=1.5)
+z <- y
 y2 <- rbinom(1e6, 0.5, size=n)
 par(mfrow = c(2, 1))
 plot(table(y/n)/length(z), xlim = c(0, 1), ylab = "prop.")
