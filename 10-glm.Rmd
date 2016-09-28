@@ -226,7 +226,7 @@ plot(table(y2/n)/length(y2), xlim = c(0, 1), ylab = "prop.",
 
 What we are looking at here is a histogram of the proportion of frogs that survived in each tank. Note how much more spread out the values are in the overdispersed scenario compared to the pure binomial distribution. 
 
-Let's plot the estimated mean survival rate with a GLM fitted with the binomial ever distribution, and a GLM that allows for overdispersion with the quasibinomial distribution.
+Let's plot the estimated mean proportion survived with a GLM fitted with the binomial error distribution, and a GLM that allows for overdispersion with the quasibinomial distribution.
 
 ```{r}
 par(mfrow = c(1, 1))
