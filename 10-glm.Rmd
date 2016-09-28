@@ -75,7 +75,7 @@ plot_glm(m_gamma, d)
 
 ## Negative binomial, log link
 
-The negative binomial distribution with a log link allows the variance to grow as a quadratic function of the mean. In real data sets, it's probably more common to see the negative binomial than the poisson.
+The negative binomial distribution with a log link can also model count data but allows the variance to grow as an estimated quadratic function of the mean. In real data sets, it's probably more common to see the negative binomial than the poisson.
 
 ```{r}
 y_true <- exp(a + b * x)
@@ -111,9 +111,9 @@ g <- plot_glm(m_bin, d)
 
 How do we interpret the slope coefficient?
 
-Answer: a unit increase in `x` corresponds to a `r round(coef(m_bin)[[2]], 1)` increase in the log odds of a `1` being observed.
+A unit increase in `x` corresponds to a `r round(coef(m_bin)[[2]], 1)` increase in the log odds of a `1` being observed.
 
-What does that mean? If we exponentiate the slope coefficient we get the expected fold increase in the *odds* of observing a `1`, `r round(exp(coef(m_bin)[[2]]),1)`.
+What does that mean? If we exponentiate the slope coefficient we get the expected fold increase in the *odds* of observing a `1`: `r round(exp(coef(m_bin)[[2]]), 2)` per unit increase in `x`.
 
 Of course, most people have trouble wrapping their heads around odds and log odds, but those are the only scales on which our slope is constant.
 
