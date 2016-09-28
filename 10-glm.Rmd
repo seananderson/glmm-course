@@ -111,9 +111,9 @@ g <- plot_glm(m_bin, d)
 
 How do we interpret the slope coefficient?
 
-Answer: a unit increase in `x` corresponds to a `r coef(m_bin)[[2]]` increase in the log odds of a `1` being observed.
+Answer: a unit increase in `x` corresponds to a `r round(coef(m_bin)[[2]], 1)` increase in the log odds of a `1` being observed.
 
-What does that mean? If we exponentiate the slope coefficient we get the expected fold increase in the *odds* of being listed as at risk,`r exp(coef(m_bin)[[2]])`.
+What does that mean? If we exponentiate the slope coefficient we get the expected fold increase in the *odds* of observing a `1`, `r round(exp(coef(m_bin)[[2]]),1)`.
 
 Of course, most people have trouble wrapping their heads around odds and log odds, but those are the only scales on which our slope is constant.
 
