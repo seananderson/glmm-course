@@ -2,7 +2,7 @@
 
 # Goals
 
-- Learn to fot poisson and negative binomial GLMMs with various packages in R
+- Learn to fit poisson and negative binomial GLMMs with various packages in R
 - Learn how to criticize GLMM fit
 - Learn how to check for overdispersion in GLMMs
 - Learn how to interpret and plot output from count GLMMs
