@@ -1,1 +1,363 @@
-start poisson, quasi, then neg bin (same dataset probably?)
+# Count-data GLMMs
+
+# Goals
+
+- Learn to poisson and negative binomial GLMMs
+- Learn how to criticize GLMM fit
+- Learn how to check for overdispersion in GLMMs
+- Learn how to interpret and plotted the output from count GLMMs
+
+We are going to work with one of the data sets from:
+Artelle, K. A., S. C. Anderson, J. D. Reynolds, A. B. Cooper, P. C. Paquet, and C. T. Darimont. 2016. Ecology of conflict: marine food supply affects human-wildlife interactions on land. Scientific Reports 6:25936.
+
+Let's read in the data and look at it:
+
+```{r}
+library(tidyverse)
+d <- readRDS("~/src/Ecology-of-Conflict/data/conflict-salmon-for-modelling.rds") %>%
+  select(late_kills,
+    gbpu,
+    salmon_biomass_geo_mean, 
+    prev_3yr_conflict_scaled,
+    mean_annual_temp_scaled,
+    mean_temp_scaled,
+    total_log_precip_scaled,
+    year_centered,
+    log_humanpop_scaled,
+    log_grizzly_pop_est_scaled,
+    gbpu_usable_area) %>%
+  mutate(
+    year_scaled = year_centered / (2 * sd(year_centered)),
+    gbpu_usable_area = gbpu_usable_area / 1e9) %>%
+  rename(salmon_scaled = salmon_biomass_geo_mean)
+head(d)
+```
+
+We are going to use the below formula a number of times. So let's store it in a variable we will call `f`.
+
+```{r}
+f <- late_kills ~ 
+  salmon_scaled + 
+  prev_3yr_conflict_scaled +
+  mean_annual_temp_scaled +
+  mean_temp_scaled +
+  total_log_precip_scaled +
+  year_scaled +
+  log_humanpop_scaled +
+  log_grizzly_pop_est_scaled +
+  offset(log(gbpu_usable_area))
+```
+
+Let's look at the data in a couple ways. 
+
+```{r}
+ggplot(d, aes(year_centered, late_kills, color = salmon_scaled)) +
+  geom_point() +
+  facet_wrap(~gbpu)
+```
+
+```{r}
+ggplot(d, aes(salmon_scaled, log(late_kills+0.5), color = gbpu)) +
+  geom_point(position = position_jitter(height = 0.4, width = 0))
+```
+
+```{r}
+ggplot(d, aes(salmon_scaled, log((late_kills+0.5)/gbpu_usable_area), 
+  color = gbpu)) +
+  geom_point(position = position_jitter(height = 0.4, width = 0)) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+ggplot(d, aes(salmon_scaled, log((late_kills+0.5)), color = gbpu)) +
+  geom_point(position = position_jitter(height = 0.4, width = 0), alpha = 0.3) +
+  geom_smooth(method = "lm", se = FALSE, colour = "black")
+```
+
+```{r}
+ggplot(d, aes(salmon_scaled, log((late_kills+0.5)), 
+  color = gbpu, group = gbpu)) +
+  geom_point(position = position_jitter(height = 0.4, width = 0), 
+    alpha = 0.3) +
+  geom_smooth(method = "lm", se = FALSE, alpha = 0.7, colour = "black")
+```
+
+# Modeling 
+
+Let's start by using the lme4 package as we have before. Instead of using the `lmer` function we will use the `glmer` function.
+
+We have count data. So one obvious place to start is with the poisson distribution and a log link. 
+
+```{r}
+library(lme4)
+f_lme4 <- paste(c(f, "+ (1 | gbpu)"), collapse = " ")
+m_glmer <- glmer(f_lme4, data = d, family = poisson(link = "log"))
+summary(m_glmer)
+```
+
+We can look at these default plots, but the default residual plot is not that helpful here. 
+
+```{r}
+plot(m_glmer)
+lattice::dotplot(ranef(m, condVar = TRUE))
+```
+
+We can also extract fixed effects, random effects, and their standard errors with:
+
+```{r}
+fixef(m_glmer)
+arm::se.fixef(m_glmer)
+
+ranef(m_glmer)
+arm::se.ranef(m_glmer)
+```
+
+There are 3 kinds of confidence intervals we can get out of lme4, but only one that will run quickly right now. 
+
+```{r}
+# confint(m_glmer, method = "profile")
+confint(m_glmer, method = "Wald")
+# confint(m_glmer, method = "boot", nsim = 20)
+```
+
+One useful summary function is 
+
+```{r}
+coef(summary(m_glmer))
+```
+
+Now we should check for over dispersion.
+
+We can do that by comparing the sum of the person residuals squared with the residual degrees of freedom. 
+
+We can see the degrees of freedom from the output of `summary()`.
+
+And we can calculate the sum of the present residual squared 
+
+```{r}
+sum(residuals(m,"pearson")^2)
+# aods3::gof(m_glmer)
+```
+
+So it looks like we have some over dispersion here.
+
+We can try dealing with this by adding an observation level random intercept or by switching to a negative binomial distribution. 
+
+Theoretically, we could fit a negative binomial GLMM with the function `lme4::glmer.nb`, but the following fails to converge for me.
+
+```{r}
+# m.nb <- glmer.nb(f_lme4, data = d)
+# summary(m.nb)
+```
+
+We could try removing the offset term. 
+
+```{r}
+f2 <- late_kills ~ 
+  salmon_scaled + 
+  prev_3yr_conflict_scaled +
+  mean_annual_temp_scaled +
+  mean_temp_scaled +
+  total_log_precip_scaled +
+  year_scaled +
+  log_humanpop_scaled +
+  log_grizzly_pop_est_scaled
+
+f_lme4_no_offset <- paste(c(f2, "+ (1 | gbpu)"), collapse = " ")
+m_glmer_nb <- glmer.nb(f_lme4_no_offset, data = d)
+```
+
+But that doesn't convert for me either.
+
+So instead, let's start by adding an observation level random intercept. 
+
+```{r}
+d$obs <- seq_len(nrow(d))
+f_lme4_obs <- paste(c(f2, "+ (1 | gbpu) + (1 | obs)"), collapse = " ")
+m_lme4_obs <- glmer(f_lme4_obs, data = d, family = poisson(link = "log"))
+summary(m_lme4_obs)
+aods3::gof(m_lme4_obs)
+```
+
+That too has poor convergence.
+
+Before we move on to other packages, let's quickly look at some plots we can get out of the sjPlot package. Remember, these confidence intervals are probably too small because we haven't dealt with overdispersion.
+
+```{r}
+sjPlot::sjp.glmer(m_glmer)
+sjPlot::sjp.glmer(m_glmer, type = "fe")
+sjPlot::sjp.glmer(m_glmer, type = "re.qq")
+# sjPlot::sjp.glmer(m, type = "ma") # many
+p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = T)
+head(p$data)
+```
+
+We can try the function `glmmPQL` in the package MASS, which lets us 
+the model with something fancy called Penalized Quasi-Likelihood.
+
+```{r}
+m_pql <- MASS::glmmPQL(f, random = ~ 1 | gbpu/obs, data = d, family = poisson(link = "log"))
+summary(m_pql)
+```
+
+This one converges. In the background the function is using nlme. Therefore, we have to work with the object as if it is from nlme. E.g.
+
+```{r}
+nlme::intervals(m_pql)
+confint(m_glmer, method = "Wald")
+```
+
+
+<!-- b <- broom::augment(m2) -->
+<!-- plot(b$.fitted, sqrt(abs(b$.resid))) -->
+
+
+<!-- plot(m2, gbpu ~ resid(.,type="pearson")) -->
+
+It's always a good idea to GLMMs with multiple methods if possible to ensure the conclusions are sensitive to the method or that your model has not converged.
+
+One of the greatest things since sliced bread, is the new TMB package for R. TMB requires you to your own model, but the package glmmTMB comes with a number of prewritten and tested GLMMs.
+
+TMB is FAST and very robust. 
+
+```{r}
+library(glmmTMB)
+
+m_tmb <- glmmTMB(f_lme4, data = d, family = poisson(link = "log"))
+summary(m_tmb)
+
+m_tmb_obs <- glmmTMB(f_lme4_obs, data = d, family = poisson(link = "log"))
+summary(m_tmb_obs)
+
+m_tmb_nb <- glmmTMB(f_lme4, data = d, family = "nbinom1")
+summary(m_tmb_nb)
+
+bbmle::AICtab(m_tmb, m_tmb_nb)
+```
+
+```{r}
+plot(log(fitted(m_tmb)), residuals(m_tmb, type = "pearson"))
+plot(log(fitted(m_tmb_obs)), residuals(m_tmb_obs, type = "pearson"))
+plot(log(fitted(m_tmb_nb)), residuals(m_tmb_nb, type = "pearson"))
+```
+
+The residuals from the negative binomial model look the best to me.
+
+```{r}
+plot(log(fitted(m_tmb)), sqrt(abs(residuals(m_tmb, type = "pearson"))))
+plot(log(fitted(m_tmb_nb)), sqrt(abs(residuals(m_tmb_nb, type = "pearson"))))
+```
+
+Let's plot the residuals by group:
+
+```{r}
+d$res_nb <- residuals(m_tmb_nb, type = "pearson")
+ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
+```
+
+Let's compare confidence intervals:
+
+```{r}
+get_tmb_cis <- function(x, name) {
+  ci <- list()
+  ci <- data.frame(confint(x), fixef(x)[[1]])
+  names(ci) <- c("lwr", "upr", "est")
+  ci$model <- name
+  ci$coef <- names(fixef(x)$cond)
+  ci
+}
+cis <- list()
+cis[[1]] <- get_tmb_cis(m_tmb, "Poisson")
+cis[[2]] <- get_tmb_cis(m_tmb_obs, "Poisson w obs RE")
+cis[[3]] <- get_tmb_cis(m_tmb_nb, "Negative binomial")
+
+cis[[4]] <- data.frame(confint(m_glmer, method = "Wald")[-1,],
+  fixef(m_glmer))
+names(cis[[4]]) <- c("lwr", "upr", "est")
+cis[[4]]$model <- "Poisson (glmer)"
+cis[[4]]$coef <- names(fixef(m_glmer))
+
+cis_df <- bind_rows(cis) %>% filter(coef != "(Intercept)")
+```
+
+```{r}
+ggplot(cis_df, aes(coef, est, ymin = lwr, ymax = upr, colour = model)) +
+  geom_pointrange(position = position_dodge(width = 0.5)) +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = 2)
+```
+
+Let's try fitting models with a zero inflation parameter. LATER
+
+```{r}
+m_tmb_z <- glmmTMB(f_lme4, data = d, family = poisson(link = "log"),
+  ziformula=~1)
+summary(m_tmb_z)
+
+m_tmb_obs_z <- glmmTMB(f_lme4_obs, data = d, family = poisson(link = "log"),
+  ziformula=~1)
+summary(mtmb.obs)
+
+m_tmb_nb_z <- glmmTMB(f_lme4, data = d, family = "nbinom1", ziformula=~1)
+summary(m_tmb_nb_z)
+# 
+# cis[[5]] <- get_tmb_cis(m_tmb_z, "Poisson z")
+# cis[[6]] <- get_tmb_cis(m_tmb_obs_z, "Poisson w obs RE z")
+# cis[[7]] <- get_tmb_cis(m_tmb_nb_z, "Negative binomial z")
+# cis_df <- bind_rows(cis) %>% filter(coef != "(Intercept)")
+```
+
+```{r}
+bbmle::AICtab(m_tmb, m_tmb_nb, m_tmb_z, m_tmb_nb_z)
+```
+
+```{r, eval=FALSE}
+library(dplyr)
+b <- b %>% mutate(gbpu_ordered = reorder(gbpu, .resid, fun=mean, sort = sort))
+
+ggplot(b, aes(gbpu_ordered, .resid)) + geom_boxplot() + coord_flip()
+
+ggplot(b, aes(gbpu_ordered, sqrt(abs(.resid)))) + geom_boxplot() + coord_flip()
+
+
+
+# library(glmmADMB)
+# madmb <- glmmadmb(f, random = ~ 1 | gbpu, data = d, family = "nbinom")
+# summary(madmb)
+
+# mtmb.nb  <- update(mtmb,family = nbinom1)
+# summary(mtmb.nb)
+# 
+
+# mtmb.z.nb  <- update(mtmb.z,family = nbinom2)
+# summary(mtmb.z.nb)
+
+plot(log(fitted(madmb)), residuals(madmb))
+
+f <- late_kills ~ 
+  salmon_biomass_geo_mean + 
+  # prev_3yr_scaled + 
+  prev_3yr_conflict_scaled +
+  mean_annual_temp_scaled +
+  # log_annual_precip_scaled +
+  mean_temp_scaled +
+  total_log_precip_scaled +
+  year_centered +
+  # log_humanpop_scaled +
+  log_grizzly_pop_est_scaled +
+  offset(log(gbpu_usable_area)) 
+
+madmb.nb.z <- glmmadmb(f, random = ~ 1 | gbpu, data = d, family = "nbinom",
+  zeroInflation = TRUE)
+summary(madmb.nb.z )
+
+plot(log(fitted(madmb)), residuals(madmb))
+```
+
+Harrison, X. A. 2014. Using observation-level random effects to model overdispersion in count data in ecology and evolution. PeerJ 2:e616.
+
+https://peerj.com/articles/616/
+
+“Overdispersion is the polite statistician’s version of Murphy’s Law: if something can go wrong, it will”
+
+Crawley (2007, p. 522)
