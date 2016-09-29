@@ -2,10 +2,10 @@
 
 # Goals
 
-- Learn to poisson and negative binomial GLMMs
+- Learn to fot poisson and negative binomial GLMMs with various packages in R
 - Learn how to criticize GLMM fit
 - Learn how to check for overdispersion in GLMMs
-- Learn how to interpret and plotted the output from count GLMMs
+- Learn how to interpret and plot output from count GLMMs
 
 We are going to work with one of the data sets from:
 Artelle, K. A., S. C. Anderson, J. D. Reynolds, A. B. Cooper, P. C. Paquet, and C. T. Darimont. 2016. Ecology of conflict: marine food supply affects human-wildlife interactions on land. Scientific Reports 6:25936.
