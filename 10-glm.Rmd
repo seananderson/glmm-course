@@ -180,6 +180,8 @@ Note that this does not look the same as the residuals on the "response" scale.
 
 ```{r}
 plot(fitted(m_nb), residuals(m_nb, type = "response"))
+plot(fitted(m_nb), residuals(m_nb, type = "pearson"))
+plot(fitted(m_nb), residuals(m_nb, type = "deviance"))
 ```
 
 What are we looking at here?
