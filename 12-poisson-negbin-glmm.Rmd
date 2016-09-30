@@ -14,7 +14,7 @@ Let's read in the data and look at it:
 
 ```{r}
 library(tidyverse)
-d <- readRDS("~/src/Ecology-of-Conflict/data/conflict-salmon-for-modelling.rds") %>%
+d <- readRDS("data/raw/conflict-salmon-for-modelling.rds") %>%
   select(late_kills,
     gbpu,
     salmon_biomass_geo_mean, 
@@ -30,6 +30,7 @@ d <- readRDS("~/src/Ecology-of-Conflict/data/conflict-salmon-for-modelling.rds")
     year_scaled = year_centered / (2 * sd(year_centered)),
     gbpu_usable_area = gbpu_usable_area / 1e9) %>%
   rename(salmon_scaled = salmon_biomass_geo_mean)
+saveRDS(d, file = "data/generated/artelle-et-all-conflict.rds")
 head(d)
 ```
 
@@ -48,7 +49,7 @@ f <- late_kills ~
   offset(log(gbpu_usable_area))
 ```
 
-Let's look at the data in a couple ways. 
+Let's look at the data in a few ways. 
 
 ```{r}
 ggplot(d, aes(year_centered, late_kills, color = salmon_scaled)) +
@@ -84,7 +85,7 @@ ggplot(d, aes(salmon_scaled, log((late_kills+0.5)),
 
 # Modeling 
 
-Let's start by using the lme4 package as we have before. Instead of using the `lmer` function we will use the `glmer` function.
+Let's start by using the lme4 package as we have before. Instead of using the `lmer` function we will use the `glmer` function. (Although `lmer` will work too.)
 
 We have count data. So one obvious place to start is with the poisson distribution and a log link. 
 
@@ -115,9 +116,9 @@ arm::se.ranef(m_glmer)
 There are 3 kinds of confidence intervals we can get out of lme4, but only one that will run quickly right now. 
 
 ```{r}
-# confint(m_glmer, method = "profile")
 confint(m_glmer, method = "Wald")
-# confint(m_glmer, method = "boot", nsim = 20)
+# confint(m_glmer, method = "profile")
+# confint(m_glmer, method = "boot")
 ```
 
 One useful summary function is 
@@ -135,8 +136,8 @@ We can see the degrees of freedom from the output of `summary()`.
 And we can calculate the sum of the present residual squared 
 
 ```{r}
-sum(residuals(m,"pearson")^2)
-# aods3::gof(m_glmer)
+sum(residuals(m_glmer, "pearson")^2)
+aods3::gof(m_glmer)
 ```
 
 So it looks like we have some over dispersion here.
@@ -146,8 +147,8 @@ We can try dealing with this by adding an observation level random intercept or 
 Theoretically, we could fit a negative binomial GLMM with the function `lme4::glmer.nb`, but the following fails to converge for me.
 
 ```{r}
-# m.nb <- glmer.nb(f_lme4, data = d)
-# summary(m.nb)
+# m_glmer_nb <- glmer.nb(f_lme4, data = d)
+# summary(m_glmer_nb)
 ```
 
 We could try removing the offset term. 
@@ -164,12 +165,12 @@ f2 <- late_kills ~
   log_grizzly_pop_est_scaled
 
 f_lme4_no_offset <- paste(c(f2, "+ (1 | gbpu)"), collapse = " ")
-m_glmer_nb <- glmer.nb(f_lme4_no_offset, data = d)
+# m_glmer_nb <- glmer.nb(f_lme4_no_offset, data = d)
 ```
 
-But that doesn't convert for me either.
+But that doesn't converge for me either.
 
-So instead, let's start by adding an observation level random intercept. 
+So instead, let's start by adding an observation-level random intercept. This simply requires making a dummy variable with a level for each row of data:
 
 ```{r}
 d$obs <- seq_len(nrow(d))
@@ -179,9 +180,9 @@ summary(m_lme4_obs)
 aods3::gof(m_lme4_obs)
 ```
 
-That too has poor convergence.
+That, too, has poor convergence.
 
-Before we move on to other packages, let's quickly look at some plots we can get out of the sjPlot package. Remember, these confidence intervals are probably too small because we haven't dealt with overdispersion.
+Before we move on to other packages, let's quickly look at some plots we can get out of the sjPlot package. Remember, these confidence intervals shouldn't be trusted because we haven't dealt with overdispersion yet.
 
 ```{r}
 sjPlot::sjp.glmer(m_glmer)
@@ -192,33 +193,43 @@ p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = T)
 head(p$data)
 ```
 
-We can try the function `glmmPQL` in the package MASS, which lets us 
-the model with something fancy called Penalized Quasi-Likelihood.
+We can try the function `glmmPQL` in the package MASS, which lets us fit the model with something fancy called penalized quasi-likelihood. "Penalized quasi-likelihood" doubles as a great conservation starter at cocktail parties.
 
 ```{r}
-m_pql <- MASS::glmmPQL(f, random = ~ 1 | gbpu/obs, data = d, family = poisson(link = "log"))
+m_pql <- MASS::glmmPQL(f, random = ~ 1 | gbpu/obs, data = d, 
+  family = poisson(link = "log"))
 summary(m_pql)
 ```
 
-This one converges. In the background the function is using nlme. Therefore, we have to work with the object as if it is from nlme. E.g.
+This one converges. In the background the function is using nlme. Therefore, we have to work with the object as if it was from nlme. E.g.
 
 ```{r}
 nlme::intervals(m_pql)
-confint(m_glmer, method = "Wald")
 ```
 
+What distribution might work best?
+
+```{r}
+dg <- group_by(d, gbpu) %>%
+  summarise(m = mean(late_kills), v = var(late_kills))
+ggplot(dg, aes(m, v)) +
+  geom_smooth(method = "lm", formula = y ~ x - 1, se = F) +
+  geom_smooth(colour = "red", se = F) +
+  geom_smooth(method = "lm", 
+    formula = y ~ I(x^2) + offset(x) - 1, colour = "purple", se = F) +
+  geom_abline(intercept = 0, slope = 1, lty = 2) +
+  geom_point()
+```
 
 <!-- b <- broom::augment(m2) -->
 <!-- plot(b$.fitted, sqrt(abs(b$.resid))) -->
-
-
 <!-- plot(m2, gbpu ~ resid(.,type="pearson")) -->
 
-It's always a good idea to GLMMs with multiple methods if possible to ensure the conclusions are sensitive to the method or that your model has not converged.
+It's always a good idea to fit GLMMs with multiple methods if possible to ensure the conclusions are not sensitive to the optimization method or that your model has not converged.
 
-One of the greatest things since sliced bread, is the new TMB package for R. TMB requires you to your own model, but the package glmmTMB comes with a number of prewritten and tested GLMMs.
+One of the greatest things since sliced bread is the new TMB package for R. TMB normally requires you to write your own model template, but the package glmmTMB comes with a number of pre-written and tested GLMMs.
 
-TMB is FAST and very robust. 
+TMB, and therefore glmmTMB, is *FAST* and very robust. <https://github.com/glmmTMB>
 
 ```{r}
 library(glmmTMB)
@@ -229,16 +240,20 @@ summary(m_tmb)
 m_tmb_obs <- glmmTMB(f_lme4_obs, data = d, family = poisson(link = "log"))
 summary(m_tmb_obs)
 
-m_tmb_nb <- glmmTMB(f_lme4, data = d, family = "nbinom1")
+m_tmb_nb <- glmmTMB(f_lme4, data = d, family = nbinom2(link = "log"))
 summary(m_tmb_nb)
 
-bbmle::AICtab(m_tmb, m_tmb_nb)
+m_tmb_nb1 <- glmmTMB(f_lme4, data = d, family = nbinom1(link = "log"))
+summary(m_tmb_nb1)
+
+bbmle::AICtab(m_tmb, m_tmb_nb, m_tmb_nb1)
 ```
 
 ```{r}
 plot(log(fitted(m_tmb)), residuals(m_tmb, type = "pearson"))
 plot(log(fitted(m_tmb_obs)), residuals(m_tmb_obs, type = "pearson"))
 plot(log(fitted(m_tmb_nb)), residuals(m_tmb_nb, type = "pearson"))
+plot(log(fitted(m_tmb_nb1)), residuals(m_tmb_nb1, type = "pearson"))
 ```
 
 The residuals from the negative binomial model look the best to me.
@@ -255,103 +270,78 @@ d$res_nb <- residuals(m_tmb_nb, type = "pearson")
 ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
 ```
 
+Quick Bayesian version:
+
+```{r}
+library(rstanarm)
+library(rstan)
+options(mc.cores = parallel::detectCores())
+
+mstan <- rstanarm::stan_glmer(f_lme4, data = d, 
+  family = poisson(link = "log"), chains = 2, cores = 2, iter = 400)
+summary(mstan)
+
+mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 4,
+  iter = 300)
+summary(mstan_nb)
+stan_plot(mstan_nb)
+stan_trace(mstan_nb)
+stan_rhat(mstan_nb)
+stan_hist(mstan_nb)
+stan_est <- broom::tidyMCMC(mstan_nb, conf.int = TRUE, 
+  estimate.method = "median")
+
+stan_est %>% filter(grepl("gbpu", term)) %>%
+  ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
+  geom_pointrange() +
+  coord_flip()
+
+stan_re_int <- stan_est %>% filter(grepl("gbpu", term))
+qqnorm(stan_re_int$estimate)
+qqline(stan_re_int$estimate)
+```
+
 Let's compare confidence intervals:
 
 ```{r}
 get_tmb_cis <- function(x, name) {
   ci <- list()
   ci <- data.frame(confint(x), fixef(x)[[1]])
-  names(ci) <- c("lwr", "upr", "est")
+  names(ci) <- c("conf.low", "conf.high", "estimate")
   ci$model <- name
-  ci$coef <- names(fixef(x)$cond)
+  ci$term <- names(fixef(x)$cond)
   ci
 }
 cis <- list()
 cis[[1]] <- get_tmb_cis(m_tmb, "Poisson")
 cis[[2]] <- get_tmb_cis(m_tmb_obs, "Poisson w obs RE")
 cis[[3]] <- get_tmb_cis(m_tmb_nb, "Negative binomial")
+cis[[4]] <- get_tmb_cis(m_tmb_nb1, "Negative binomial 1")
+cis[[5]] <- broom::tidy(m_glmer, conf.int = TRUE) %>%
+  dplyr::select(conf.low, conf.high, estimate, term) %>%
+  mutate(model = "Poisson (glmer)") %>%
+  filter(term != "sd_(Intercept).gbpu")
+cis[[6]] <- stan_est %>%
+  dplyr::select(conf.low, conf.high, estimate, term) %>%
+  filter(!grepl("Intercept", term), term != "overdispersion") %>%
+  mutate(model = "Negative binomial (Stan)")
 
-cis[[4]] <- data.frame(confint(m_glmer, method = "Wald")[-1,],
-  fixef(m_glmer))
-names(cis[[4]]) <- c("lwr", "upr", "est")
-cis[[4]]$model <- "Poisson (glmer)"
-cis[[4]]$coef <- names(fixef(m_glmer))
-
-cis_df <- bind_rows(cis) %>% filter(coef != "(Intercept)")
+cis_df <- bind_rows(cis) %>% filter(term != "(Intercept)")
 ```
 
 ```{r}
-ggplot(cis_df, aes(coef, est, ymin = lwr, ymax = upr, colour = model)) +
+ggplot(cis_df, aes(term, estimate, 
+  ymin = conf.low, ymax = conf.high, colour = model)) +
   geom_pointrange(position = position_dodge(width = 0.5)) +
   coord_flip() +
   geom_hline(yintercept = 0, linetype = 2)
-```
 
-Let's try fitting models with a zero inflation parameter. LATER
-
-```{r}
-m_tmb_z <- glmmTMB(f_lme4, data = d, family = poisson(link = "log"),
-  ziformula=~1)
-summary(m_tmb_z)
-
-m_tmb_obs_z <- glmmTMB(f_lme4_obs, data = d, family = poisson(link = "log"),
-  ziformula=~1)
-summary(mtmb.obs)
-
-m_tmb_nb_z <- glmmTMB(f_lme4, data = d, family = "nbinom1", ziformula=~1)
-summary(m_tmb_nb_z)
-# 
-# cis[[5]] <- get_tmb_cis(m_tmb_z, "Poisson z")
-# cis[[6]] <- get_tmb_cis(m_tmb_obs_z, "Poisson w obs RE z")
-# cis[[7]] <- get_tmb_cis(m_tmb_nb_z, "Negative binomial z")
-# cis_df <- bind_rows(cis) %>% filter(coef != "(Intercept)")
-```
-
-```{r}
-bbmle::AICtab(m_tmb, m_tmb_nb, m_tmb_z, m_tmb_nb_z)
-```
-
-```{r, eval=FALSE}
-library(dplyr)
-b <- b %>% mutate(gbpu_ordered = reorder(gbpu, .resid, fun=mean, sort = sort))
-
-ggplot(b, aes(gbpu_ordered, .resid)) + geom_boxplot() + coord_flip()
-
-ggplot(b, aes(gbpu_ordered, sqrt(abs(.resid)))) + geom_boxplot() + coord_flip()
-
-
-
-# library(glmmADMB)
-# madmb <- glmmadmb(f, random = ~ 1 | gbpu, data = d, family = "nbinom")
-# summary(madmb)
-
-# mtmb.nb  <- update(mtmb,family = nbinom1)
-# summary(mtmb.nb)
-# 
-
-# mtmb.z.nb  <- update(mtmb.z,family = nbinom2)
-# summary(mtmb.z.nb)
-
-plot(log(fitted(madmb)), residuals(madmb))
-
-f <- late_kills ~ 
-  salmon_biomass_geo_mean + 
-  # prev_3yr_scaled + 
-  prev_3yr_conflict_scaled +
-  mean_annual_temp_scaled +
-  # log_annual_precip_scaled +
-  mean_temp_scaled +
-  total_log_precip_scaled +
-  year_centered +
-  # log_humanpop_scaled +
-  log_grizzly_pop_est_scaled +
-  offset(log(gbpu_usable_area)) 
-
-madmb.nb.z <- glmmadmb(f, random = ~ 1 | gbpu, data = d, family = "nbinom",
-  zeroInflation = TRUE)
-summary(madmb.nb.z )
-
-plot(log(fitted(madmb)), residuals(madmb))
+filter(cis_df, term == "salmon_scaled") %>%
+  ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high, 
+    colour = model)) +
+  geom_pointrange(position = position_dodge(width = 0.5)) +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = 2)
 ```
 
 Harrison, X. A. 2014. Using observation-level random effects to model overdispersion in count data in ecology and evolution. PeerJ 2:e616.
@@ -361,3 +351,6 @@ https://peerj.com/articles/616/
 “Overdispersion is the polite statistician’s version of Murphy’s Law: if something can go wrong, it will”
 
 Crawley (2007, p. 522)
+
+Y ~ NB(lambda, alpha)
+Var(Y) = lambda + lambda^2 / alpha
