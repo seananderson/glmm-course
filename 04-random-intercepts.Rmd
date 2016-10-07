@@ -194,7 +194,7 @@ Random effects:
 Number of obs: 1434, groups:  taxon, 15
 ```
 
-This tells us the variance and standard deviation (Variance = sqrt(Std.Dev.)) of our random intercept on `taxon` and of the residual variation `Residual`. We are also told how many rows of data we have `Number of obs: 1434` and how many random intercept groups we have `taxon, 15`.
+This tells us the variance and standard deviation (Std.Dev. = sqrt(Variance)) of our random intercept on `taxon` and of the residual variation `Residual`. We are also told how many rows of data we have `Number of obs: 1434` and how many random intercept groups we have `taxon, 15`.
 
 ```{}
 Fixed effects:

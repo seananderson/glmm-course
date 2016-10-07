@@ -133,7 +133,7 @@ We can do that by comparing the sum of the person residuals squared with the res
 
 We can see the degrees of freedom from the output of `summary()`.
 
-And we can calculate the sum of the present residual squared 
+And we can calculate the sum of the pearson residuals squared:
 
 ```{r}
 sum(residuals(m_glmer, "pearson")^2)
@@ -348,9 +348,6 @@ Harrison, X. A. 2014. Using observation-level random effects to model overdisper
 
 https://peerj.com/articles/616/
 
-“Overdispersion is the polite statistician’s version of Murphy’s Law: if something can go wrong, it will”
-
-Crawley (2007, p. 522)
 
 Y ~ NB(lambda, alpha)
 Var(Y) = lambda + lambda^2 / alpha
