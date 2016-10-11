@@ -1,6 +1,4 @@
----
-Title: Distribution playground
----
+# Distribution playground
 
 # Goals
 
@@ -50,7 +48,7 @@ is small?
 What happens if the Gamma *scale* parameter is large and the *shape* parameter
 is small?
 
-What distributions do these resemble?
+What distributions do these resemble? Why is that useful? 
 
 ```{r}
 x <- seq(0, 100, length.out = 300)
@@ -69,7 +67,9 @@ manipulate({
 
 ## Poisson
 
-What happens to the width of the Poisson as the mean (lambda) increases?
+What happens to the width of the poisson as the mean (lambda) increases? 
+
+When might you expect to observe a poisson distribution?
 
 ```{r}
 x <- seq(0, 100)
@@ -83,8 +83,11 @@ manipulate({
 
 ## Negative binomial
 
+What happens when the `size` parameter gets really small? What distribution does this resemble if the `size` parameter gets big?
+
+When might you expect to observe a negative binomial distribution?
+
 ```{r}
-# TODO: reparameterize dnbinom?
 x <- seq(0, 100)
 manipulate({
   y <- dnbinom(
@@ -100,6 +103,8 @@ manipulate({
 ## Binomial
 
 Read the help `?dbinom` and play with the sliders. What do `size` and `prob` arguments mean?
+
+Think in terms of flipping a coin. What would the `prob` parameter be for a typical coin? If I flipped a coin 6 times what would the parameter `size` be?
 
 ```{r}
 x <- seq(0, 10)
