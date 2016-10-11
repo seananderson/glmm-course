@@ -1,0 +1,74 @@
+```{r}
+library(tidyverse)
+d <- read_csv("data/raw/oregan-etal-2013/meso.csv")
+species_letters <- tibble(species = c("spadefoot", "treefrog", "redlegged"),
+  sp = c("b", "c", "a"))
+d <- inner_join(d, species_letters) %>%
+  rename(species_true = species, species = sp) %>%
+  mutate(warming = ifelse(climate == "warming", 1, 0),
+    drying = ifelse(drying == "temp", 1, 0)) %>%
+  select(tank, date, drying, warming, species, species_true, svl, mass, time) %>%
+  mutate(species = as.factor(species), tank = as.factor(tank))
+d
+```
+
+```{r}
+library(lme4)
+m <- lmer(svl ~ (warming + drying + species)^2 + (1 | tank), data = d)
+
+# m2 <- lmer(log(svl) ~ (warming + drying + sp)^2 + ((warming + drying + sp)^2 | tank), data = d)
+
+m3 <- glmmTMB::glmmTMB(log(svl) ~ (warming + drying + species)^2 + ((warming + drying + species)^2 | tank), data = d)
+summary(m3)
+
+```
+
+```{r}
+plot(m)
+# plot(m, resid(., type = "pearson") ~ fitted(.) | tank, abline = 0)
+# plot(m, resid(., type = "pearson") ~ fitted(.) | drying, abline = 0)
+# plot(m, resid(., type = "pearson") ~ fitted(.) | species, abline = 0)
+plot(m, resid(., type = "pearson") ~ fitted(.) | drying + warming, abline = 0)
+summary(m)
+
+d$svl_res <- residuals(m, type = "pearson")
+p3 <-  ggplot(d, aes(as.factor(tank), svl_res, colour = paste(drying, warming))) + geom_boxplot() + geom_hline(yintercept = 0) + xlab("") + ylab("SVL residuals (mm)")
+p3
+
+fe <- fixef(m)
+se <- arm::se.fixef(m)
+
+
+coef(summary(m))
+arm::display(m)
+
+fe_comp <- fe[["dryingtemp:spb"]] + fe[["dryingtemp"]]
+se_comp <- sqrt(se[["dryingtemp:spb"]]^2 - se[["dryingtemp"]]^2)
+fe_comp + c(-1.96, 1.96) * se_comp
+
+comparison_effect <- function(model, base_par, comparison_par) {
+  fe <- fixef(model)
+  se <- arm::se.fixef(model)
+  
+  if (base_par != comparison_par) {
+    fe_comp <- fe[[comparison_par]] + fe[[base_par]]
+    se_comp <- sqrt(se[[comparison_par]]^2 - se[[base_par]]^2)
+  } else {
+    fe_comp <- fe[[base_par]]
+    se_comp <- se[[base_par]]
+  }
+  
+  ci <- fe_comp + c(-1.96, 1.96) * se_comp
+  data.frame(lwr = ci[1], est = fe_comp, upr = ci[2])
+}
+
+comparison_effect(m, "dryingtemp", "dryingtemp")
+comparison_effect(m, "dryingtemp", "dryingtemp:spb")
+comparison_effect(m, "dryingtemp", "dryingtemp:spc")
+
+base_par <- rep("dryingtemp", 3)
+comparison_par <- c("dryingtemp", "dryingtemp:spb", "dryingtemp:spc")
+out <- map2_df(base_par, comparison_par, comparison_effect, model = m)
+out
+```
+
