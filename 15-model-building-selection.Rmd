@@ -10,3 +10,7 @@ Iterative
 Build from simple
 Simulate
 Gelman approach plus Bolker and Zuur lists
+
+Bolker, B. 2009. Learning hierarchical models: advice for the rest of us. Ecological Applications 19:588–592.
+
+Bolker, B. M., M. E. Brooks, C. J. Clark, S. W. Geange, J. R. Poulsen, M. H. H. Stevens, and J.-S. S. White. 2009. Generalized linear mixed models: a practical guide for ecology and evolution. Trends in Ecology \& Evolution 24:127–135.

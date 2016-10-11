@@ -1,0 +1,55 @@
+when things went wrong...
+
+temporal autocorrelation
+spatial autocorrelation
+
+approaches: fixed effect, model correlation in residuals
+
+variance structures: 2 examples: varexp...
+
+```{r}
+power_var <- function(v, t1) abs(v)^(2 * t1)
+const_power_var <- function(v, t1, t2) (t1 + abs(v)^t2)^2
+exp_var <- function(v, t1) exp(2 * t1 * v)
+
+library(manipulate)
+
+v <- seq(0.05, 4, length.out = 100)
+
+manipulate({plot(v, power_var(v, t1), type = "l", main = "nlme::varPower()")},
+  t1 = slider(-1, 2, 0.1, step = 0.1))
+
+manipulate({plot(v, const_power_var(v, t1, t2), type = "l", 
+  main = "nlme::varConstPower()")},
+  t1 = slider(-4, 4, 1, step = 0.1),
+  t2 = slider(-1, 2, 0.1, step = 0.1))
+
+manipulate({plot(v, exp_var(v, t1), type = "l", main = "nlme::varExp()")},
+  t1 = slider(-1, 2, 0.1, step = 0.1))
+
+
+plot(v, const_power_var(v, 1, 0.3), type = "l", 
+  main = "nlme::varConstPower()", ylim = c(0, 7), ylab = "s2(v)")
+lines(v, const_power_var(v, 1, 0.1), col = "red")
+lines(v, const_power_var(v, 0.5, 0.3), col = "blue")
+
+plot(v, power_var(v, 0.3), type = "l", 
+  main = "nlme::varPower()", ylim = c(0, 7), ylab = "s2(v)")
+lines(v, power_var(v, 0.1), col = "red")
+
+# P + B 2000:
+fm1Wheat2 <- gls(yield ~ variety - 1, Wheat2)
+plot(Variogram(fm1Wheat2, form = ~ latitude + longitude))
+
+# A nugget eﬀect of about 0.2 seems to be present and the semivariogram appears to approach 1 around distance 28.
+# Littell et al. (1996, §9.6.2) 
+# noting that, in corSpher, the range is the distance at which the semivariogram ﬁrst equals 1
+fm2Wheat2 <- update(fm1Wheat2, corr = corSpher(c(28, 0.2), 
+  form = ~ latitude + longitude, nugget = TRUE))
+
+fm2Wheat2
+
+anova(fm2Wheat2, fm3Wheat2)
+
+```
+

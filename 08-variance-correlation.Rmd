@@ -1,8 +1,0 @@
-when things went wrong...
-
-temporal autocorrelation
-spatial autocorrelation
-
-approaches: fixed effect, model correlation in residuals
-
-variance structures: 2 examples: varexp...
