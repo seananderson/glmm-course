@@ -1,0 +1,134 @@
+Fake sim dat:
+
+```{r}
+library(tidyverse)
+set.seed(1)
+mu_a <- 0.2
+sd_a <- 0.7
+b <- 0.5
+J <- 12
+sigma <- 0.6
+a <- rnorm(J, mu_a, sd_a)
+N <- 40
+x <- rnorm(N * J, 0, 1)
+d <- tibble(beta = rep(b, N * J), alpha = rep(a, each = N),
+  sigma = sigma) %>%
+  mutate(mean = alpha + beta * x,
+    group = as.factor(rep(LETTERS[seq_len(J)], each = N)),
+    time = rep(seq_len(N), J),
+    x = x,
+    y = rnorm(N * J, mean, sigma))
+```
+
+```{r}
+library(ggplot2)
+ggplot(d, aes(x, y)) + geom_point() + facet_wrap(~group)
+
+library(lme4)
+m <- lmer(y ~ x + (1 | group), data = d)
+arm::display(m)
+```
+
+varExp:
+
+```{r}
+set.seed(123)
+d <- mutate(d, y1 = rnorm(N * J, mean, sd = sqrt(exp(2 * 0.5 * mean))))
+ggplot(d, aes(x, y1)) + geom_point() + facet_wrap(~group)
+m1_wrong <- lmer(y1 ~ x + (1 | group), data = d)
+plot(m1_wrong)
+
+library(nlme)
+m1_right <- lme(y1 ~ x, random = ~ 1 | group, data = d,
+  weights = varExp(form = ~ fitted(.)))
+summary(m1_right)
+plot(m1_right)
+
+# m1_right <- lme(y1 ~ x, random = ~ 1 | group, data = d,
+# weights = varExp())
+```
+
+varIdent:
+
+```{r}
+set.seed(999)
+sds <- rep(rlnorm(J, 0, 0.4), each = N)
+d <- mutate(d, y2 = rnorm(N * J, mean, sd = sds))
+ggplot(d, aes(x, y2)) + geom_point() + facet_wrap(~group)
+m2_wrong <- lmer(y2 ~ x + (1 | group), data = d)
+plot(m2_wrong)
+plot(m2_wrong, resid(.) ~ fitted(.) | group, abline = 0)
+
+m2_right <- lme(y2 ~ x, random = ~ 1 | group, data = d,
+  weights = varIdent(form = ~ 1 | group))
+summary(m2_right)
+plot(m2_right, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
+```
+
+```{r}
+set.seed(222)
+sds <- rep(rlnorm(J, 0, 0.4), each = N)
+sds <- sqrt(exp(2 * 0.75 * d$mean) * sds)
+d <- mutate(d, y3 = rnorm(N * J, mean, sd = sds))
+ggplot(d, aes(x, y3)) + geom_point() + facet_wrap(~group)
+m3_wrong <- lmer(y3 ~ x + (1 | group), data = d)
+plot(m3_wrong)
+plot(m3_wrong, resid(.) ~ fitted(.) | group, abline = 0)
+
+m3_wrong <- lme(y3 ~ x, random = ~ 1 | group, data = d,
+  weights = varIdent(form = ~ 1 | group))
+plot(m3_wrong, resid(., type = "normalized") ~ fitted(.))
+plot(m3_wrong, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
+
+m3_wrong <- lme(y3 ~ x, random = ~ 1 | group, data = d,
+  weights = varExp())
+plot(m3_wrong, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
+
+m3_right <- lme(y3 ~ x, random = ~ 1 | group, data = d,
+  weights = varComb(varIdent(form = ~ 1 | group), varExp()))
+
+summary(m3_right)
+plot(m3_right, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
+```
+
+temporal correlation:
+
+```{r}
+set.seed(9382)
+d <- mutate(d, y4 =
+    as.numeric(arima.sim(model = list(ar = 0.5), n = N * J, sd = sigma)) + mean)
+ggplot(d, aes(x, y4)) + geom_point() + facet_wrap(~group)
+ggplot(d, aes(time, y4)) + geom_point() + facet_wrap(~group)
+
+m4_wrong <- lmer(y4 ~ x + (1 | group), data = d)
+plot(m4_wrong)
+plot(m4_wrong, resid(.) ~ fitted(.) | group, abline = 0)
+plot(m4_wrong, resid(.) ~ time | group, abline = 0)
+
+m4_wrong <- lme(y4 ~ x, random = ~ 1 | group, data = d)
+plot(ACF(m4_wrong, resType = "normalized"))
+
+m4_right <- lme(y4 ~ x, random = ~ 1 | group, data = d, correlation = corAR1())
+plot(m4_right, resid(., type = "normalized") ~ time | group, abline = 0)
+
+plot(ACF(m4_right, resType = "normalized"))
+
+summary(m4_right)
+plot(m3_right, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
+```
+
+```{r}
+# group_means <- 
+# mean = alpha + beta * x,
+```
+
+reorder:
+
+```{r}
+# y1 = varexp, y2 = corar1, y3 = varident, y4 = varcomb
+d <- select(d, -c(beta:sigma), -mean) %>%
+  rename(y102 = y2, y104 = y4, y103 = y3) %>%
+  rename(y2 = y104, y3 = y102, y4 = y103) %>%
+  select(group, time, x, y, y1, y2, y3, y4)
+saveRDS(d, file = "data/generated/model-checking.rds")
+```
