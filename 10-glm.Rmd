@@ -29,8 +29,8 @@ We will use the following function to quickly plot the predictions from our mode
 plot_glm <- function(model, dat) {
   fit <- predict(model, type = "link", se = FALSE)
   se <- predict(model, type = "link", se = TRUE)$se
-  dat$lwr <- family(model)$linkinv(fit - 2 * se)
-  dat$upr <- family(model)$linkinv(fit + 2 * se)
+  dat$lwr <- family(model)$linkinv(fit - 1.96 * se)
+  dat$upr <- family(model)$linkinv(fit + 1.96 * se)
   dat$fit <- family(model)$linkinv(fit)
   p <- ggplot(dat) + geom_point(aes(x, y), alpha = 0.6) + 
     geom_line(aes(x, fit), colour = "red", lwd = 1) +
@@ -46,7 +46,7 @@ Put another way, the "link" is the transformation you need to apply to make your
 
 The error distribution describes the spread of the data around the raw untransformed mean.
 
-The two most common link functions, and there only two we are going to work with in this workshop, are the log and logit links.
+The two most common link functions, and the only two we are going to work with in this workshop, are the log and logit links.
 
 Let's look at those now. So if we want to fit a curve that looks like this:
 
@@ -74,9 +74,9 @@ Then we can make it linear by applying the logit link:
 plot(xx, qlogis(plogis(xx)), type = "l")
 ```
 
-Note that of the `qlogis()` function is also known as the logit function and the `plogis()` function is also known as the inverse logit function. The logit of p is simply: logit(p) = log(p/(1-p)).
+Note that of the `qlogis()` function is also known as the logit function and the `plogis()` function is also known as the inverse logit function. logit(p) = log(p/(1-p)).
 
-There are many ways you can specify a distribution family and link function in R. I'm going to try and stay consistent and specify them like this `family(link = "link")`.
+There are many ways you can specify a distribution family and link function in R. I'm going to try and be consistent and specify them like this `family(link = "link")`.
 
 When in doubt, read the help for `?family`.
 
