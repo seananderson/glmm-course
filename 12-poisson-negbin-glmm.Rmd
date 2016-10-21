@@ -130,7 +130,7 @@ coef(summary(m_glmer))
 
 Now we should check for overdispersion.
 
-We can do that by comparing the sum of the person residuals squared with the residual degrees of freedom. 
+We can do that by comparing the sum of the pearson residuals squared with the residual degrees of freedom. 
 
 We can see the degrees of freedom from the output of `summary()`.
 
@@ -138,7 +138,7 @@ And we can calculate the sum of the pearson residuals squared:
 
 ```{r}
 sum(residuals(m_glmer, "pearson")^2)
-aods3::gof(m_glmer)
+aods3::gof(m_glmer) # alternative
 ```
 
 So it looks like we have some overdispersion here.
