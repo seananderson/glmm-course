@@ -1,0 +1,844 @@
+tank,date,climate,drying,treatment,species,svl,mass,time,cumulative,prop.meta,devel.rate,final.stage,algaemass
+1,6/27/2012,warming,temp,warming + fast,spadefoot,16.0,0.67,49,1,0.033333333,0.387755102,46,1.768
+1,6/29/2012,warming,temp,warming + fast,spadefoot,16.0,0.597,51,2,0.066666667,0.37254902,46,1.768
+1,7/1/2012,warming,temp,warming + fast,spadefoot,17.0,0.523,53,5,0.166666667,0.358490566,46,1.768
+1,7/1/2012,warming,temp,warming + fast,spadefoot,16.0,0.492,53,5,0.166666667,0.358490566,46,1.768
+1,7/1/2012,warming,temp,warming + fast,spadefoot,18.0,0.609,53,5,0.166666667,0.358490566,46,1.768
+1,7/2/2012,warming,temp,warming + fast,spadefoot,16.0,0.476,54,7,0.233333333,0.351851852,46,1.768
+1,7/2/2012,warming,temp,warming + fast,spadefoot,17.5,0.536,54,7,0.233333333,0.351851852,46,1.768
+1,7/4/2012,warming,temp,warming + fast,spadefoot,16.5,0.368,56,10,0.333333333,0.339285714,46,1.768
+1,7/4/2012,warming,temp,warming + fast,spadefoot,18.5,0.642,56,10,0.333333333,0.339285714,45,1.768
+1,7/4/2012,warming,temp,warming + fast,spadefoot,19.0,0.698,56,10,0.333333333,0.339285714,45,1.768
+1,7/6/2012,warming,temp,warming + fast,spadefoot,17.0,0.658,58,11,0.366666667,0.327586207,45,1.768
+1,7/8/2012,warming,temp,warming + fast,spadefoot,18.0,0.59,60,15,0.5,0.316666667,46,1.768
+1,7/8/2012,warming,temp,warming + fast,spadefoot,19.5,0.691,60,15,0.5,0.316666667,46,1.768
+1,7/8/2012,warming,temp,warming + fast,spadefoot,17.0,0.597,60,15,0.5,0.316666667,45,1.768
+1,7/8/2012,warming,temp,warming + fast,spadefoot,18.5,0.776,60,15,0.5,0.316666667,45,1.768
+1,7/13/2012,warming,temp,warming + fast,spadefoot,20.0,0.822,65,17,0.566666667,0.292307692,46,1.768
+1,7/13/2012,warming,temp,warming + fast,spadefoot,20.0,0.8,65,17,0.566666667,0.292307692,46,1.768
+1,7/16/2012,warming,temp,warming + fast,spadefoot,17.5,0.585,68,18,0.6,0.279411765,46,1.768
+2,6/27/2012,warming,perm,warming + slow,spadefoot,17.0,0.685,49,2,0.066666667,0.387755102,45,3.081
+2,6/27/2012,warming,perm,warming + slow,spadefoot,17.0,0.577,49,2,0.066666667,0.387755102,46,3.081
+2,6/29/2012,warming,perm,warming + slow,spadefoot,17.0,0.615,51,4,0.133333333,0.37254902,46,3.081
+2,6/29/2012,warming,perm,warming + slow,spadefoot,18.0,0.588,51,4,0.133333333,0.37254902,45,3.081
+2,7/2/2012,warming,perm,warming + slow,spadefoot,16.5,0.549,54,5,0.166666667,0.351851852,46,3.081
+2,7/6/2012,warming,perm,warming + slow,spadefoot,17.0,0.427,58,7,0.233333333,0.327586207,45,3.081
+2,7/6/2012,warming,perm,warming + slow,spadefoot,18.0,0.636,58,7,0.233333333,0.327586207,45,3.081
+2,7/8/2012,warming,perm,warming + slow,spadefoot,19.5,0.644,60,9,0.3,0.316666667,46,3.081
+2,7/11/2012,warming,perm,warming + slow,spadefoot,19.0,0.62,63,10,0.333333333,0.301587302,46,3.081
+2,7/17/2012,warming,perm,warming + slow,spadefoot,18.0,0.84,69,12,0.4,0.275362319,46,3.081
+2,7/17/2012,warming,perm,warming + slow,spadefoot,19.0,0.815,69,12,0.4,0.275362319,46,3.081
+2,7/19/2012,warming,perm,warming + slow,spadefoot,19.5,0.865,71,14,0.466666667,0.267605634,45,3.081
+2,7/19/2012,warming,perm,warming + slow,spadefoot,17.0,0.6,71,14,0.466666667,0.267605634,45,3.081
+2,7/30/2012,warming,perm,warming + slow,spadefoot,16.0,0.489,80,15,0.5,0.2375,46,3.081
+3,6/21/2012,warming,perm,warming + slow,treefrog,17.0,0.328,44,2,0.066666667,0.431818182,45,0.0
+3,6/21/2012,warming,perm,warming + slow,treefrog,15.5,0.36,44,2,0.066666667,0.431818182,46,0.0
+3,6/23/2012,warming,perm,warming + slow,treefrog,15.5,0.342,45,6,0.2,0.422222222,46,0.0
+3,6/23/2012,warming,perm,warming + slow,treefrog,14.0,0.239,45,6,0.2,0.422222222,46,0.0
+3,6/23/2012,warming,perm,warming + slow,treefrog,15.5,0.294,45,6,0.2,0.422222222,45,0.0
+3,6/23/2012,warming,perm,warming + slow,treefrog,16.0,0.307,45,6,0.2,0.422222222,46,0.0
+3,6/25/2012,warming,perm,warming + slow,treefrog,16.0,0.309,47,9,0.3,0.404255319,45,0.0
+3,6/25/2012,warming,perm,warming + slow,treefrog,15.0,0.304,47,9,0.3,0.404255319,46,0.0
+3,6/25/2012,warming,perm,warming + slow,treefrog,14.0,0.308,47,9,0.3,0.404255319,46,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,16.0,0.343,51,17,0.566666667,0.37254902,46,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,16.0,0.375,51,17,0.566666667,0.37254902,46,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,15.0,0.326,51,17,0.566666667,0.37254902,45,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,15.5,0.343,51,17,0.566666667,0.37254902,46,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,13.0,0.269,51,17,0.566666667,0.37254902,46,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,14.0,0.325,51,17,0.566666667,0.37254902,45,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,15.5,0.323,51,17,0.566666667,0.37254902,46,0.0
+3,6/29/2012,warming,perm,warming + slow,treefrog,15.0,0.327,51,17,0.566666667,0.37254902,46,0.0
+3,7/2/2012,warming,perm,warming + slow,treefrog,15.0,0.34,54,21,0.7,0.351851852,46,0.0
+3,7/2/2012,warming,perm,warming + slow,treefrog,16.0,0.38,54,21,0.7,0.351851852,45,0.0
+3,7/2/2012,warming,perm,warming + slow,treefrog,15.5,0.27,54,21,0.7,0.351851852,46,0.0
+3,7/2/2012,warming,perm,warming + slow,treefrog,16.0,0.325,54,21,0.7,0.351851852,46,0.0
+3,7/4/2012,warming,perm,warming + slow,treefrog,17.0,0.327,56,24,0.8,0.339285714,46,0.0
+3,7/4/2012,warming,perm,warming + slow,treefrog,17.0,0.418,56,24,0.8,0.339285714,45,0.0
+3,7/4/2012,warming,perm,warming + slow,treefrog,17.0,0.383,56,24,0.8,0.339285714,46,0.0
+3,7/5/2012,warming,perm,warming + slow,treefrog,15.5,0.397,57,25,0.833333333,0.333333333,45,0.0
+4,7/8/2012,no warming,temp,no warming + fast,treefrog,17.0,0.423,60,1,0.033333333,0.316666667,46,2.0095
+4,7/9/2012,no warming,temp,no warming + fast,treefrog,14.0,0.293,61,4,0.133333333,0.31147541,46,2.0095
+4,7/9/2012,no warming,temp,no warming + fast,treefrog,14.0,0.329,61,4,0.133333333,0.31147541,45,2.0095
+4,7/9/2012,no warming,temp,no warming + fast,treefrog,15.0,0.4,61,4,0.133333333,0.31147541,45,2.0095
+4,7/11/2012,no warming,temp,no warming + fast,treefrog,16.0,0.356,63,8,0.266666667,0.301587302,45,2.0095
+4,7/11/2012,no warming,temp,no warming + fast,treefrog,18.5,0.368,63,8,0.266666667,0.301587302,46,2.0095
+4,7/11/2012,no warming,temp,no warming + fast,treefrog,15.0,0.294,63,8,0.266666667,0.301587302,46,2.0095
+4,7/11/2012,no warming,temp,no warming + fast,treefrog,16.0,0.332,63,8,0.266666667,0.301587302,46,2.0095
+4,7/13/2012,no warming,temp,no warming + fast,treefrog,15.0,0.3,65,11,0.366666667,0.292307692,45,2.0095
+4,7/13/2012,no warming,temp,no warming + fast,treefrog,16.0,0.3,65,11,0.366666667,0.292307692,46,2.0095
+4,7/13/2012,no warming,temp,no warming + fast,treefrog,16.0,0.345,65,11,0.366666667,0.292307692,46,2.0095
+4,7/16/2012,no warming,temp,no warming + fast,treefrog,16.0,0.34,68,17,0.566666667,0.279411765,46,2.0095
+4,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.305,68,17,0.566666667,0.279411765,45,2.0095
+4,7/16/2012,no warming,temp,no warming + fast,treefrog,14.0,0.299,68,17,0.566666667,0.279411765,46,2.0095
+4,7/16/2012,no warming,temp,no warming + fast,treefrog,16.0,0.335,68,17,0.566666667,0.279411765,46,2.0095
+4,7/16/2012,no warming,temp,no warming + fast,treefrog,14.0,0.26,68,17,0.566666667,0.279411765,46,2.0095
+4,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.336,68,17,0.566666667,0.279411765,45,2.0095
+4,7/17/2012,no warming,temp,no warming + fast,treefrog,15.0,0.31,69,18,0.6,0.275362319,45,2.0095
+4,7/19/2012,no warming,temp,no warming + fast,treefrog,16.0,0.255,71,23,0.766666667,0.267605634,46,2.0095
+4,7/19/2012,no warming,temp,no warming + fast,treefrog,16.0,0.378,71,23,0.766666667,0.267605634,45,2.0095
+4,7/19/2012,no warming,temp,no warming + fast,treefrog,15.5,0.26,71,23,0.766666667,0.267605634,46,2.0095
+4,7/19/2012,no warming,temp,no warming + fast,treefrog,17.0,0.37,71,23,0.766666667,0.267605634,46,2.0095
+4,7/19/2012,no warming,temp,no warming + fast,treefrog,15.0,0.29,71,23,0.766666667,0.267605634,46,2.0095
+4,7/22/2012,no warming,temp,no warming + fast,treefrog,16.5,0.317,74,24,0.8,0.256756757,46,2.0095
+4,7/23/2012,no warming,temp,no warming + fast,treefrog,15.0,0.327,75,25,0.833333333,0.253333333,46,2.0095
+5,6/27/2012,warming,temp,warming + fast,redlegged,17.0,0.396,49,1,0.033333333,0.387755102,45,0.0
+5,6/29/2012,warming,temp,warming + fast,redlegged,16.5,0.588,51,3,0.1,0.37254902,46,0.0
+5,6/29/2012,warming,temp,warming + fast,redlegged,17.5,0.44,51,3,0.1,0.37254902,45,0.0
+5,7/2/2012,warming,temp,warming + fast,redlegged,15.0,0.269,54,8,0.266666667,0.351851852,46,0.0
+5,7/2/2012,warming,temp,warming + fast,redlegged,17.5,0.366,54,8,0.266666667,0.351851852,46,0.0
+5,7/2/2012,warming,temp,warming + fast,redlegged,18.0,0.397,54,8,0.266666667,0.351851852,46,0.0
+5,7/2/2012,warming,temp,warming + fast,redlegged,16.0,0.333,54,8,0.266666667,0.351851852,46,0.0
+5,7/2/2012,warming,temp,warming + fast,redlegged,16.0,0.305,54,8,0.266666667,0.351851852,46,0.0
+5,7/4/2012,warming,temp,warming + fast,redlegged,17.0,0.44,56,10,0.333333333,0.339285714,45,0.0
+5,7/4/2012,warming,temp,warming + fast,redlegged,16.5,0.353,56,10,0.333333333,0.339285714,46,0.0
+5,7/5/2012,warming,temp,warming + fast,redlegged,18.0,0.38,57,11,0.366666667,0.333333333,46,0.0
+5,7/6/2012,warming,temp,warming + fast,redlegged,18.0,0.435,58,12,0.4,0.327586207,46,0.0
+5,7/8/2012,warming,temp,warming + fast,redlegged,17.5,0.409,60,13,0.433333333,0.316666667,45,0.0
+5,7/11/2012,warming,temp,warming + fast,redlegged,16.0,0.39,63,15,0.5,0.301587302,45,0.0
+5,7/11/2012,warming,temp,warming + fast,redlegged,17.5,0.47,63,15,0.5,0.301587302,46,0.0
+5,7/13/2012,warming,temp,warming + fast,redlegged,17.5,0.381,65,16,0.533333333,0.292307692,46,0.0
+5,7/16/2012,warming,temp,warming + fast,redlegged,18.0,0.448,68,19,0.633333333,0.279411765,45,0.0
+5,7/16/2012,warming,temp,warming + fast,redlegged,17.0,0.385,68,19,0.633333333,0.279411765,46,0.0
+5,7/16/2012,warming,temp,warming + fast,redlegged,18.5,0.5,68,19,0.633333333,0.279411765,46,0.0
+5,7/19/2012,warming,temp,warming + fast,redlegged,19.5,0.723,71,20,0.666666667,0.267605634,46,0.0
+6,7/13/2012,no warming,temp,no warming + fast,spadefoot,18.5,0.584,65,1,0.033333333,0.292307692,45,1.061
+6,7/16/2012,no warming,temp,no warming + fast,spadefoot,16.5,0.58,68,4,0.133333333,0.279411765,46,1.061
+6,7/16/2012,no warming,temp,no warming + fast,spadefoot,15.0,0.406,68,4,0.133333333,0.279411765,45,1.061
+6,7/16/2012,no warming,temp,no warming + fast,spadefoot,16.0,0.529,68,4,0.133333333,0.279411765,45,1.061
+6,7/19/2012,no warming,temp,no warming + fast,spadefoot,19.0,0.7,71,6,0.2,0.267605634,46,1.061
+6,7/19/2012,no warming,temp,no warming + fast,spadefoot,18.5,0.604,71,6,0.2,0.267605634,46,1.061
+6,7/22/2012,no warming,temp,no warming + fast,spadefoot,17.5,0.623,74,9,0.3,0.256756757,46,1.061
+6,7/22/2012,no warming,temp,no warming + fast,spadefoot,15.5,0.455,74,9,0.3,0.256756757,46,1.061
+6,7/22/2012,no warming,temp,no warming + fast,spadefoot,16.0,0.56,74,9,0.3,0.256756757,46,1.061
+6,7/23/2012,no warming,temp,no warming + fast,spadefoot,18.0,0.778,75,10,0.333333333,0.253333333,46,1.061
+7,7/2/2012,warming,temp,warming + fast,redlegged,21.0,0.61,54,3,0.1,0.351851852,46,0.0
+7,7/2/2012,warming,temp,warming + fast,redlegged,21.0,0.641,54,3,0.1,0.351851852,46,0.0
+7,7/2/2012,warming,temp,warming + fast,redlegged,21.0,0.672,54,3,0.1,0.351851852,46,0.0
+7,7/6/2012,warming,temp,warming + fast,redlegged,16.0,0.47,58,4,0.133333333,0.327586207,45,0.0
+7,7/9/2012,warming,temp,warming + fast,redlegged,17.5,0.546,61,8,0.266666667,0.31147541,45,0.0
+7,7/9/2012,warming,temp,warming + fast,redlegged,18.0,0.569,61,8,0.266666667,0.31147541,45,0.0
+7,7/11/2012,warming,temp,warming + fast,redlegged,19.0,0.567,63,9,0.3,0.301587302,45,0.0
+7,7/13/2012,warming,temp,warming + fast,redlegged,18.5,0.52,65,11,0.366666667,0.292307692,46,0.0
+7,7/13/2012,warming,temp,warming + fast,redlegged,19.0,0.615,65,11,0.366666667,0.292307692,45,0.0
+7,7/16/2012,warming,temp,warming + fast,redlegged,17.0,0.486,68,12,0.4,0.279411765,45,0.0
+7,7/19/2012,warming,temp,warming + fast,redlegged,18.0,0.505,71,14,0.466666667,0.267605634,45,0.0
+7,7/19/2012,warming,temp,warming + fast,redlegged,18.0,0.58,71,14,0.466666667,0.267605634,45,0.0
+8,7/13/2012,no warming,temp,no warming + fast,redlegged,17.5,0.427,65,4,0.133333333,0.292307692,45,2.4994
+8,7/13/2012,no warming,temp,no warming + fast,redlegged,17.5,0.448,65,4,0.133333333,0.292307692,45,2.4994
+8,7/13/2012,no warming,temp,no warming + fast,redlegged,18.0,0.45,65,4,0.133333333,0.292307692,46,2.4994
+8,7/13/2012,no warming,temp,no warming + fast,redlegged,20.0,0.707,65,4,0.133333333,0.292307692,46,2.4994
+8,7/16/2012,no warming,temp,no warming + fast,redlegged,18.0,0.496,68,6,0.2,0.279411765,45,2.4994
+8,7/16/2012,no warming,temp,no warming + fast,redlegged,20.0,0.6,68,6,0.2,0.279411765,46,2.4994
+8,7/17/2012,no warming,temp,no warming + fast,redlegged,18.0,0.412,69,9,0.3,0.275362319,45,2.4994
+8,7/17/2012,no warming,temp,no warming + fast,redlegged,18.0,0.405,69,9,0.3,0.275362319,45,2.4994
+8,7/17/2012,no warming,temp,no warming + fast,redlegged,12.5,0.415,69,9,0.3,0.275362319,45,2.4994
+8,7/18/2012,no warming,temp,no warming + fast,redlegged,16.0,0.425,70,10,0.333333333,0.271428571,45,2.4994
+8,7/19/2012,no warming,temp,no warming + fast,redlegged,19.0,0.47,71,13,0.433333333,0.267605634,46,2.4994
+8,7/19/2012,no warming,temp,no warming + fast,redlegged,19.0,0.527,71,13,0.433333333,0.267605634,46,2.4994
+8,7/19/2012,no warming,temp,no warming + fast,redlegged,18.5,0.45,71,13,0.433333333,0.267605634,46,2.4994
+8,7/22/2012,no warming,temp,no warming + fast,redlegged,18.5,0.513,74,15,0.5,0.256756757,45,2.4994
+8,7/22/2012,no warming,temp,no warming + fast,redlegged,17.5,0.395,74,15,0.5,0.256756757,46,2.4994
+8,7/25/2012,no warming,temp,no warming + fast,redlegged,16.0,0.379,75,16,0.533333333,0.253333333,46,2.4994
+8,7/27/2012,no warming,temp,no warming + fast,redlegged,16.5,0.367,77,17,0.566666667,0.246753247,46,2.4994
+8,7/30/2012,no warming,temp,no warming + fast,redlegged,18.0,0.46,80,22,0.733333333,0.2375,45,2.4994
+8,7/30/2012,no warming,temp,no warming + fast,redlegged,18.0,0.545,80,22,0.733333333,0.2375,45,2.4994
+8,7/30/2012,no warming,temp,no warming + fast,redlegged,18.0,0.469,80,22,0.733333333,0.2375,46,2.4994
+8,7/30/2012,no warming,temp,no warming + fast,redlegged,17.5,0.464,80,22,0.733333333,0.2375,46,2.4994
+8,7/30/2012,no warming,temp,no warming + fast,redlegged,17.0,0.476,80,22,0.733333333,0.2375,46,2.4994
+8,8/1/2012,no warming,temp,no warming + fast,redlegged,18.0,0.628,82,23,0.766666667,0.231707317,46,2.4994
+9,7/8/2012,no warming,perm,no warming + slow,treefrog,15.5,0.4,60,1,0.033333333,0.316666667,46,1.3519
+9,7/9/2012,no warming,perm,no warming + slow,treefrog,15.5,0.454,61,4,0.133333333,0.31147541,46,1.3519
+9,7/9/2012,no warming,perm,no warming + slow,treefrog,16.0,0.494,61,4,0.133333333,0.31147541,45,1.3519
+9,7/9/2012,no warming,perm,no warming + slow,treefrog,17.0,0.475,61,4,0.133333333,0.31147541,46,1.3519
+9,7/11/2012,no warming,perm,no warming + slow,treefrog,18.0,0.495,63,6,0.2,0.301587302,45,1.3519
+9,7/11/2012,no warming,perm,no warming + slow,treefrog,16.0,0.379,63,6,0.2,0.301587302,46,1.3519
+9,7/13/2012,no warming,perm,no warming + slow,treefrog,17.0,0.46,65,13,0.433333333,0.292307692,45,1.3519
+9,7/13/2012,no warming,perm,no warming + slow,treefrog,16.0,0.296,65,13,0.433333333,0.292307692,46,1.3519
+9,7/13/2012,no warming,perm,no warming + slow,treefrog,16.0,0.339,65,13,0.433333333,0.292307692,45,1.3519
+9,7/13/2012,no warming,perm,no warming + slow,treefrog,16.0,0.438,65,13,0.433333333,0.292307692,46,1.3519
+9,7/13/2012,no warming,perm,no warming + slow,treefrog,17.0,0.425,65,13,0.433333333,0.292307692,46,1.3519
+9,7/13/2012,no warming,perm,no warming + slow,treefrog,17.0,0.53,65,13,0.433333333,0.292307692,46,1.3519
+9,7/13/2012,no warming,perm,no warming + slow,treefrog,16.0,0.37,65,13,0.433333333,0.292307692,45,1.3519
+9,7/14/2012,no warming,perm,no warming + slow,treefrog,17.0,0.502,66,14,0.466666667,0.287878788,45,1.3519
+9,7/16/2012,no warming,perm,no warming + slow,treefrog,18.0,0.468,68,16,0.533333333,0.279411765,46,1.3519
+9,7/17/2012,no warming,perm,no warming + slow,treefrog,17.0,0.465,69,17,0.566666667,0.275362319,45,1.3519
+9,7/19/2012,no warming,perm,no warming + slow,treefrog,17.0,0.404,71,18,0.6,0.267605634,46,1.3519
+9,7/22/2012,no warming,perm,no warming + slow,treefrog,16.0,0.36,74,19,0.633333333,0.256756757,46,1.3519
+9,7/25/2012,no warming,perm,no warming + slow,treefrog,16.0,0.335,75,20,0.666666667,0.253333333,46,1.3519
+9,7/27/2012,no warming,perm,no warming + slow,treefrog,19.0,0.476,77,21,0.7,0.246753247,46,1.3519
+10,7/19/2012,no warming,perm,no warming + slow,spadefoot,19.0,0.725,71,1,0.033333333,0.267605634,46,3.959
+10,7/22/2012,no warming,perm,no warming + slow,spadefoot,16.5,0.648,74,2,0.066666667,0.256756757,46,3.959
+10,7/27/2012,no warming,perm,no warming + slow,spadefoot,21.0,0.99,77,3,0.1,0.246753247,45,3.959
+10,8/2/2012,no warming,perm,no warming + slow,spadefoot,20.0,1.16,83,4,0.133333333,0.228915663,45,3.959
+11,7/13/2012,no warming,temp,no warming + fast,spadefoot,23.5,1.16,65,1,0.033333333,0.292307692,46,2.343
+11,7/16/2012,no warming,temp,no warming + fast,spadefoot,23.0,1.258,68,2,0.066666667,0.279411765,46,2.343
+11,7/17/2012,no warming,temp,no warming + fast,spadefoot,21.0,1.22,69,3,0.1,0.275362319,45,2.343
+11,7/19/2012,no warming,temp,no warming + fast,spadefoot,20.0,0.934,71,4,0.133333333,0.267605634,46,2.343
+11,7/22/2012,no warming,temp,no warming + fast,spadefoot,19.0,0.705,74,5,0.166666667,0.256756757,46,2.343
+11,8/1/2012,no warming,temp,no warming + fast,spadefoot,21.0,1.026,82,6,0.2,0.231707317,45,2.343
+12,6/27/2012,warming,perm,warming + slow,redlegged,15.0,0.332,49,1,0.033333333,0.387755102,46,0.0
+12,6/29/2012,warming,perm,warming + slow,redlegged,19.0,0.45,51,4,0.133333333,0.37254902,46,0.0
+12,6/29/2012,warming,perm,warming + slow,redlegged,18.0,0.43,51,4,0.133333333,0.37254902,45,0.0
+12,6/29/2012,warming,perm,warming + slow,redlegged,18.0,0.393,51,4,0.133333333,0.37254902,45,0.0
+12,7/2/2012,warming,perm,warming + slow,redlegged,16.5,0.358,54,7,0.233333333,0.351851852,46,0.0
+12,7/2/2012,warming,perm,warming + slow,redlegged,17.0,0.335,54,7,0.233333333,0.351851852,46,0.0
+12,7/2/2012,warming,perm,warming + slow,redlegged,17.0,0.344,54,7,0.233333333,0.351851852,45,0.0
+12,7/4/2012,warming,perm,warming + slow,redlegged,17.5,0.38,56,9,0.3,0.339285714,45,0.0
+12,7/4/2012,warming,perm,warming + slow,redlegged,17.0,0.389,56,9,0.3,0.339285714,45,0.0
+12,7/5/2012,warming,perm,warming + slow,redlegged,15.0,0.36,57,10,0.333333333,0.333333333,45,0.0
+12,7/11/2012,warming,perm,warming + slow,redlegged,17.5,0.407,63,13,0.433333333,0.301587302,46,0.0
+12,7/11/2012,warming,perm,warming + slow,redlegged,16.0,0.356,63,13,0.433333333,0.301587302,46,0.0
+12,7/11/2012,warming,perm,warming + slow,redlegged,17.5,0.426,63,13,0.433333333,0.301587302,46,0.0
+12,7/13/2012,warming,perm,warming + slow,redlegged,18.0,0.474,65,14,0.466666667,0.292307692,45,0.0
+12,7/16/2012,warming,perm,warming + slow,redlegged,20.0,0.582,68,15,0.5,0.279411765,46,0.0
+12,7/17/2012,warming,perm,warming + slow,redlegged,19.5,0.645,69,17,0.566666667,0.275362319,46,0.0
+12,7/17/2012,warming,perm,warming + slow,redlegged,18.0,0.515,69,17,0.566666667,0.275362319,45,0.0
+12,7/18/2012,warming,perm,warming + slow,redlegged,15.0,0.294,70,18,0.6,0.271428571,46,0.0
+12,7/19/2012,warming,perm,warming + slow,redlegged,18.5,0.55,71,20,0.666666667,0.267605634,45,0.0
+12,7/19/2012,warming,perm,warming + slow,redlegged,18.0,0.467,71,20,0.666666667,0.267605634,46,0.0
+12,7/22/2012,warming,perm,warming + slow,redlegged,19.5,0.56,74,21,0.7,0.256756757,46,0.0
+12,8/4/2012,warming,perm,warming + slow,redlegged,21.5,0.784,85,22,0.733333333,0.223529412,46,0.0
+12,8/11/2012,warming,perm,warming + slow,redlegged,21.0,0.676,92,23,0.766666667,0.206521739,46,0.0
+12,8/29/2012,warming,perm,warming + slow,redlegged,20.0,0.65,109,24,0.8,0.174311927,46,0.0
+13,6/19/2012,warming,temp,warming + fast,treefrog,16.0,0.267,42,3,0.1,0.452380952,46,0.0
+13,6/19/2012,warming,temp,warming + fast,treefrog,16.0,0.308,42,3,0.1,0.452380952,46,0.0
+13,6/19/2012,warming,temp,warming + fast,treefrog,15.0,0.23,42,3,0.1,0.452380952,45,0.0
+13,6/21/2012,warming,temp,warming + fast,treefrog,14.0,0.323,44,5,0.166666667,0.431818182,45,0.0
+13,6/21/2012,warming,temp,warming + fast,treefrog,15.0,0.31,44,5,0.166666667,0.431818182,46,0.0
+13,6/23/2012,warming,temp,warming + fast,treefrog,14.0,0.26,45,8,0.266666667,0.422222222,46,0.0
+13,6/23/2012,warming,temp,warming + fast,treefrog,14.0,0.23,45,8,0.266666667,0.422222222,46,0.0
+13,6/23/2012,warming,temp,warming + fast,treefrog,15.0,0.273,45,8,0.266666667,0.422222222,46,0.0
+13,6/25/2012,warming,temp,warming + fast,treefrog,15.0,0.289,47,14,0.466666667,0.404255319,46,0.0
+13,6/25/2012,warming,temp,warming + fast,treefrog,15.5,0.343,47,14,0.466666667,0.404255319,46,0.0
+13,6/25/2012,warming,temp,warming + fast,treefrog,14.0,0.265,47,14,0.466666667,0.404255319,46,0.0
+13,6/25/2012,warming,temp,warming + fast,treefrog,14.0,0.213,47,14,0.466666667,0.404255319,45,0.0
+13,6/25/2012,warming,temp,warming + fast,treefrog,15.0,0.324,47,14,0.466666667,0.404255319,46,0.0
+13,6/25/2012,warming,temp,warming + fast,treefrog,16.0,0.348,47,14,0.466666667,0.404255319,46,0.0
+13,6/27/2012,warming,temp,warming + fast,treefrog,15.0,0.265,49,17,0.566666667,0.387755102,46,0.0
+13,6/27/2012,warming,temp,warming + fast,treefrog,14.0,0.293,49,17,0.566666667,0.387755102,45,0.0
+13,6/27/2012,warming,temp,warming + fast,treefrog,13.5,0.314,49,17,0.566666667,0.387755102,45,0.0
+13,6/29/2012,warming,temp,warming + fast,treefrog,15.5,0.367,51,18,0.6,0.37254902,45,0.0
+13,7/2/2012,warming,temp,warming + fast,treefrog,15.0,0.32,54,22,0.733333333,0.351851852,46,0.0
+13,7/2/2012,warming,temp,warming + fast,treefrog,16.0,0.3,54,22,0.733333333,0.351851852,46,0.0
+13,7/2/2012,warming,temp,warming + fast,treefrog,15.0,0.303,54,22,0.733333333,0.351851852,46,0.0
+13,7/2/2012,warming,temp,warming + fast,treefrog,14.0,0.225,54,22,0.733333333,0.351851852,46,0.0
+13,7/4/2012,warming,temp,warming + fast,treefrog,15.0,0.342,56,24,0.8,0.339285714,45,0.0
+13,7/4/2012,warming,temp,warming + fast,treefrog,16.5,0.39,56,24,0.8,0.339285714,46,0.0
+14,7/2/2012,warming,perm,warming + slow,redlegged,18.0,0.406,54,4,0.133333333,0.351851852,46,0.0
+14,7/2/2012,warming,perm,warming + slow,redlegged,16.5,0.324,54,4,0.133333333,0.351851852,45,0.0
+14,7/2/2012,warming,perm,warming + slow,redlegged,17.0,0.446,54,4,0.133333333,0.351851852,45,0.0
+14,7/2/2012,warming,perm,warming + slow,redlegged,17.5,0.417,54,4,0.133333333,0.351851852,45,0.0
+14,7/4/2012,warming,perm,warming + slow,redlegged,16.0,0.31,56,7,0.233333333,0.339285714,46,0.0
+14,7/4/2012,warming,perm,warming + slow,redlegged,17.0,0.395,56,7,0.233333333,0.339285714,45,0.0
+14,7/4/2012,warming,perm,warming + slow,redlegged,18.0,0.412,56,7,0.233333333,0.339285714,45,0.0
+14,7/5/2012,warming,perm,warming + slow,redlegged,18.0,0.336,57,12,0.4,0.333333333,45,0.0
+14,7/5/2012,warming,perm,warming + slow,redlegged,17.5,0.412,57,12,0.4,0.333333333,45,0.0
+14,7/5/2012,warming,perm,warming + slow,redlegged,15.0,0.313,57,12,0.4,0.333333333,45,0.0
+14,7/5/2012,warming,perm,warming + slow,redlegged,17.5,0.386,57,12,0.4,0.333333333,45,0.0
+14,7/5/2012,warming,perm,warming + slow,redlegged,16.5,0.343,57,12,0.4,0.333333333,45,0.0
+14,7/8/2012,warming,perm,warming + slow,redlegged,18.0,0.348,60,14,0.466666667,0.316666667,46,0.0
+14,7/8/2012,warming,perm,warming + slow,redlegged,19.0,0.49,60,14,0.466666667,0.316666667,46,0.0
+14,7/11/2012,warming,perm,warming + slow,redlegged,20.0,0.566,63,15,0.5,0.301587302,45,0.0
+14,7/16/2012,warming,perm,warming + slow,redlegged,17.0,0.513,68,16,0.533333333,0.279411765,46,0.0
+14,7/19/2012,warming,perm,warming + slow,redlegged,17.5,0.505,71,19,0.633333333,0.267605634,45,0.0
+14,7/19/2012,warming,perm,warming + slow,redlegged,18.0,0.432,71,19,0.633333333,0.267605634,46,0.0
+14,7/19/2012,warming,perm,warming + slow,redlegged,19.0,0.488,71,19,0.633333333,0.267605634,45,0.0
+14,7/25/2012,warming,perm,warming + slow,redlegged,20.0,0.548,75,20,0.666666667,0.253333333,46,0.0
+14,7/27/2012,warming,perm,warming + slow,redlegged,19.0,0.597,77,21,0.7,0.246753247,46,0.0
+14,8/1/2012,warming,perm,warming + slow,redlegged,21.0,0.79,82,22,0.733333333,0.231707317,36,0.0
+14,8/4/2012,warming,perm,warming + slow,redlegged,19.0,0.477,85,23,0.766666667,0.223529412,46,0.0
+14,8/29/2012,warming,perm,warming + slow,redlegged,22.0,0.64,109,24,0.8,0.174311927,NA,0.0
+15,6/27/2012,warming,temp,warming + fast,spadefoot,17.5,0.552,49,1,0.033333333,0.387755102,46,5.979
+15,6/29/2012,warming,temp,warming + fast,spadefoot,16.0,0.59,51,3,0.1,0.37254902,45,5.979
+15,6/29/2012,warming,temp,warming + fast,spadefoot,17.5,0.582,51,3,0.1,0.37254902,46,5.979
+15,7/1/2012,warming,temp,warming + fast,spadefoot,16.0,0.515,53,4,0.133333333,0.358490566,45,5.979
+15,7/2/2012,warming,temp,warming + fast,spadefoot,16.0,0.589,54,5,0.166666667,0.351851852,46,5.979
+15,7/4/2012,warming,temp,warming + fast,spadefoot,18.0,0.801,56,6,0.2,0.339285714,46,5.979
+15,7/5/2012,warming,temp,warming + fast,spadefoot,15.0,0.393,57,7,0.233333333,0.333333333,46,5.979
+15,7/8/2012,warming,temp,warming + fast,spadefoot,19.5,0.738,60,10,0.333333333,0.316666667,45,5.979
+15,7/8/2012,warming,temp,warming + fast,spadefoot,18.0,0.599,60,10,0.333333333,0.316666667,46,5.979
+15,7/8/2012,warming,temp,warming + fast,spadefoot,18.0,0.67,60,10,0.333333333,0.316666667,46,5.979
+15,7/11/2012,warming,temp,warming + fast,spadefoot,18.0,0.56,63,11,0.366666667,0.301587302,46,5.979
+15,7/14/2012,warming,temp,warming + fast,spadefoot,17.5,0.675,66,12,0.4,0.287878788,45,5.979
+15,7/16/2012,warming,temp,warming + fast,spadefoot,15.0,0.426,68,13,0.433333333,0.279411765,46,5.979
+15,7/19/2012,warming,temp,warming + fast,spadefoot,18.5,0.729,71,15,0.5,0.267605634,46,5.979
+15,7/19/2012,warming,temp,warming + fast,spadefoot,21.0,0.86,71,15,0.5,0.267605634,46,5.979
+16,7/19/2012,no warming,temp,no warming + fast,spadefoot,16.0,0.46,71,2,0.066666667,0.267605634,45,2.569
+16,7/19/2012,no warming,temp,no warming + fast,spadefoot,17.0,0.643,71,2,0.066666667,0.267605634,45,2.569
+16,7/22/2012,no warming,temp,no warming + fast,spadefoot,17.0,0.566,74,3,0.1,0.256756757,46,2.569
+16,7/24/2012,no warming,temp,no warming + fast,spadefoot,17.0,0.6,76,4,0.133333333,0.25,45,2.569
+16,7/25/2012,no warming,temp,no warming + fast,spadefoot,17.0,0.725,77,5,0.166666667,0.246753247,45,2.569
+16,7/27/2012,no warming,temp,no warming + fast,spadefoot,18.5,0.84,77,7,0.233333333,0.246753247,45,2.569
+16,7/27/2012,no warming,temp,no warming + fast,spadefoot,16.0,0.49,77,7,0.233333333,0.246753247,45,2.569
+16,7/30/2012,no warming,temp,no warming + fast,spadefoot,17.0,0.615,80,8,0.266666667,0.2375,46,2.569
+17,6/27/2012,warming,perm,warming + slow,redlegged,18.0,0.463,49,3,0.1,0.387755102,45,0.0
+17,6/27/2012,warming,perm,warming + slow,redlegged,17.5,0.457,49,3,0.1,0.387755102,46,0.0
+17,6/27/2012,warming,perm,warming + slow,redlegged,18.0,0.4,49,3,0.1,0.387755102,46,0.0
+17,6/29/2012,warming,perm,warming + slow,redlegged,18.0,0.41,51,6,0.2,0.37254902,46,0.0
+17,6/29/2012,warming,perm,warming + slow,redlegged,18.0,0.49,51,6,0.2,0.37254902,45,0.0
+17,6/29/2012,warming,perm,warming + slow,redlegged,19.0,0.464,51,6,0.2,0.37254902,45,0.0
+17,7/2/2012,warming,perm,warming + slow,redlegged,18.0,0.357,54,9,0.3,0.351851852,46,0.0
+17,7/2/2012,warming,perm,warming + slow,redlegged,19.0,0.434,54,9,0.3,0.351851852,46,0.0
+17,7/2/2012,warming,perm,warming + slow,redlegged,18.0,0.349,54,9,0.3,0.351851852,46,0.0
+17,7/4/2012,warming,perm,warming + slow,redlegged,17.0,0.347,56,10,0.333333333,0.339285714,46,0.0
+17,7/5/2012,warming,perm,warming + slow,redlegged,18.0,0.399,57,11,0.366666667,0.333333333,46,0.0
+17,7/6/2012,warming,perm,warming + slow,redlegged,18.0,0.472,58,12,0.4,0.327586207,46,0.0
+17,7/8/2012,warming,perm,warming + slow,redlegged,18.5,0.525,60,14,0.466666667,0.316666667,46,0.0
+17,7/8/2012,warming,perm,warming + slow,redlegged,18.0,0.373,60,14,0.466666667,0.316666667,46,0.0
+17,7/11/2012,warming,perm,warming + slow,redlegged,19.0,0.686,63,17,0.566666667,0.301587302,46,0.0
+17,7/11/2012,warming,perm,warming + slow,redlegged,18.0,0.535,63,17,0.566666667,0.301587302,45,0.0
+17,7/13/2012,warming,perm,warming + slow,redlegged,19.0,0.5,65,19,0.633333333,0.292307692,46,0.0
+17,7/16/2012,warming,perm,warming + slow,redlegged,20.0,0.619,68,20,0.666666667,0.279411765,45,0.0
+17,7/20/2012,warming,perm,warming + slow,redlegged,18.0,0.69,72,21,0.7,0.263888889,45,0.0
+17,7/22/2012,warming,perm,warming + slow,redlegged,21.0,0.687,74,24,0.8,0.256756757,45,0.0
+17,7/22/2012,warming,perm,warming + slow,redlegged,21.0,0.676,74,24,0.8,0.256756757,46,0.0
+17,7/22/2012,warming,perm,warming + slow,redlegged,22.0,0.854,74,24,0.8,0.256756757,45,0.0
+18,6/23/2012,warming,temp,warming + fast,spadefoot,17.5,0.61,45,2,0.066666667,0.422222222,46,3.3702
+18,6/23/2012,warming,temp,warming + fast,spadefoot,18.5,0.76,45,2,0.066666667,0.422222222,46,3.3702
+18,6/25/2012,warming,temp,warming + fast,spadefoot,18.0,0.573,47,4,0.133333333,0.404255319,46,3.3702
+18,6/25/2012,warming,temp,warming + fast,spadefoot,19.0,0.808,47,4,0.133333333,0.404255319,46,3.3702
+18,6/29/2012,warming,temp,warming + fast,spadefoot,19.5,0.966,51,5,0.166666667,0.37254902,46,3.3702
+18,7/9/2012,warming,temp,warming + fast,spadefoot,22.0,1.079,61,6,0.2,0.31147541,46,3.3702
+18,7/11/2012,warming,temp,warming + fast,spadefoot,20.0,0.843,63,8,0.266666667,0.301587302,46,3.3702
+18,7/11/2012,warming,temp,warming + fast,spadefoot,22.5,0.877,63,8,0.266666667,0.301587302,46,3.3702
+18,7/13/2012,warming,temp,warming + fast,spadefoot,19.5,0.939,65,9,0.3,0.292307692,45,3.3702
+19,7/16/2012,no warming,temp,no warming + fast,spadefoot,17.0,0.66,68,1,0.033333333,0.279411765,46,2.5716
+19,7/19/2012,no warming,temp,no warming + fast,spadefoot,19.5,0.787,71,2,0.066666667,0.267605634,46,2.5716
+19,7/22/2012,no warming,temp,no warming + fast,spadefoot,20.0,0.984,74,3,0.1,0.256756757,46,2.5716
+20,6/29/2012,warming,temp,warming + fast,redlegged,15.5,0.344,51,1,0.033333333,0.37254902,45,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,16.0,0.37,54,8,0.266666667,0.351851852,45,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,16.0,0.28,54,8,0.266666667,0.351851852,46,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,15.0,0.284,54,8,0.266666667,0.351851852,46,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,17.0,0.407,54,8,0.266666667,0.351851852,45,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,15.0,0.389,54,8,0.266666667,0.351851852,45,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,15.0,0.3,54,8,0.266666667,0.351851852,46,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,16.0,0.335,54,8,0.266666667,0.351851852,45,0.0
+20,7/2/2012,warming,temp,warming + fast,redlegged,15.0,0.317,54,8,0.266666667,0.351851852,46,0.0
+20,7/4/2012,warming,temp,warming + fast,redlegged,16.0,0.318,56,10,0.333333333,0.339285714,46,0.0
+20,7/4/2012,warming,temp,warming + fast,redlegged,17.0,0.36,56,10,0.333333333,0.339285714,45,0.0
+20,7/5/2012,warming,temp,warming + fast,redlegged,16.5,0.333,57,13,0.433333333,0.333333333,46,0.0
+20,7/5/2012,warming,temp,warming + fast,redlegged,15.0,0.304,57,13,0.433333333,0.333333333,45,0.0
+20,7/5/2012,warming,temp,warming + fast,redlegged,16.0,0.363,57,13,0.433333333,0.333333333,45,0.0
+20,7/13/2012,warming,temp,warming + fast,redlegged,16.5,0.345,65,16,0.533333333,0.292307692,45,0.0
+20,7/13/2012,warming,temp,warming + fast,redlegged,16.0,0.327,65,16,0.533333333,0.292307692,46,0.0
+20,7/13/2012,warming,temp,warming + fast,redlegged,17.0,0.386,65,16,0.533333333,0.292307692,46,0.0
+20,7/16/2012,warming,temp,warming + fast,redlegged,14.0,0.257,68,18,0.6,0.279411765,46,0.0
+20,7/16/2012,warming,temp,warming + fast,redlegged,17.0,0.345,68,18,0.6,0.279411765,46,0.0
+20,7/17/2012,warming,temp,warming + fast,redlegged,15.0,0.308,69,20,0.666666667,0.275362319,46,0.0
+20,7/17/2012,warming,temp,warming + fast,redlegged,16.0,0.386,69,20,0.666666667,0.275362319,45,0.0
+20,7/19/2012,warming,temp,warming + fast,redlegged,15.0,0.318,71,22,0.733333333,0.267605634,46,0.0
+20,7/19/2012,warming,temp,warming + fast,redlegged,15.0,0.355,71,22,0.733333333,0.267605634,46,0.0
+21,6/30/2012,warming,temp,warming + fast,redlegged,20.0,0.568,52,2,0.066666667,0.365384615,45,0.0
+21,6/30/2012,warming,temp,warming + fast,redlegged,18.5,0.449,52,2,0.066666667,0.365384615,45,0.0
+21,7/2/2012,warming,temp,warming + fast,redlegged,16.0,0.3,54,7,0.233333333,0.351851852,46,0.0
+21,7/2/2012,warming,temp,warming + fast,redlegged,17.0,0.38,54,7,0.233333333,0.351851852,45,0.0
+21,7/2/2012,warming,temp,warming + fast,redlegged,17.0,0.35,54,7,0.233333333,0.351851852,45,0.0
+21,7/2/2012,warming,temp,warming + fast,redlegged,17.0,0.377,54,7,0.233333333,0.351851852,46,0.0
+21,7/2/2012,warming,temp,warming + fast,redlegged,18.0,0.449,54,7,0.233333333,0.351851852,45,0.0
+21,7/4/2012,warming,temp,warming + fast,redlegged,17.0,0.395,56,10,0.333333333,0.339285714,46,0.0
+21,7/4/2012,warming,temp,warming + fast,redlegged,17.0,0.396,56,10,0.333333333,0.339285714,45,0.0
+21,7/4/2012,warming,temp,warming + fast,redlegged,18.0,0.494,56,10,0.333333333,0.339285714,45,0.0
+21,7/6/2012,warming,temp,warming + fast,redlegged,16.0,0.385,58,12,0.4,0.327586207,45,0.0
+21,7/6/2012,warming,temp,warming + fast,redlegged,17.0,0.409,58,12,0.4,0.327586207,45,0.0
+21,7/11/2012,warming,temp,warming + fast,redlegged,17.0,0.38,63,13,0.433333333,0.301587302,46,0.0
+21,7/13/2012,warming,temp,warming + fast,redlegged,18.0,0.46,65,17,0.566666667,0.292307692,46,0.0
+21,7/13/2012,warming,temp,warming + fast,redlegged,16.0,0.362,65,17,0.566666667,0.292307692,45,0.0
+21,7/13/2012,warming,temp,warming + fast,redlegged,17.5,0.439,65,17,0.566666667,0.292307692,46,0.0
+21,7/13/2012,warming,temp,warming + fast,redlegged,17.5,0.436,65,17,0.566666667,0.292307692,45,0.0
+21,7/14/2012,warming,temp,warming + fast,redlegged,17.0,0.496,66,18,0.6,0.287878788,45,0.0
+21,7/16/2012,warming,temp,warming + fast,redlegged,16.5,0.473,68,21,0.7,0.279411765,45,0.0
+21,7/16/2012,warming,temp,warming + fast,redlegged,19.0,0.532,68,21,0.7,0.279411765,45,0.0
+21,7/16/2012,warming,temp,warming + fast,redlegged,18.0,0.485,68,21,0.7,0.279411765,46,0.0
+21,7/19/2012,warming,temp,warming + fast,redlegged,17.0,0.487,71,22,0.733333333,0.267605634,45,0.0
+22,6/19/2012,warming,temp,warming + fast,treefrog,15.0,0.288,42,1,0.033333333,0.452380952,46,0.0
+22,6/21/2012,warming,temp,warming + fast,treefrog,16.0,0.333,44,4,0.133333333,0.431818182,46,0.0
+22,6/21/2012,warming,temp,warming + fast,treefrog,16.0,0.356,44,4,0.133333333,0.431818182,46,0.0
+22,6/21/2012,warming,temp,warming + fast,treefrog,15.0,0.287,44,4,0.133333333,0.431818182,46,0.0
+22,6/23/2012,warming,temp,warming + fast,treefrog,17.0,0.343,45,6,0.2,0.422222222,46,0.0
+22,6/23/2012,warming,temp,warming + fast,treefrog,13.0,0.238,45,6,0.2,0.422222222,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,14.0,0.297,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,15.0,0.312,47,18,0.6,0.404255319,45,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,14.0,0.247,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,13.0,0.19,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,13.0,0.219,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,13.5,0.247,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,15.0,0.317,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,15.0,0.316,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,13.0,0.198,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,13.0,0.23,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,14.0,0.268,47,18,0.6,0.404255319,46,0.0
+22,6/25/2012,warming,temp,warming + fast,treefrog,16.0,0.278,47,18,0.6,0.404255319,46,0.0
+22,6/27/2012,warming,temp,warming + fast,treefrog,13.0,0.227,49,21,0.7,0.387755102,46,0.0
+22,6/27/2012,warming,temp,warming + fast,treefrog,15.0,0.352,49,21,0.7,0.387755102,45,0.0
+22,6/27/2012,warming,temp,warming + fast,treefrog,14.5,0.284,49,21,0.7,0.387755102,46,0.0
+22,6/29/2012,warming,temp,warming + fast,treefrog,16.0,0.29,51,26,0.866666667,0.37254902,46,0.0
+22,6/29/2012,warming,temp,warming + fast,treefrog,15.0,0.28,51,26,0.866666667,0.37254902,46,0.0
+22,6/29/2012,warming,temp,warming + fast,treefrog,15.0,0.3,51,26,0.866666667,0.37254902,46,0.0
+22,6/29/2012,warming,temp,warming + fast,treefrog,15.0,0.339,51,26,0.866666667,0.37254902,45,0.0
+22,6/29/2012,warming,temp,warming + fast,treefrog,15.0,0.292,51,26,0.866666667,0.37254902,46,0.0
+22,7/2/2012,warming,temp,warming + fast,treefrog,15.5,0.306,54,28,0.933333333,0.351851852,46,0.0
+22,7/2/2012,warming,temp,warming + fast,treefrog,15.0,0.393,54,28,0.933333333,0.351851852,45,0.0
+22,7/11/2012,warming,temp,warming + fast,treefrog,16.0,0.339,63,29,0.966666667,0.301587302,46,0.0
+23,7/22/2012,no warming,temp,no warming + fast,redlegged,16.0,0.36,74,4,0.133333333,0.256756757,45,0.6013
+23,7/22/2012,no warming,temp,no warming + fast,redlegged,17.0,0.379,74,4,0.133333333,0.256756757,46,0.6013
+23,7/22/2012,no warming,temp,no warming + fast,redlegged,18.0,0.446,74,4,0.133333333,0.256756757,46,0.6013
+23,7/23/2012,no warming,temp,no warming + fast,redlegged,18.0,0.508,75,5,0.166666667,0.253333333,45,0.6013
+23,7/24/2012,no warming,temp,no warming + fast,redlegged,18.0,0.55,76,6,0.2,0.25,45,0.6013
+23,7/25/2012,no warming,temp,no warming + fast,redlegged,17.0,0.434,75,10,0.333333333,0.253333333,45,0.6013
+23,7/25/2012,no warming,temp,no warming + fast,redlegged,19.0,0.548,75,10,0.333333333,0.253333333,46,0.6013
+23,7/25/2012,no warming,temp,no warming + fast,redlegged,17.0,0.455,75,10,0.333333333,0.253333333,45,0.6013
+23,7/25/2012,no warming,temp,no warming + fast,redlegged,19.5,0.598,75,10,0.333333333,0.253333333,45,0.6013
+23,7/26/2012,no warming,temp,no warming + fast,redlegged,19.0,0.538,76,12,0.4,0.25,45,0.6013
+23,7/26/2012,no warming,temp,no warming + fast,redlegged,18.0,0.539,76,12,0.4,0.25,45,0.6013
+23,7/30/2012,no warming,temp,no warming + fast,redlegged,17.0,0.389,80,14,0.466666667,0.2375,46,0.6013
+23,7/30/2012,no warming,temp,no warming + fast,redlegged,18.0,0.516,80,14,0.466666667,0.2375,46,0.6013
+24,7/16/2012,no warming,perm,no warming + slow,redlegged,19.0,0.456,68,1,0.033333333,0.279411765,46,0.7956
+24,7/17/2012,no warming,perm,no warming + slow,redlegged,18.5,0.47,69,2,0.066666667,0.275362319,45,0.7956
+24,7/19/2012,no warming,perm,no warming + slow,redlegged,17.0,0.455,71,7,0.233333333,0.267605634,45,0.7956
+24,7/19/2012,no warming,perm,no warming + slow,redlegged,19.0,0.55,71,7,0.233333333,0.267605634,46,0.7956
+24,7/19/2012,no warming,perm,no warming + slow,redlegged,17.0,0.475,71,7,0.233333333,0.267605634,45,0.7956
+24,7/19/2012,no warming,perm,no warming + slow,redlegged,18.0,0.418,71,7,0.233333333,0.267605634,46,0.7956
+24,7/19/2012,no warming,perm,no warming + slow,redlegged,16.0,0.322,71,7,0.233333333,0.267605634,46,0.7956
+24,7/22/2012,no warming,perm,no warming + slow,redlegged,16.0,0.377,74,12,0.4,0.256756757,46,0.7956
+24,7/22/2012,no warming,perm,no warming + slow,redlegged,18.0,0.419,74,12,0.4,0.256756757,46,0.7956
+24,7/22/2012,no warming,perm,no warming + slow,redlegged,15.0,0.325,74,12,0.4,0.256756757,46,0.7956
+24,7/22/2012,no warming,perm,no warming + slow,redlegged,16.5,0.456,74,12,0.4,0.256756757,46,0.7956
+24,7/22/2012,no warming,perm,no warming + slow,redlegged,16.0,0.385,74,12,0.4,0.256756757,46,0.7956
+24,7/25/2012,no warming,perm,no warming + slow,redlegged,16.0,0.39,75,15,0.5,0.253333333,45,0.7956
+24,7/25/2012,no warming,perm,no warming + slow,redlegged,16.0,0.368,75,15,0.5,0.253333333,45,0.7956
+24,7/25/2012,no warming,perm,no warming + slow,redlegged,16.0,0.384,75,15,0.5,0.253333333,45,0.7956
+24,7/27/2012,no warming,perm,no warming + slow,redlegged,16.5,0.325,77,16,0.533333333,0.246753247,46,0.7956
+24,8/4/2012,no warming,perm,no warming + slow,redlegged,16.5,0.36,85,18,0.6,0.223529412,46,0.7956
+24,8/4/2012,no warming,perm,no warming + slow,redlegged,18.0,0.539,85,18,0.6,0.223529412,45,0.7956
+24,8/11/2012,no warming,perm,no warming + slow,redlegged,18.0,0.48,92,21,0.7,0.206521739,46,0.7956
+24,8/11/2012,no warming,perm,no warming + slow,redlegged,18.0,0.489,92,21,0.7,0.206521739,46,0.7956
+24,8/11/2012,no warming,perm,no warming + slow,redlegged,18.5,0.46,92,21,0.7,0.206521739,46,0.7956
+24,8/14/2012,no warming,perm,no warming + slow,redlegged,19.0,0.48,95,25,0.833333333,0.2,46,0.7956
+24,8/14/2012,no warming,perm,no warming + slow,redlegged,18.0,0.43,95,25,0.833333333,0.2,46,0.7956
+24,8/14/2012,no warming,perm,no warming + slow,redlegged,18.5,0.493,95,25,0.833333333,0.2,46,0.7956
+24,8/14/2012,no warming,perm,no warming + slow,redlegged,19.0,0.467,95,25,0.833333333,0.2,46,0.7956
+24,8/20/2012,no warming,perm,no warming + slow,redlegged,21.0,0.7,100,26,0.866666667,0.19,46,0.7956
+25,7/16/2012,no warming,perm,no warming + slow,redlegged,20.0,0.605,68,1,0.033333333,0.279411765,45,4.1476
+25,7/17/2012,no warming,perm,no warming + slow,redlegged,19.0,0.584,69,3,0.1,0.275362319,45,4.1476
+25,7/17/2012,no warming,perm,no warming + slow,redlegged,18.0,0.445,69,3,0.1,0.275362319,45,4.1476
+25,7/19/2012,no warming,perm,no warming + slow,redlegged,17.0,0.39,71,8,0.266666667,0.267605634,45,4.1476
+25,7/19/2012,no warming,perm,no warming + slow,redlegged,17.0,0.333,71,8,0.266666667,0.267605634,46,4.1476
+25,7/19/2012,no warming,perm,no warming + slow,redlegged,17.5,0.415,71,8,0.266666667,0.267605634,45,4.1476
+25,7/19/2012,no warming,perm,no warming + slow,redlegged,17.0,0.4,71,8,0.266666667,0.267605634,45,4.1476
+25,7/19/2012,no warming,perm,no warming + slow,redlegged,21.0,0.773,71,8,0.266666667,0.267605634,46,4.1476
+25,7/22/2012,no warming,perm,no warming + slow,redlegged,18.5,0.439,74,9,0.3,0.256756757,46,4.1476
+25,7/25/2012,no warming,perm,no warming + slow,redlegged,18.0,0.409,75,12,0.4,0.253333333,46,4.1476
+25,7/25/2012,no warming,perm,no warming + slow,redlegged,17.0,0.48,75,12,0.4,0.253333333,45,4.1476
+25,7/26/2012,no warming,perm,no warming + slow,redlegged,18.0,0.497,76,12,0.4,0.25,45,4.1476
+25,7/30/2012,no warming,perm,no warming + slow,redlegged,17.0,0.369,80,17,0.566666667,0.2375,46,4.1476
+25,7/30/2012,no warming,perm,no warming + slow,redlegged,16.5,0.3,80,17,0.566666667,0.2375,46,4.1476
+25,7/30/2012,no warming,perm,no warming + slow,redlegged,18.0,0.478,80,17,0.566666667,0.2375,46,4.1476
+25,7/30/2012,no warming,perm,no warming + slow,redlegged,17.0,0.354,80,17,0.566666667,0.2375,46,4.1476
+25,7/30/2012,no warming,perm,no warming + slow,redlegged,18.0,0.396,80,17,0.566666667,0.2375,46,4.1476
+25,8/4/2012,no warming,perm,no warming + slow,redlegged,17.5,0.41,85,19,0.633333333,0.223529412,46,4.1476
+25,8/4/2012,no warming,perm,no warming + slow,redlegged,19.5,0.615,85,19,0.633333333,0.223529412,46,4.1476
+25,8/6/2012,no warming,perm,no warming + slow,redlegged,18.0,0.449,87,20,0.666666667,0.218390805,46,4.1476
+25,8/14/2012,no warming,perm,no warming + slow,redlegged,20.0,0.49,95,21,0.7,0.2,46,4.1476
+25,8/22/2012,no warming,perm,no warming + slow,redlegged,24.5,1.2,102,22,0.733333333,0.18627451,45,4.1476
+25,8/29/2012,no warming,perm,no warming + slow,redlegged,23.0,0.88,109,24,0.8,0.174311927,NA,4.1476
+25,8/29/2012,no warming,perm,no warming + slow,redlegged,17.0,0.305,109,24,0.8,0.174311927,NA,4.1476
+26,6/19/2012,warming,perm,warming + slow,treefrog,16.0,0.325,42,1,0.033333333,0.452380952,45,0.0
+26,6/21/2012,warming,perm,warming + slow,treefrog,16.5,0.339,44,4,0.133333333,0.431818182,46,0.0
+26,6/21/2012,warming,perm,warming + slow,treefrog,15.5,0.31,44,4,0.133333333,0.431818182,46,0.0
+26,6/21/2012,warming,perm,warming + slow,treefrog,16.0,0.333,44,4,0.133333333,0.431818182,46,0.0
+26,6/23/2012,warming,perm,warming + slow,treefrog,15.5,0.34,45,6,0.2,0.422222222,45,0.0
+26,6/23/2012,warming,perm,warming + slow,treefrog,15.5,0.323,45,6,0.2,0.422222222,45,0.0
+26,6/25/2012,warming,perm,warming + slow,treefrog,16.0,0.328,47,9,0.3,0.404255319,46,0.0
+26,6/25/2012,warming,perm,warming + slow,treefrog,16.0,0.3,47,9,0.3,0.404255319,46,0.0
+26,6/25/2012,warming,perm,warming + slow,treefrog,15.0,0.284,47,9,0.3,0.404255319,46,0.0
+26,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.384,49,15,0.5,0.387755102,45,0.0
+26,6/27/2012,warming,perm,warming + slow,treefrog,18.0,0.362,49,15,0.5,0.387755102,46,0.0
+26,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.252,49,15,0.5,0.387755102,46,0.0
+26,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.286,49,15,0.5,0.387755102,46,0.0
+26,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.314,49,15,0.5,0.387755102,45,0.0
+26,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.47,49,15,0.5,0.387755102,45,0.0
+26,6/29/2012,warming,perm,warming + slow,treefrog,14.0,0.349,51,17,0.566666667,0.37254902,46,0.0
+26,6/29/2012,warming,perm,warming + slow,treefrog,15.0,0.297,51,17,0.566666667,0.37254902,45,0.0
+26,7/2/2012,warming,perm,warming + slow,treefrog,15.0,0.338,54,23,0.766666667,0.351851852,45,0.0
+26,7/2/2012,warming,perm,warming + slow,treefrog,15.5,0.288,54,23,0.766666667,0.351851852,46,0.0
+26,7/2/2012,warming,perm,warming + slow,treefrog,15.5,0.375,54,23,0.766666667,0.351851852,46,0.0
+26,7/2/2012,warming,perm,warming + slow,treefrog,15.0,0.359,54,23,0.766666667,0.351851852,46,0.0
+26,7/2/2012,warming,perm,warming + slow,treefrog,16.0,0.34,54,23,0.766666667,0.351851852,45,0.0
+26,7/2/2012,warming,perm,warming + slow,treefrog,15.0,0.315,54,23,0.766666667,0.351851852,46,0.0
+26,7/4/2012,warming,perm,warming + slow,treefrog,16.0,0.346,56,24,0.8,0.339285714,46,0.0
+26,7/5/2012,warming,perm,warming + slow,treefrog,16.5,0.41,57,25,0.833333333,0.333333333,45,0.0
+26,7/6/2012,warming,perm,warming + slow,treefrog,16.0,0.45,58,26,0.866666667,0.327586207,45,0.0
+26,7/8/2012,warming,perm,warming + slow,treefrog,16.0,0.368,60,28,0.933333333,0.316666667,46,0.0
+26,7/8/2012,warming,perm,warming + slow,treefrog,17.0,0.437,60,28,0.933333333,0.316666667,46,0.0
+26,7/11/2012,warming,perm,warming + slow,treefrog,17.0,0.394,63,29,0.966666667,0.301587302,46,0.0
+27,7/16/2012,no warming,perm,no warming + slow,redlegged,18.0,0.43,68,1,0.033333333,0.279411765,46,0.0
+27,7/19/2012,no warming,perm,no warming + slow,redlegged,19.0,0.455,71,5,0.166666667,0.267605634,45,0.0
+27,7/19/2012,no warming,perm,no warming + slow,redlegged,17.5,0.399,71,5,0.166666667,0.267605634,45,0.0
+27,7/19/2012,no warming,perm,no warming + slow,redlegged,18.5,0.566,71,5,0.166666667,0.267605634,45,0.0
+27,7/19/2012,no warming,perm,no warming + slow,redlegged,19.0,0.6,71,5,0.166666667,0.267605634,46,0.0
+27,7/22/2012,no warming,perm,no warming + slow,redlegged,18.0,0.468,74,10,0.333333333,0.256756757,45,0.0
+27,7/22/2012,no warming,perm,no warming + slow,redlegged,18.0,0.46,74,10,0.333333333,0.256756757,46,0.0
+27,7/22/2012,no warming,perm,no warming + slow,redlegged,17.0,0.373,74,10,0.333333333,0.256756757,46,0.0
+27,7/22/2012,no warming,perm,no warming + slow,redlegged,17.0,0.316,74,10,0.333333333,0.256756757,46,0.0
+27,7/22/2012,no warming,perm,no warming + slow,redlegged,15.5,0.309,74,10,0.333333333,0.256756757,46,0.0
+27,7/23/2012,no warming,perm,no warming + slow,redlegged,17.0,0.41,75,11,0.366666667,0.253333333,45,0.0
+27,7/30/2012,no warming,perm,no warming + slow,redlegged,18.0,0.476,80,15,0.5,0.2375,46,0.0
+27,7/30/2012,no warming,perm,no warming + slow,redlegged,17.0,0.438,80,15,0.5,0.2375,46,0.0
+27,7/30/2012,no warming,perm,no warming + slow,redlegged,19.5,0.64,80,15,0.5,0.2375,45,0.0
+27,7/30/2012,no warming,perm,no warming + slow,redlegged,18.0,0.428,80,15,0.5,0.2375,46,0.0
+27,7/31/2012,no warming,perm,no warming + slow,redlegged,19.0,0.57,81,16,0.533333333,0.234567901,45,0.0
+27,8/4/2012,no warming,perm,no warming + slow,redlegged,20.0,0.599,85,17,0.566666667,0.223529412,46,0.0
+27,8/7/2012,no warming,perm,no warming + slow,redlegged,18.5,0.47,88,19,0.633333333,0.215909091,46,0.0
+27,8/7/2012,no warming,perm,no warming + slow,redlegged,17.0,0.403,88,19,0.633333333,0.215909091,46,0.0
+27,8/29/2012,no warming,perm,no warming + slow,redlegged,19.5,0.465,109,21,0.7,0.174311927,NA,0.0
+27,8/29/2012,no warming,perm,no warming + slow,redlegged,19.0,0.39,109,21,0.7,0.174311927,NA,0.0
+28,7/8/2012,no warming,perm,no warming + slow,treefrog,14.5,0.274,60,5,0.166666667,0.316666667,46,0.0
+28,7/8/2012,no warming,perm,no warming + slow,treefrog,15.0,0.265,60,5,0.166666667,0.316666667,46,0.0
+28,7/8/2012,no warming,perm,no warming + slow,treefrog,15.0,0.334,60,5,0.166666667,0.316666667,46,0.0
+28,7/8/2012,no warming,perm,no warming + slow,treefrog,15.0,0.296,60,5,0.166666667,0.316666667,46,0.0
+28,7/9/2012,no warming,perm,no warming + slow,treefrog,15.0,0.35,61,5,0.166666667,0.31147541,46,0.0
+28,7/9/2012,no warming,perm,no warming + slow,treefrog,14.0,0.32,61,7,0.233333333,0.31147541,46,0.0
+28,7/9/2012,no warming,perm,no warming + slow,treefrog,15.0,0.272,61,7,0.233333333,0.31147541,46,0.0
+28,7/11/2012,no warming,perm,no warming + slow,treefrog,15.0,0.293,63,8,0.266666667,0.301587302,46,0.0
+28,7/13/2012,no warming,perm,no warming + slow,treefrog,14.0,0.23,65,9,0.3,0.292307692,45,0.0
+28,7/14/2012,no warming,perm,no warming + slow,treefrog,15.0,0.358,66,10,0.333333333,0.287878788,45,0.0
+28,7/16/2012,no warming,perm,no warming + slow,treefrog,15.5,0.323,68,17,0.566666667,0.279411765,46,0.0
+28,7/16/2012,no warming,perm,no warming + slow,treefrog,15.0,0.278,68,17,0.566666667,0.279411765,46,0.0
+28,7/16/2012,no warming,perm,no warming + slow,treefrog,16.0,0.29,68,17,0.566666667,0.279411765,46,0.0
+28,7/16/2012,no warming,perm,no warming + slow,treefrog,15.0,0.303,68,17,0.566666667,0.279411765,46,0.0
+28,7/16/2012,no warming,perm,no warming + slow,treefrog,15.5,0.295,68,17,0.566666667,0.279411765,46,0.0
+28,7/16/2012,no warming,perm,no warming + slow,treefrog,15.0,0.333,68,17,0.566666667,0.279411765,45,0.0
+28,7/16/2012,no warming,perm,no warming + slow,treefrog,15.5,0.299,68,17,0.566666667,0.279411765,46,0.0
+28,7/17/2012,no warming,perm,no warming + slow,treefrog,16.0,0.394,69,18,0.6,0.275362319,45,0.0
+28,7/19/2012,no warming,perm,no warming + slow,treefrog,16.0,0.355,71,22,0.733333333,0.267605634,46,0.0
+28,7/19/2012,no warming,perm,no warming + slow,treefrog,15.0,0.289,71,22,0.733333333,0.267605634,45,0.0
+28,7/19/2012,no warming,perm,no warming + slow,treefrog,15.5,0.327,71,22,0.733333333,0.267605634,46,0.0
+28,7/19/2012,no warming,perm,no warming + slow,treefrog,15.5,0.364,71,22,0.733333333,0.267605634,45,0.0
+28,7/22/2012,no warming,perm,no warming + slow,treefrog,16.0,0.377,74,24,0.8,0.256756757,46,0.0
+28,7/22/2012,no warming,perm,no warming + slow,treefrog,15.0,0.348,74,24,0.8,0.256756757,46,0.0
+28,7/23/2012,no warming,perm,no warming + slow,treefrog,16.0,0.378,75,25,0.833333333,0.253333333,45,0.0
+28,7/27/2012,no warming,perm,no warming + slow,treefrog,16.5,0.348,77,27,0.9,0.246753247,46,0.0
+28,7/27/2012,no warming,perm,no warming + slow,treefrog,14.0,0.314,77,27,0.9,0.246753247,46,0.0
+29,6/19/2012,warming,temp,warming + fast,treefrog,15.0,0.34,42,3,0.1,0.452380952,46,0.5526
+29,6/19/2012,warming,temp,warming + fast,treefrog,15.0,0.336,42,3,0.1,0.452380952,45,0.5526
+29,6/19/2012,warming,temp,warming + fast,treefrog,15.0,0.213,42,3,0.1,0.452380952,46,0.5526
+29,6/21/2012,warming,temp,warming + fast,treefrog,15.5,0.325,44,6,0.2,0.431818182,46,0.5526
+29,6/21/2012,warming,temp,warming + fast,treefrog,15.0,0.321,44,6,0.2,0.431818182,46,0.5526
+29,6/21/2012,warming,temp,warming + fast,treefrog,15.0,0.337,44,6,0.2,0.431818182,45,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,15.0,0.246,45,16,0.533333333,0.422222222,46,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,16.0,0.297,45,16,0.533333333,0.422222222,46,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,15.0,0.296,45,16,0.533333333,0.422222222,46,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,14.0,0.245,45,16,0.533333333,0.422222222,46,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,15.5,0.365,45,16,0.533333333,0.422222222,45,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,15.0,0.315,45,16,0.533333333,0.422222222,46,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,14.0,0.302,45,16,0.533333333,0.422222222,46,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,15.0,0.34,45,16,0.533333333,0.422222222,46,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,16.0,0.345,45,16,0.533333333,0.422222222,45,0.5526
+29,6/23/2012,warming,temp,warming + fast,treefrog,15.0,0.33,45,16,0.533333333,0.422222222,45,0.5526
+29,6/25/2012,warming,temp,warming + fast,treefrog,16.0,0.366,47,18,0.6,0.404255319,46,0.5526
+29,6/25/2012,warming,temp,warming + fast,treefrog,16.0,0.328,47,18,0.6,0.404255319,46,0.5526
+29,6/27/2012,warming,temp,warming + fast,treefrog,16.0,0.379,49,19,0.633333333,0.387755102,45,0.5526
+29,6/29/2012,warming,temp,warming + fast,treefrog,15.5,0.308,51,21,0.7,0.37254902,46,0.5526
+29,6/29/2012,warming,temp,warming + fast,treefrog,15.0,0.356,51,21,0.7,0.37254902,46,0.5526
+29,7/5/2012,warming,temp,warming + fast,treefrog,15.0,0.387,57,22,0.733333333,0.333333333,45,0.5526
+29,7/9/2012,warming,temp,warming + fast,treefrog,17.0,0.402,61,23,0.766666667,0.31147541,46,0.5526
+30,8/1/2012,no warming,perm,no warming + slow,spadefoot,23.0,0.959,82,1,0.033333333,0.231707317,45,0.8941
+32,7/8/2012,no warming,temp,no warming + fast,treefrog,15.0,0.333,60,2,0.066666667,0.316666667,46,1.4465
+32,7/8/2012,no warming,temp,no warming + fast,treefrog,14.5,0.317,60,2,0.066666667,0.316666667,45,1.4465
+32,7/9/2012,no warming,temp,no warming + fast,treefrog,15.0,0.293,61,5,0.166666667,0.31147541,46,1.4465
+32,7/9/2012,no warming,temp,no warming + fast,treefrog,15.5,0.31,61,5,0.166666667,0.31147541,46,1.4465
+32,7/11/2012,no warming,temp,no warming + fast,treefrog,16.0,0.36,63,7,0.233333333,0.301587302,46,1.4465
+32,7/11/2012,no warming,temp,no warming + fast,treefrog,16.5,0.346,63,7,0.233333333,0.301587302,46,1.4465
+32,7/13/2012,no warming,temp,no warming + fast,treefrog,14.0,0.21,65,11,0.366666667,0.292307692,46,1.4465
+32,7/13/2012,no warming,temp,no warming + fast,treefrog,16.0,0.325,65,11,0.366666667,0.292307692,46,1.4465
+32,7/13/2012,no warming,temp,no warming + fast,treefrog,15.0,0.286,65,11,0.366666667,0.292307692,46,1.4465
+32,7/13/2012,no warming,temp,no warming + fast,treefrog,16.0,0.358,65,11,0.366666667,0.292307692,46,1.4465
+32,7/16/2012,no warming,temp,no warming + fast,treefrog,16.0,0.35,68,16,0.533333333,0.279411765,46,1.4465
+32,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.349,68,16,0.533333333,0.279411765,46,1.4465
+32,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.346,68,16,0.533333333,0.279411765,46,1.4465
+32,7/16/2012,no warming,temp,no warming + fast,treefrog,16.0,0.399,68,16,0.533333333,0.279411765,45,1.4465
+32,7/19/2012,no warming,temp,no warming + fast,treefrog,15.0,0.3,71,20,0.666666667,0.267605634,46,1.4465
+32,7/19/2012,no warming,temp,no warming + fast,treefrog,17.0,0.36,71,20,0.666666667,0.267605634,46,1.4465
+32,7/19/2012,no warming,temp,no warming + fast,treefrog,16.5,0.34,71,20,0.666666667,0.267605634,46,1.4465
+32,7/19/2012,no warming,temp,no warming + fast,treefrog,15.5,0.34,71,20,0.666666667,0.267605634,45,1.4465
+32,7/22/2012,no warming,temp,no warming + fast,treefrog,16.5,0.425,74,22,0.733333333,0.256756757,46,1.4465
+32,7/22/2012,no warming,temp,no warming + fast,treefrog,15.0,0.362,74,22,0.733333333,0.256756757,46,1.4465
+32,7/23/2012,no warming,temp,no warming + fast,treefrog,15.0,0.23,75,23,0.766666667,0.253333333,46,1.4465
+32,7/25/2012,no warming,temp,no warming + fast,treefrog,15.5,0.407,75,24,0.8,0.253333333,45,1.4465
+32,7/30/2012,no warming,temp,no warming + fast,treefrog,16.0,0.409,80,25,0.833333333,0.2375,46,1.4465
+33,6/14/2012,warming,temp,warming + fast,treefrog,15.0,0.24,37,1,0.033333333,0.513513514,45,0.0
+33,6/19/2012,warming,temp,warming + fast,treefrog,16.0,0.333,42,5,0.166666667,0.452380952,46,0.0
+33,6/19/2012,warming,temp,warming + fast,treefrog,15.0,0.306,42,5,0.166666667,0.452380952,46,0.0
+33,6/19/2012,warming,temp,warming + fast,treefrog,15.0,0.267,42,5,0.166666667,0.452380952,46,0.0
+33,6/19/2012,warming,temp,warming + fast,treefrog,16.0,0.335,42,5,0.166666667,0.452380952,46,0.0
+33,6/21/2012,warming,temp,warming + fast,treefrog,14.0,0.198,44,6,0.2,0.431818182,46,0.0
+33,6/23/2012,warming,temp,warming + fast,treefrog,13.5,0.225,45,10,0.333333333,0.422222222,46,0.0
+33,6/23/2012,warming,temp,warming + fast,treefrog,13.0,0.248,45,10,0.333333333,0.422222222,45,0.0
+33,6/23/2012,warming,temp,warming + fast,treefrog,11.5,0.18,45,10,0.333333333,0.422222222,46,0.0
+33,6/23/2012,warming,temp,warming + fast,treefrog,13.5,0.219,45,10,0.333333333,0.422222222,45,0.0
+33,6/25/2012,warming,temp,warming + fast,treefrog,14.0,0.254,47,15,0.5,0.404255319,45,0.0
+33,6/25/2012,warming,temp,warming + fast,treefrog,14.0,0.25,47,15,0.5,0.404255319,46,0.0
+33,6/25/2012,warming,temp,warming + fast,treefrog,13.0,0.24,47,15,0.5,0.404255319,45,0.0
+33,6/25/2012,warming,temp,warming + fast,treefrog,13.0,0.213,47,15,0.5,0.404255319,45,0.0
+33,6/25/2012,warming,temp,warming + fast,treefrog,12.0,0.178,47,15,0.5,0.404255319,46,0.0
+33,6/27/2012,warming,temp,warming + fast,treefrog,15.0,0.264,49,20,0.666666667,0.387755102,46,0.0
+33,6/27/2012,warming,temp,warming + fast,treefrog,15.0,0.3,49,20,0.666666667,0.387755102,46,0.0
+33,6/27/2012,warming,temp,warming + fast,treefrog,13.0,0.175,49,20,0.666666667,0.387755102,46,0.0
+33,6/27/2012,warming,temp,warming + fast,treefrog,13.5,0.246,49,20,0.666666667,0.387755102,46,0.0
+33,6/27/2012,warming,temp,warming + fast,treefrog,15.0,0.295,49,20,0.666666667,0.387755102,46,0.0
+33,6/29/2012,warming,temp,warming + fast,treefrog,15.0,0.305,51,22,0.733333333,0.37254902,46,0.0
+33,6/29/2012,warming,temp,warming + fast,treefrog,13.5,0.2,51,22,0.733333333,0.37254902,46,0.0
+33,7/2/2012,warming,temp,warming + fast,treefrog,15.0,0.36,54,25,0.833333333,0.351851852,46,0.0
+33,7/2/2012,warming,temp,warming + fast,treefrog,15.0,0.277,54,25,0.833333333,0.351851852,46,0.0
+33,7/2/2012,warming,temp,warming + fast,treefrog,15.0,0.289,54,25,0.833333333,0.351851852,46,0.0
+33,7/4/2012,warming,temp,warming + fast,treefrog,13.0,0.216,56,29,0.966666667,0.339285714,45,0.0
+33,7/4/2012,warming,temp,warming + fast,treefrog,14.5,0.275,56,29,0.966666667,0.339285714,45,0.0
+33,7/4/2012,warming,temp,warming + fast,treefrog,13.0,0.23,56,29,0.966666667,0.339285714,46,0.0
+33,7/4/2012,warming,temp,warming + fast,treefrog,14.5,0.307,56,29,0.966666667,0.339285714,46,0.0
+33,7/8/2012,warming,temp,warming + fast,treefrog,14.5,0.255,60,30,1.0,0.316666667,46,0.0
+34,7/8/2012,warming,perm,warming + slow,spadefoot,20.0,0.9,60,1,0.033333333,0.316666667,45,6.4085
+34,7/9/2012,warming,perm,warming + slow,spadefoot,17.0,0.678,61,2,0.066666667,0.31147541,45,6.4085
+34,8/4/2012,warming,perm,warming + slow,spadefoot,21.0,1.01,85,3,0.1,0.223529412,45,6.4085
+35,8/1/2012,no warming,perm,no warming + slow,spadefoot,25.0,1.587,82,1,0.033333333,0.231707317,45,8.5048
+37,6/27/2012,warming,temp,warming + fast,spadefoot,17.0,0.55,49,3,0.1,0.387755102,45,4.7278
+37,6/27/2012,warming,temp,warming + fast,spadefoot,17.0,0.723,49,3,0.1,0.387755102,46,4.7278
+37,6/27/2012,warming,temp,warming + fast,spadefoot,16.5,0.64,49,3,0.1,0.387755102,46,4.7278
+37,7/2/2012,warming,temp,warming + fast,spadefoot,18.0,0.644,54,5,0.166666667,0.351851852,46,4.7278
+37,7/2/2012,warming,temp,warming + fast,spadefoot,18.0,0.567,54,5,0.166666667,0.351851852,46,4.7278
+37,7/4/2012,warming,temp,warming + fast,spadefoot,15.0,0.417,56,6,0.2,0.339285714,45,4.7278
+37,7/11/2012,warming,temp,warming + fast,spadefoot,17.5,0.622,63,8,0.266666667,0.301587302,46,4.7278
+37,7/11/2012,warming,temp,warming + fast,spadefoot,19.5,0.672,63,8,0.266666667,0.301587302,46,4.7278
+37,7/16/2012,warming,temp,warming + fast,spadefoot,18.0,0.596,68,9,0.3,0.279411765,46,4.7278
+38,7/8/2012,no warming,perm,no warming + slow,treefrog,16.0,0.433,60,4,0.133333333,0.316666667,46,0.0
+38,7/8/2012,no warming,perm,no warming + slow,treefrog,15.5,0.31,60,4,0.133333333,0.316666667,46,0.0
+38,7/8/2012,no warming,perm,no warming + slow,treefrog,15.0,0.3,60,4,0.133333333,0.316666667,46,0.0
+38,7/9/2012,no warming,perm,no warming + slow,treefrog,15.0,0.38,61,4,0.133333333,0.31147541,45,0.0
+38,7/9/2012,no warming,perm,no warming + slow,treefrog,16.5,0.336,61,8,0.266666667,0.31147541,48,0.0
+38,7/9/2012,no warming,perm,no warming + slow,treefrog,15.0,0.29,61,8,0.266666667,0.31147541,45,0.0
+38,7/9/2012,no warming,perm,no warming + slow,treefrog,15.5,0.362,61,8,0.266666667,0.31147541,46,0.0
+38,7/9/2012,no warming,perm,no warming + slow,treefrog,16.0,0.37,61,8,0.266666667,0.31147541,46,0.0
+38,7/11/2012,no warming,perm,no warming + slow,treefrog,16.0,0.293,63,12,0.4,0.301587302,46,0.0
+38,7/11/2012,no warming,perm,no warming + slow,treefrog,15.0,0.293,63,12,0.4,0.301587302,46,0.0
+38,7/11/2012,no warming,perm,no warming + slow,treefrog,15.0,0.292,63,12,0.4,0.301587302,46,0.0
+38,7/11/2012,no warming,perm,no warming + slow,treefrog,16.0,0.363,63,12,0.4,0.301587302,46,0.0
+38,7/13/2012,no warming,perm,no warming + slow,treefrog,15.5,0.33,65,16,0.533333333,0.292307692,46,0.0
+38,7/13/2012,no warming,perm,no warming + slow,treefrog,15.0,0.33,65,16,0.533333333,0.292307692,46,0.0
+38,7/13/2012,no warming,perm,no warming + slow,treefrog,17.0,0.364,65,16,0.533333333,0.292307692,46,0.0
+38,7/13/2012,no warming,perm,no warming + slow,treefrog,16.0,0.316,65,16,0.533333333,0.292307692,46,0.0
+38,7/16/2012,no warming,perm,no warming + slow,treefrog,16.0,0.315,68,20,0.666666667,0.279411765,46,0.0
+38,7/16/2012,no warming,perm,no warming + slow,treefrog,17.5,0.35,68,20,0.666666667,0.279411765,46,0.0
+38,7/16/2012,no warming,perm,no warming + slow,treefrog,16.5,0.322,68,20,0.666666667,0.279411765,46,0.0
+39,6/19/2012,warming,perm,warming + slow,treefrog,16.0,0.295,42,2,0.066666667,0.452380952,46,0.0
+39,6/19/2012,warming,perm,warming + slow,treefrog,15.0,0.3,42,2,0.066666667,0.452380952,46,0.0
+39,6/23/2012,warming,perm,warming + slow,treefrog,15.0,0.27,45,3,0.1,0.422222222,46,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,17.0,0.39,47,11,0.366666667,0.404255319,46,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,17.0,0.39,47,11,0.366666667,0.404255319,46,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,16.0,0.39,47,11,0.366666667,0.404255319,45,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,16.0,0.398,47,11,0.366666667,0.404255319,45,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,15.0,0.304,47,11,0.366666667,0.404255319,46,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,14.0,0.286,47,11,0.366666667,0.404255319,46,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,17.0,0.396,47,11,0.366666667,0.404255319,45,0.0
+39,6/25/2012,warming,perm,warming + slow,treefrog,16.0,0.384,47,11,0.366666667,0.404255319,45,0.0
+39,6/27/2012,warming,perm,warming + slow,treefrog,14.0,0.259,49,15,0.5,0.387755102,46,0.0
+39,6/27/2012,warming,perm,warming + slow,treefrog,14.0,0.259,49,15,0.5,0.387755102,45,0.0
+39,6/27/2012,warming,perm,warming + slow,treefrog,14.0,0.299,49,15,0.5,0.387755102,46,0.0
+39,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.285,49,15,0.5,0.387755102,46,0.0
+39,6/29/2012,warming,perm,warming + slow,treefrog,15.5,0.345,51,18,0.6,0.37254902,46,0.0
+39,6/29/2012,warming,perm,warming + slow,treefrog,15.5,0.34,51,18,0.6,0.37254902,46,0.0
+39,6/29/2012,warming,perm,warming + slow,treefrog,17.0,0.355,51,18,0.6,0.37254902,46,0.0
+39,7/2/2012,warming,perm,warming + slow,treefrog,16.0,0.36,54,21,0.7,0.351851852,46,0.0
+39,7/2/2012,warming,perm,warming + slow,treefrog,16.5,0.37,54,21,0.7,0.351851852,46,0.0
+39,7/2/2012,warming,perm,warming + slow,treefrog,18.0,0.409,54,21,0.7,0.351851852,46,0.0
+39,7/4/2012,warming,perm,warming + slow,treefrog,17.0,0.386,56,24,0.8,0.339285714,46,0.0
+39,7/4/2012,warming,perm,warming + slow,treefrog,16.0,0.433,56,24,0.8,0.339285714,45,0.0
+39,7/4/2012,warming,perm,warming + slow,treefrog,17.0,0.407,56,24,0.8,0.339285714,45,0.0
+39,7/11/2012,warming,perm,warming + slow,treefrog,17.0,0.414,63,25,0.833333333,0.301587302,46,0.0
+40,7/5/2012,no warming,temp,no warming + fast,treefrog,16.0,0.373,57,2,0.066666667,0.333333333,46,0.9124
+40,7/5/2012,no warming,temp,no warming + fast,treefrog,16.0,0.339,57,2,0.066666667,0.333333333,46,0.9124
+40,7/6/2012,no warming,temp,no warming + fast,treefrog,14.0,0.335,58,3,0.1,0.327586207,46,0.9124
+40,7/9/2012,no warming,temp,no warming + fast,treefrog,17.0,0.34,61,7,0.233333333,0.31147541,46,0.9124
+40,7/9/2012,no warming,temp,no warming + fast,treefrog,17.0,0.39,61,7,0.233333333,0.31147541,46,0.9124
+40,7/9/2012,no warming,temp,no warming + fast,treefrog,16.0,0.422,61,7,0.233333333,0.31147541,45,0.9124
+40,7/9/2012,no warming,temp,no warming + fast,treefrog,15.5,0.364,61,7,0.233333333,0.31147541,46,0.9124
+40,7/11/2012,no warming,temp,no warming + fast,treefrog,15.0,0.375,63,14,0.466666667,0.301587302,46,0.9124
+40,7/11/2012,no warming,temp,no warming + fast,treefrog,15.5,0.323,63,14,0.466666667,0.301587302,46,0.9124
+40,7/11/2012,no warming,temp,no warming + fast,treefrog,14.0,0.253,63,14,0.466666667,0.301587302,46,0.9124
+40,7/11/2012,no warming,temp,no warming + fast,treefrog,16.0,0.36,63,14,0.466666667,0.301587302,46,0.9124
+40,7/11/2012,no warming,temp,no warming + fast,treefrog,16.0,0.35,63,14,0.466666667,0.301587302,46,0.9124
+40,7/11/2012,no warming,temp,no warming + fast,treefrog,15.5,0.309,63,14,0.466666667,0.301587302,46,0.9124
+40,7/11/2012,no warming,temp,no warming + fast,treefrog,16.0,0.39,63,14,0.466666667,0.301587302,45,0.9124
+40,7/13/2012,no warming,temp,no warming + fast,treefrog,16.0,0.29,65,17,0.566666667,0.292307692,46,0.9124
+40,7/13/2012,no warming,temp,no warming + fast,treefrog,15.0,0.299,65,17,0.566666667,0.292307692,46,0.9124
+40,7/13/2012,no warming,temp,no warming + fast,treefrog,16.0,0.36,65,17,0.566666667,0.292307692,46,0.9124
+40,7/14/2012,no warming,temp,no warming + fast,treefrog,15.0,0.34,66,18,0.6,0.287878788,45,0.9124
+40,7/16/2012,no warming,temp,no warming + fast,treefrog,16.0,0.348,68,23,0.766666667,0.279411765,45,0.9124
+40,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.316,68,23,0.766666667,0.279411765,46,0.9124
+40,7/16/2012,no warming,temp,no warming + fast,treefrog,17.0,0.36,68,23,0.766666667,0.279411765,46,0.9124
+40,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.348,68,23,0.766666667,0.279411765,45,0.9124
+40,7/17/2012,no warming,temp,no warming + fast,treefrog,16.0,0.379,69,25,0.833333333,0.275362319,46,0.9124
+40,7/17/2012,no warming,temp,no warming + fast,treefrog,15.0,0.346,69,25,0.833333333,0.275362319,45,0.9124
+40,7/19/2012,no warming,temp,no warming + fast,treefrog,15.0,0.315,71,26,0.866666667,0.267605634,46,0.9124
+40,7/25/2012,no warming,temp,no warming + fast,treefrog,15.0,0.332,75,27,0.9,0.253333333,45,0.9124
+41,7/6/2012,warming,perm,warming + slow,spadefoot,16.0,0.526,58,1,0.033333333,0.327586207,45,2.8155
+41,7/8/2012,warming,perm,warming + slow,spadefoot,18.5,0.662,60,2,0.066666667,0.316666667,45,2.8155
+41,7/11/2012,warming,perm,warming + slow,spadefoot,15.0,0.56,63,5,0.166666667,0.301587302,45,2.8155
+41,7/11/2012,warming,perm,warming + slow,spadefoot,16.0,0.6,63,5,0.166666667,0.301587302,45,2.8155
+41,7/11/2012,warming,perm,warming + slow,spadefoot,19.0,0.61,63,5,0.166666667,0.301587302,45,2.8155
+41,7/13/2012,warming,perm,warming + slow,spadefoot,15.5,0.32,65,10,0.333333333,0.292307692,46,2.8155
+41,7/13/2012,warming,perm,warming + slow,spadefoot,17.0,0.493,65,10,0.333333333,0.292307692,46,2.8155
+41,7/13/2012,warming,perm,warming + slow,spadefoot,16.0,0.515,65,10,0.333333333,0.292307692,46,2.8155
+41,7/16/2012,warming,perm,warming + slow,spadefoot,16.5,0.48,68,12,0.4,0.279411765,46,2.8155
+41,7/16/2012,warming,perm,warming + slow,spadefoot,16.0,0.448,68,12,0.4,0.279411765,46,2.8155
+41,7/17/2012,warming,perm,warming + slow,spadefoot,15.5,0.405,69,13,0.433333333,0.275362319,46,2.8155
+41,7/19/2012,warming,perm,warming + slow,spadefoot,15.0,0.543,71,14,0.466666667,0.267605634,45,2.8155
+41,7/30/2012,warming,perm,warming + slow,spadefoot,18.0,0.619,80,16,0.533333333,0.2375,46,2.8155
+41,7/30/2012,warming,perm,warming + slow,spadefoot,18.0,0.626,80,16,0.533333333,0.2375,46,2.8155
+42,7/16/2012,no warming,perm,no warming + slow,redlegged,19.5,0.48,68,2,0.066666667,0.279411765,45,1.9954
+42,7/16/2012,no warming,perm,no warming + slow,redlegged,19.0,0.508,68,2,0.066666667,0.279411765,46,1.9954
+42,7/20/2012,no warming,perm,no warming + slow,redlegged,22.0,0.81,72,3,0.1,0.263888889,45,1.9954
+42,7/22/2012,no warming,perm,no warming + slow,redlegged,17.0,0.399,74,4,0.133333333,0.256756757,46,1.9954
+42,7/23/2012,no warming,perm,no warming + slow,redlegged,17.5,0.438,75,6,0.2,0.253333333,45,1.9954
+42,7/23/2012,no warming,perm,no warming + slow,redlegged,16.0,0.365,75,6,0.2,0.253333333,45,1.9954
+42,7/25/2012,no warming,perm,no warming + slow,redlegged,17.0,0.395,75,11,0.366666667,0.253333333,46,1.9954
+42,7/25/2012,no warming,perm,no warming + slow,redlegged,17.0,0.45,75,11,0.366666667,0.253333333,45,1.9954
+42,7/25/2012,no warming,perm,no warming + slow,redlegged,18.0,0.5,75,11,0.366666667,0.253333333,46,1.9954
+42,7/25/2012,no warming,perm,no warming + slow,redlegged,17.0,0.339,75,11,0.366666667,0.253333333,46,1.9954
+42,7/25/2012,no warming,perm,no warming + slow,redlegged,19.0,0.507,75,11,0.366666667,0.253333333,46,1.9954
+42,7/27/2012,no warming,perm,no warming + slow,redlegged,16.0,0.359,77,12,0.4,0.246753247,46,1.9954
+42,7/29/2012,no warming,perm,no warming + slow,redlegged,18.0,0.52,79,14,0.466666667,0.240506329,45,1.9954
+42,7/29/2012,no warming,perm,no warming + slow,redlegged,17.0,0.5,79,14,0.466666667,0.240506329,45,1.9954
+42,7/30/2012,no warming,perm,no warming + slow,redlegged,18.0,0.454,80,15,0.5,0.2375,46,1.9954
+42,8/6/2012,no warming,perm,no warming + slow,redlegged,18.5,0.55,87,16,0.533333333,0.218390805,46,1.9954
+42,8/11/2012,no warming,perm,no warming + slow,redlegged,21.5,0.724,92,17,0.566666667,0.206521739,46,1.9954
+42,8/12/2012,no warming,perm,no warming + slow,redlegged,21.0,0.785,93,18,0.6,0.204301075,45,1.9954
+42,8/13/2012,no warming,perm,no warming + slow,redlegged,19.5,0.79,94,19,0.633333333,0.20212766,45,1.9954
+43,6/19/2012,warming,perm,warming + slow,treefrog,14.5,0.24,42,3,0.1,0.452380952,45,0.0
+43,6/19/2012,warming,perm,warming + slow,treefrog,17.0,0.35,42,3,0.1,0.452380952,46,0.0
+43,6/19/2012,warming,perm,warming + slow,treefrog,15.0,0.3,42,3,0.1,0.452380952,46,0.0
+43,6/21/2012,warming,perm,warming + slow,treefrog,15.0,0.271,44,5,0.166666667,0.431818182,46,0.0
+43,6/21/2012,warming,perm,warming + slow,treefrog,16.0,0.283,44,5,0.166666667,0.431818182,46,0.0
+43,6/23/2012,warming,perm,warming + slow,treefrog,14.5,0.275,45,10,0.333333333,0.422222222,45,0.0
+43,6/23/2012,warming,perm,warming + slow,treefrog,15.0,0.31,45,10,0.333333333,0.422222222,46,0.0
+43,6/23/2012,warming,perm,warming + slow,treefrog,14.0,0.253,45,10,0.333333333,0.422222222,46,0.0
+43,6/23/2012,warming,perm,warming + slow,treefrog,14.0,0.27,45,10,0.333333333,0.422222222,45,0.0
+43,6/25/2012,warming,perm,warming + slow,treefrog,25.0,0.27,47,12,0.4,0.404255319,46,0.0
+43,6/25/2012,warming,perm,warming + slow,treefrog,15.5,0.313,47,12,0.4,0.404255319,46,0.0
+43,6/27/2012,warming,perm,warming + slow,treefrog,16.0,0.319,49,19,0.633333333,0.387755102,46,0.0
+43,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.32,49,19,0.633333333,0.387755102,46,0.0
+43,6/27/2012,warming,perm,warming + slow,treefrog,16.0,0.34,49,19,0.633333333,0.387755102,46,0.0
+43,6/27/2012,warming,perm,warming + slow,treefrog,14.0,0.256,49,19,0.633333333,0.387755102,45,0.0
+43,6/27/2012,warming,perm,warming + slow,treefrog,15.0,0.342,49,19,0.633333333,0.387755102,46,0.0
+43,6/27/2012,warming,perm,warming + slow,treefrog,16.0,0.376,49,19,0.633333333,0.387755102,46,0.0
+43,6/27/2012,warming,perm,warming + slow,treefrog,16.0,0.292,49,19,0.633333333,0.387755102,46,0.0
+43,6/29/2012,warming,perm,warming + slow,treefrog,15.0,0.289,51,22,0.733333333,0.37254902,46,0.0
+43,6/29/2012,warming,perm,warming + slow,treefrog,15.0,0.325,51,22,0.733333333,0.37254902,46,0.0
+43,6/29/2012,warming,perm,warming + slow,treefrog,15.5,0.279,51,22,0.733333333,0.37254902,46,0.0
+43,7/2/2012,warming,perm,warming + slow,treefrog,17.5,0.4,54,25,0.833333333,0.351851852,45,0.0
+43,7/2/2012,warming,perm,warming + slow,treefrog,15.0,0.246,54,25,0.833333333,0.351851852,46,0.0
+43,7/2/2012,warming,perm,warming + slow,treefrog,16.0,0.424,54,25,0.833333333,0.351851852,46,0.0
+43,7/5/2012,warming,perm,warming + slow,treefrog,16.0,0.333,57,27,0.9,0.333333333,46,0.0
+43,7/5/2012,warming,perm,warming + slow,treefrog,16.0,0.341,57,27,0.9,0.333333333,46,0.0
+43,7/8/2012,warming,perm,warming + slow,treefrog,16.0,0.324,60,30,1.0,0.316666667,46,0.0
+43,7/8/2012,warming,perm,warming + slow,treefrog,15.0,0.332,60,30,1.0,0.316666667,46,0.0
+43,7/8/2012,warming,perm,warming + slow,treefrog,17.0,0.377,60,30,1.0,0.316666667,46,0.0
+44,6/27/2012,warming,perm,warming + slow,spadefoot,19.0,1.119,49,3,0.1,0.387755102,46,0.0
+44,6/27/2012,warming,perm,warming + slow,spadefoot,20.0,1.111,49,3,0.1,0.387755102,45,0.0
+44,6/27/2012,warming,perm,warming + slow,spadefoot,20.0,1.12,49,3,0.1,0.387755102,46,0.0
+44,7/1/2012,warming,perm,warming + slow,spadefoot,17.0,0.599,53,4,0.133333333,0.358490566,45,0.0
+44,7/5/2012,warming,perm,warming + slow,spadefoot,20.0,0.88,57,6,0.2,0.333333333,45,0.0
+44,7/5/2012,warming,perm,warming + slow,spadefoot,20.0,0.94,57,6,0.2,0.333333333,45,0.0
+44,7/16/2012,warming,perm,warming + slow,spadefoot,22.0,1.37,68,8,0.266666667,0.279411765,46,0.0
+44,7/16/2012,warming,perm,warming + slow,spadefoot,22.0,1.124,68,8,0.266666667,0.279411765,46,0.0
+44,8/1/2012,warming,perm,warming + slow,spadefoot,25.0,1.58,82,9,0.3,0.231707317,45,0.0
+45,7/8/2012,no warming,perm,no warming + slow,treefrog,16.0,0.372,60,1,0.033333333,0.316666667,45,1.6227
+45,7/9/2012,no warming,perm,no warming + slow,treefrog,15.0,0.337,61,2,0.066666667,0.31147541,45,1.6227
+45,7/11/2012,no warming,perm,no warming + slow,treefrog,17.0,0.383,63,6,0.2,0.301587302,46,1.6227
+45,7/11/2012,no warming,perm,no warming + slow,treefrog,17.0,0.318,63,6,0.2,0.301587302,45,1.6227
+45,7/11/2012,no warming,perm,no warming + slow,treefrog,17.0,0.39,63,6,0.2,0.301587302,46,1.6227
+45,7/11/2012,no warming,perm,no warming + slow,treefrog,18.0,0.426,63,6,0.2,0.301587302,46,1.6227
+45,7/13/2012,no warming,perm,no warming + slow,treefrog,16.0,0.344,65,8,0.266666667,0.292307692,46,1.6227
+45,7/13/2012,no warming,perm,no warming + slow,treefrog,16.0,0.325,65,8,0.266666667,0.292307692,46,1.6227
+45,7/16/2012,no warming,perm,no warming + slow,treefrog,16.0,0.3,68,14,0.466666667,0.279411765,46,1.6227
+45,7/16/2012,no warming,perm,no warming + slow,treefrog,15.0,0.297,68,14,0.466666667,0.279411765,46,1.6227
+45,7/16/2012,no warming,perm,no warming + slow,treefrog,17.5,0.396,68,14,0.466666667,0.279411765,46,1.6227
+45,7/16/2012,no warming,perm,no warming + slow,treefrog,15.0,0.338,68,14,0.466666667,0.279411765,45,1.6227
+45,7/16/2012,no warming,perm,no warming + slow,treefrog,15.0,0.297,68,14,0.466666667,0.279411765,46,1.6227
+45,7/16/2012,no warming,perm,no warming + slow,treefrog,15.0,0.296,68,14,0.466666667,0.279411765,46,1.6227
+45,7/17/2012,no warming,perm,no warming + slow,treefrog,16.0,0.33,69,16,0.533333333,0.275362319,45,1.6227
+45,7/17/2012,no warming,perm,no warming + slow,treefrog,16.0,0.4,69,16,0.533333333,0.275362319,45,1.6227
+45,7/19/2012,no warming,perm,no warming + slow,treefrog,17.0,0.363,71,18,0.6,0.267605634,46,1.6227
+45,7/19/2012,no warming,perm,no warming + slow,treefrog,17.5,0.414,71,18,0.6,0.267605634,46,1.6227
+45,7/22/2012,no warming,perm,no warming + slow,treefrog,16.0,0.35,74,19,0.633333333,0.256756757,46,1.6227
+45,7/25/2012,no warming,perm,no warming + slow,treefrog,17.5,0.519,75,21,0.7,0.253333333,46,1.6227
+45,7/25/2012,no warming,perm,no warming + slow,treefrog,17.0,0.429,75,21,0.7,0.253333333,45,1.6227
+45,7/27/2012,no warming,perm,no warming + slow,treefrog,16.0,0.405,77,22,0.733333333,0.246753247,46,1.6227
+45,7/30/2012,no warming,perm,no warming + slow,treefrog,18.0,0.45,80,25,0.833333333,0.2375,45,1.6227
+45,7/30/2012,no warming,perm,no warming + slow,treefrog,17.5,0.377,80,25,0.833333333,0.2375,46,1.6227
+45,7/30/2012,no warming,perm,no warming + slow,treefrog,16.5,0.404,80,25,0.833333333,0.2375,46,1.6227
+46,7/8/2012,no warming,temp,no warming + fast,treefrog,17.5,0.433,60,2,0.066666667,0.316666667,46,1.0434
+46,7/8/2012,no warming,temp,no warming + fast,treefrog,14.0,0.281,60,2,0.066666667,0.316666667,45,1.0434
+46,7/11/2012,no warming,temp,no warming + fast,treefrog,15.5,0.234,63,5,0.166666667,0.301587302,46,1.0434
+46,7/11/2012,no warming,temp,no warming + fast,treefrog,15.5,0.327,63,5,0.166666667,0.301587302,45,1.0434
+46,7/11/2012,no warming,temp,no warming + fast,treefrog,15.0,0.34,63,5,0.166666667,0.301587302,45,1.0434
+46,7/13/2012,no warming,temp,no warming + fast,treefrog,14.0,0.266,65,11,0.366666667,0.292307692,46,1.0434
+46,7/13/2012,no warming,temp,no warming + fast,treefrog,15.0,0.275,65,11,0.366666667,0.292307692,46,1.0434
+46,7/13/2012,no warming,temp,no warming + fast,treefrog,17.0,0.414,65,11,0.366666667,0.292307692,46,1.0434
+46,7/13/2012,no warming,temp,no warming + fast,treefrog,14.5,0.265,65,11,0.366666667,0.292307692,46,1.0434
+46,7/13/2012,no warming,temp,no warming + fast,treefrog,16.0,0.43,65,11,0.366666667,0.292307692,46,1.0434
+46,7/16/2012,no warming,temp,no warming + fast,treefrog,18.5,0.297,68,18,0.6,0.279411765,46,1.0434
+46,7/16/2012,no warming,temp,no warming + fast,treefrog,12.5,0.235,68,18,0.6,0.279411765,46,1.0434
+46,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.318,68,18,0.6,0.279411765,46,1.0434
+46,7/16/2012,no warming,temp,no warming + fast,treefrog,15.0,0.275,68,18,0.6,0.279411765,46,1.0434
+46,7/16/2012,no warming,temp,no warming + fast,treefrog,14.5,0.305,68,18,0.6,0.279411765,46,1.0434
+46,7/16/2012,no warming,temp,no warming + fast,treefrog,14.0,0.2,68,18,0.6,0.279411765,46,1.0434
+46,7/19/2012,no warming,temp,no warming + fast,treefrog,15.5,0.286,71,22,0.733333333,0.267605634,46,1.0434
+46,7/19/2012,no warming,temp,no warming + fast,treefrog,15.0,0.32,71,22,0.733333333,0.267605634,46,1.0434
+46,7/19/2012,no warming,temp,no warming + fast,treefrog,15.0,0.3,71,22,0.733333333,0.267605634,46,1.0434
+46,7/19/2012,no warming,temp,no warming + fast,treefrog,14.5,0.286,71,22,0.733333333,0.267605634,46,1.0434
+46,7/23/2012,no warming,temp,no warming + fast,treefrog,16.0,0.385,75,23,0.766666667,0.253333333,45,1.0434
+46,7/24/2012,no warming,temp,no warming + fast,treefrog,16.0,0.408,76,24,0.8,0.25,45,1.0434
+47,7/16/2012,no warming,temp,no warming + fast,redlegged,20.0,0.559,68,1,0.033333333,0.279411765,45,0.0
+47,7/17/2012,no warming,temp,no warming + fast,redlegged,18.0,0.488,69,3,0.1,0.275362319,45,0.0
+47,7/17/2012,no warming,temp,no warming + fast,redlegged,16.0,0.395,69,3,0.1,0.275362319,45,0.0
+47,7/19/2012,no warming,temp,no warming + fast,redlegged,16.5,0.38,71,6,0.2,0.267605634,45,0.0
+47,7/19/2012,no warming,temp,no warming + fast,redlegged,17.0,0.34,71,6,0.2,0.267605634,45,0.0
+47,7/19/2012,no warming,temp,no warming + fast,redlegged,16.5,0.405,71,6,0.2,0.267605634,45,0.0
+47,7/22/2012,no warming,temp,no warming + fast,redlegged,17.0,0.366,74,12,0.4,0.256756757,46,0.0
+47,7/22/2012,no warming,temp,no warming + fast,redlegged,17.0,0.367,74,12,0.4,0.256756757,46,0.0
+47,7/22/2012,no warming,temp,no warming + fast,redlegged,16.0,0.389,74,12,0.4,0.256756757,46,0.0
+47,7/22/2012,no warming,temp,no warming + fast,redlegged,15.0,0.327,74,12,0.4,0.256756757,46,0.0
+47,7/22/2012,no warming,temp,no warming + fast,redlegged,18.0,0.388,74,12,0.4,0.256756757,46,0.0
+47,7/22/2012,no warming,temp,no warming + fast,redlegged,15.5,0.38,74,12,0.4,0.256756757,46,0.0
+47,7/23/2012,no warming,temp,no warming + fast,redlegged,17.0,0.45,75,14,0.466666667,0.253333333,45,0.0
+47,7/23/2012,no warming,temp,no warming + fast,redlegged,17.0,0.498,75,14,0.466666667,0.253333333,45,0.0
+47,7/25/2012,no warming,temp,no warming + fast,redlegged,16.5,0.37,75,15,0.5,0.253333333,45,0.0
+47,7/27/2012,no warming,temp,no warming + fast,redlegged,18.0,0.515,77,17,0.566666667,0.246753247,45,0.0
+47,7/27/2012,no warming,temp,no warming + fast,redlegged,17.0,0.424,77,17,0.566666667,0.246753247,45,0.0
+47,7/30/2012,no warming,temp,no warming + fast,redlegged,18.0,0.368,80,22,0.733333333,0.2375,46,0.0
+47,7/30/2012,no warming,temp,no warming + fast,redlegged,17.0,0.384,80,22,0.733333333,0.2375,46,0.0
+47,7/30/2012,no warming,temp,no warming + fast,redlegged,16.0,0.393,80,22,0.733333333,0.2375,46,0.0
+47,7/30/2012,no warming,temp,no warming + fast,redlegged,18.5,0.515,80,22,0.733333333,0.2375,46,0.0
+47,7/30/2012,no warming,temp,no warming + fast,redlegged,17.0,0.35,80,22,0.733333333,0.2375,46,0.0
+48,7/19/2012,no warming,temp,no warming + fast,redlegged,18.5,0.543,71,4,0.133333333,0.267605634,46,0.5774
+48,7/19/2012,no warming,temp,no warming + fast,redlegged,21.0,0.896,71,4,0.133333333,0.267605634,45,0.5774
+48,7/19/2012,no warming,temp,no warming + fast,redlegged,17.5,0.43,71,4,0.133333333,0.267605634,46,0.5774
+48,7/19/2012,no warming,temp,no warming + fast,redlegged,18.5,0.445,71,4,0.133333333,0.267605634,45,0.5774
+48,7/20/2012,no warming,temp,no warming + fast,redlegged,19.0,0.555,72,5,0.166666667,0.263888889,46,0.5774
+48,7/22/2012,no warming,temp,no warming + fast,redlegged,16.0,0.37,74,8,0.266666667,0.256756757,46,0.5774
+48,7/22/2012,no warming,temp,no warming + fast,redlegged,17.0,0.396,74,8,0.266666667,0.256756757,46,0.5774
+48,7/22/2012,no warming,temp,no warming + fast,redlegged,18.0,0.507,74,8,0.266666667,0.256756757,46,0.5774
+48,7/23/2012,no warming,temp,no warming + fast,redlegged,19.0,0.605,75,10,0.333333333,0.253333333,45,0.5774
+48,7/23/2012,no warming,temp,no warming + fast,redlegged,17.0,0.548,75,10,0.333333333,0.253333333,45,0.5774
+48,7/25/2012,no warming,temp,no warming + fast,redlegged,19.0,0.63,75,14,0.466666667,0.253333333,45,0.5774
+48,7/25/2012,no warming,temp,no warming + fast,redlegged,19.0,0.61,75,14,0.466666667,0.253333333,45,0.5774
+48,7/25/2012,no warming,temp,no warming + fast,redlegged,18.0,0.52,75,14,0.466666667,0.253333333,45,0.5774
+48,7/25/2012,no warming,temp,no warming + fast,redlegged,17.5,0.49,75,14,0.466666667,0.253333333,45,0.5774
+48,7/27/2012,no warming,temp,no warming + fast,redlegged,18.0,0.509,77,17,0.566666667,0.246753247,45,0.5774
+48,7/27/2012,no warming,temp,no warming + fast,redlegged,18.0,0.444,77,17,0.566666667,0.246753247,45,0.5774
+48,7/27/2012,no warming,temp,no warming + fast,redlegged,18.0,0.53,77,17,0.566666667,0.246753247,45,0.5774
+48,7/30/2012,no warming,temp,no warming + fast,redlegged,16.5,0.418,80,20,0.666666667,0.2375,45,0.5774
+48,7/30/2012,no warming,temp,no warming + fast,redlegged,20.0,0.71,80,20,0.666666667,0.2375,45,0.5774
+48,7/30/2012,no warming,temp,no warming + fast,redlegged,18.0,0.63,80,20,0.666666667,0.2375,45,0.5774
+48,8/1/2012,no warming,temp,no warming + fast,redlegged,17.0,0.63,82,23,0.766666667,0.231707317,45,0.5774
+48,8/1/2012,no warming,temp,no warming + fast,redlegged,19.0,0.68,82,23,0.766666667,0.231707317,45,0.5774
+48,8/1/2012,no warming,temp,no warming + fast,redlegged,18.0,0.663,82,23,0.766666667,0.231707317,45,0.5774
