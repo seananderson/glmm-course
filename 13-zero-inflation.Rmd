@@ -49,8 +49,8 @@ summary(zip_tmb)
 ```
 
 ```{r}
-nb_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "nbinom2")
-summary(nb_tmb)
+# nb_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "nbinom2")
+# summary(nb_tmb)
 ```
 
 
@@ -84,14 +84,19 @@ Predictions:
 ```{r}
 hurd_b_lme4 <- lme4::glmer(y1 ~ x + (1 | f), data = d, 
   family = binomial(link = "logit"))
-summary(hurd_b)
+summary(hurd_b_lme4)
 
-pa <- predict(hurd_a)
+pred_a <- predict(hurd_a, newdata = d)
+pred_b <- predict(hurd_b_lme4, newdata = d) %>% plogis
 
-paa <- 
-pb <- plogis(predict(hurd_b_lme4))
+head(pred_a)
+head(pred_b)
+d$pred <- pred_a * pred_b
 
-pa * pb
+filter(d, zi == 1 | !y1) %>%
+ggplot(aes(y, pred, colour = f, shape = as.factor(zi))) + 
+  geom_point() + scale_shape_manual(values = c(20, 21))
+
 ```
 
 ```{r}
