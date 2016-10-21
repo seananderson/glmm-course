@@ -87,11 +87,12 @@ ggplot(d, aes(salmon_scaled, log((late_kills+0.5)),
 
 Let's start by using the lme4 package as we have before. Instead of using the `lmer` function we will use the `glmer` function. (Although `lmer` will work too.)
 
-We have count data. So one obvious place to start is with the poisson distribution and a log link. 
+We have count data. So one obvious place to start is with the Poisson distribution and a log link. 
 
 ```{r}
 library(lme4)
 f_lme4 <- paste(c(f, "+ (1 | gbpu)"), collapse = " ")
+f_lme4
 m_glmer <- glmer(f_lme4, data = d, family = poisson(link = "log"))
 summary(m_glmer)
 ```
@@ -100,7 +101,7 @@ We can look at these default plots, but the default residual plot is not that he
 
 ```{r}
 plot(m_glmer)
-lattice::dotplot(ranef(m, condVar = TRUE))
+lattice::dotplot(ranef(m_glmer, condVar = TRUE))
 ```
 
 We can also extract fixed effects, random effects, and their standard errors with:
@@ -127,7 +128,7 @@ One useful summary function is
 coef(summary(m_glmer))
 ```
 
-Now we should check for over dispersion.
+Now we should check for overdispersion.
 
 We can do that by comparing the sum of the person residuals squared with the residual degrees of freedom. 
 
@@ -140,9 +141,9 @@ sum(residuals(m_glmer, "pearson")^2)
 aods3::gof(m_glmer)
 ```
 
-So it looks like we have some over dispersion here.
+So it looks like we have some overdispersion here.
 
-We can try dealing with this by adding an observation level random intercept or by switching to a negative binomial distribution. 
+We can try dealing with this by adding an observation-level random intercept or by switching to a negative binomial distribution. 
 
 Theoretically, we could fit a negative binomial GLMM with the function `lme4::glmer.nb`, but the following fails to converge for me.
 
@@ -278,11 +279,12 @@ library(rstan)
 options(mc.cores = parallel::detectCores())
 
 mstan <- rstanarm::stan_glmer(f_lme4, data = d, 
-  family = poisson(link = "log"), chains = 2, cores = 2, iter = 400)
+  family = poisson(link = "log"), chains = 4, iter = 300)
 summary(mstan)
 
 mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 4,
   iter = 300)
+
 summary(mstan_nb)
 stan_plot(mstan_nb)
 stan_trace(mstan_nb)
