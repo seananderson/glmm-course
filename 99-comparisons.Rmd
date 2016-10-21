@@ -18,32 +18,29 @@ m <- lmer(svl ~ (warming + drying + species)^2 + (1 | tank), data = d)
 
 # m2 <- lmer(log(svl) ~ (warming + drying + sp)^2 + ((warming + drying + sp)^2 | tank), data = d)
 
-m3 <- glmmTMB::glmmTMB(log(svl) ~ (warming + drying + species)^2 + ((warming + drying + species)^2 | tank), data = d)
-summary(m3)
+# m3 <- glmmTMB::glmmTMB(log(svl) ~ (warming + drying + species)^2 + ((warming + drying + species)^2 | tank), data = d)
+# summary(m3)
 
 ```
 
 ```{r}
 plot(m)
-# plot(m, resid(., type = "pearson") ~ fitted(.) | tank, abline = 0)
-# plot(m, resid(., type = "pearson") ~ fitted(.) | drying, abline = 0)
-# plot(m, resid(., type = "pearson") ~ fitted(.) | species, abline = 0)
 plot(m, resid(., type = "pearson") ~ fitted(.) | drying + warming, abline = 0)
 summary(m)
 
 d$svl_res <- residuals(m, type = "pearson")
-p3 <-  ggplot(d, aes(as.factor(tank), svl_res, colour = paste(drying, warming))) + geom_boxplot() + geom_hline(yintercept = 0) + xlab("") + ylab("SVL residuals (mm)")
-p3
+ggplot(d, aes(as.factor(tank), svl_res, colour = paste(drying, warming))) +
+  geom_boxplot() + 
+  geom_hline(yintercept = 0) + 
+  xlab("") + ylab("SVL residuals (mm)")
 
 fe <- fixef(m)
 se <- arm::se.fixef(m)
 
-
-coef(summary(m))
 arm::display(m)
 
-fe_comp <- fe[["dryingtemp:spb"]] + fe[["dryingtemp"]]
-se_comp <- sqrt(se[["dryingtemp:spb"]]^2 - se[["dryingtemp"]]^2)
+fe_comp <- fe[["drying:speciesb"]] + fe[["drying"]]
+se_comp <- sqrt(se[["drying:speciesb"]]^2 - se[["drying"]]^2)
 fe_comp + c(-1.96, 1.96) * se_comp
 
 comparison_effect <- function(model, base_par, comparison_par) {
@@ -62,13 +59,13 @@ comparison_effect <- function(model, base_par, comparison_par) {
   data.frame(lwr = ci[1], est = fe_comp, upr = ci[2])
 }
 
-comparison_effect(m, "dryingtemp", "dryingtemp")
-comparison_effect(m, "dryingtemp", "dryingtemp:spb")
-comparison_effect(m, "dryingtemp", "dryingtemp:spc")
+comparison_effect(m, "drying", "drying")
+comparison_effect(m, "drying", "drying:speciesb")
+comparison_effect(m, "drying", "drying:speciesc")
 
-base_par <- rep("dryingtemp", 3)
-comparison_par <- c("dryingtemp", "dryingtemp:spb", "dryingtemp:spc")
-out <- map2_df(base_par, comparison_par, comparison_effect, model = m)
+base_par <- rep("drying", 3)
+comparison_par <- c("drying", "drying:speciesb", "drying:speciesc")
+out <- purrr::map2_df(base_par, comparison_par, comparison_effect, model = m)
 out
 ```
 
