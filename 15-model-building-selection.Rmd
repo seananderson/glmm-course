@@ -11,6 +11,36 @@ Build from simple
 Simulate
 Gelman approach plus Bolker and Zuur lists
 
+Gelman order of importance
+
+Zuur, A. F., E. N. Ieno, and C. S. Elphick. 2010. A protocol for data exploration to avoid common statistical problems. Methods in Ecology and Evolution 1:3–14.
+
 Bolker, B. 2009. Learning hierarchical models: advice for the rest of us. Ecological Applications 19:588–592.
 
 Bolker, B. M., M. E. Brooks, C. J. Clark, S. W. Geange, J. R. Poulsen, M. H. H. Stevens, and J.-S. S. White. 2009. Generalized linear mixed models: a practical guide for ecology and evolution. Trends in Ecology \& Evolution 24:127–135.
+
+1. Specify fixed (treatments or covariates) and random effects (experimental, spatial or temporal blocks, individuals, etc.). Include only important interactions. Restrict the model a priori to a feasible level of complexity, based on rules of thumb (>5–6 random-effect levels per random effect and >10–20 samples per treatment level or experimental unit) and knowledge of adequate sample sizes gained from previous studies. 
+
+2. Choose an error distribution and link function
+
+3. Graphical checking:
+   - are variances of data (transformed by the link
+   function) homogeneous across categories? Are responses of transformed
+   data linear with respect to continuous predictors? Are there outlier
+   individuals or groups? Do distributions within groups match the
+   assumed distribution? 
+
+4. Fit fixed-effect GLMs both to the full
+   (pooled) data set and within each level of the random factors [28,50].
+   Estimated parameters should be approximately normally distributed
+   across groups (group-level parameters can have large uncertainties,
+   especially for groups with small sample sizes). Adjust model as
+   necessary (e.g. change link function or add covariates). 
+
+5. Fit the full GLMM. Insufficient computer memory or too slow: reduce model
+   complexity. If estimation succeeds on a subset of the data, try a more
+   efficient estimation algorithm (e.g. PQL if appropriate).
+
+Failure to converge (warnings or errors): reduce model complexity or change optimization settings (make sure the resulting answers make sense). Try other estimation algorithms. Zero variance components or singularity (warnings or errors): check that the model is properly deﬁned and identiﬁable (i.e. all components can theoretically be estimated). Reduce model com- plexity. Adding information to the model (additional covariates, or new groupings for random effects) can alleviate problems, as will centering continuous covariates by subtracting their mean [50]. If necessary, eliminate random effects from the full model, dropping (i) terms of less intrinsic biological interest, (ii) terms with very small estimated variances and/or large uncertainty, or (iii) inter- action terms. (Convergence errors or zero variances could indicate insufﬁcient data.)
+
+6. Recheck assumptions for the final model (as in step 3) and check that parameter estimates and confidence intervals are reasonable (gigantic confidence intervals could indicate fitting problems). The magnitude of the standardized residuals should be independent of the fitted values. Assess overdispersion (the sum of the squared Pearson residuals should be x 2 distributed [66,67]). If necessary, change distributions or estimate a scale parameter. Check that a full model that includes dropped random effects with small standard deviations gives similar results to the final model. If different models lead to substantially different parameter esti- mates, consider model averaging.
