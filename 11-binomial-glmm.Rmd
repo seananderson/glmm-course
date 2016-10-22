@@ -88,6 +88,22 @@ plot(m, species~resid(.,type = "pearson"), xlim = c(-5, 5))
 plot(m, treatment~resid(.,type = "pearson"), xlim = c(-5, 5))
 ```
 
+```{r}
+aug <- broom::augment(m)
+aug <- aug %>% mutate(week_binned = findInterval(week_centered, 
+      seq(min(week_centered), max(week_centered), length.out = 25)))
+binned <- group_by(aug, species, week_binned) %>%
+  summarise(mean_week_centered = mean(week_centered), mean_residual = mean(.resid),
+    mean_fitted = mean(.fitted))
+
+ggplot(binned, aes(mean_fitted, mean_residual, color = species)) +
+  geom_point(alpha = 0.8) +
+  geom_smooth(se = FALSE, method = "loess") +
+  geom_smooth(se = FALSE, method = "loess", colour = "black")
+```
+
+Not very good!
+
 We can use built-in functions to plot the random intercept estimates:
 
 ```{r}
@@ -207,10 +223,26 @@ comparison_effect <- function(model, base_par, comparison_par) {
   data.frame(lwr = ci[1], est = fe_comp, upr = ci[2])
 }
 
-summary(m4)
-comparison_effect(m4, "drying", "drying")
-comparison_effect(m4, "drying", "speciesc:drying")
-comparison_effect(m4, "drying", "speciesb:drying")
-
-comparison_effect(m4, "warming", "speciesb:warming")
+coef(summary(m4))
+comparison_effect(m4, "week_centered", "week_centered")/4
+comparison_effect(m4, "week_centered", "week_centered:speciesb")/4
+comparison_effect(m4, "week_centered", "week_centered:speciesc")/4
 ```
+
+```{r}
+aug <- d
+aug$.resid <- residuals(m4)
+aug$.fitted <- fitted(m4)
+aug <- aug %>% mutate(week_binned = findInterval(week_centered, 
+      seq(min(week_centered), max(week_centered), length.out = 25)))
+binned4 <- group_by(aug, species, week_centered) %>%
+  summarise(mean_week_centered = mean(week_centered), mean_residual = mean(.resid),
+    mean_fitted = mean(.fitted))
+
+ggplot(binned4, aes(mean_fitted, mean_residual, colour = species)) +
+  geom_point(alpha = 0.8) +
+  geom_smooth(se = FALSE, method = "loess") +
+  geom_smooth(se = FALSE, method = "loess", colour = "black")
+```
+
+Better.
