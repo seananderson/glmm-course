@@ -1,0 +1,171 @@
+# Binomial GLMMs
+
+Goals:
+
+- Become familiar building, checking, and plotting a binomial GLMM
+
+Let's read in and wrangle the data from O'Regan et al. 2013.
+
+```{r}
+library(tidyverse)
+d <- read_csv("data/raw/oregan-etal-2013/meso.csv")
+d$date <- lubridate::mdy(d$date)
+d <- filter(d, !tank %in% c(23, 30, 35)) # simplify
+
+max_time <- max(d$time)
+dat <- list()
+for (i in seq_len(nrow(d))) {
+  ti <- d[i,]$time
+  dat[[i]] <- data.frame(day = seq(1, max_time), 
+    meta = c(rep(0, ti-1), rep(1, max_time - ti + 1)),
+    frog = i, tank = d[i,"tank"], warming = d[i,"climate"], 
+    drying = d[i,"drying"], species = d[i,"species"])
+}
+dat <- bind_rows(dat)
+d <- filter(dat, day %in% seq(0, max_time, 3)) # downsample 
+species_letters <- tibble(species = c("spadefoot", "treefrog", "redlegged"),
+  sp = c("b", "c", "a"))
+d <- inner_join(d, species_letters) %>%
+  rename(species_true = species, species = sp) %>%
+  mutate(treatment = paste(climate, drying, sep = "+")) %>% 
+  mutate(warming = ifelse(climate == "warming", 1, 0),
+    drying = ifelse(drying == "temp", 1, 0))  %>% 
+    select(-climate)
+d <- mutate(d, day_centered = day - mean(day), week_centered = day_centered/7)
+```
+
+A good first step is to fit a global model with no random effects in separate models for each random effect level. 
+
+```{r}
+library(lme4)
+
+m_global <- glm(meta ~ week_centered + species + warming * drying, 
+  family = binomial(link = "logit"), data = d)
+summary(m_global)
+
+m_list <- lmList(meta ~ week_centered | tank, data = d, family = binomial(link = "logit"))
+
+intercepts <- map_dbl(m_list, function(x) coef(x)[[1]])
+slopes <- map_dbl(m_list, function(x) coef(x)[[2]])
+```
+
+We can check that the tank-level estimates are approximately normally distributed:
+
+```{r}
+hist(intercepts)
+hist(slopes)
+```
+
+Although we won't here, it would be a good idea to plot of the model fits on
+top of the data for each tank. 
+
+Let's try fitting a binomial GLMM with a random intercept for each tank:
+
+```{r}
+m <- glmer(meta ~ week_centered + species + warming * drying + (1 | tank), 
+  family = binomial(link = "logit"), data = d)
+```
+
+Let's look at the model:
+
+```{r}
+summary(m, correlation = FALSE)
+VarCorr(m)
+```
+
+Residual plots are not particularly useful for a binomial response:
+
+```{r}
+plot(m, type = c("p", "smooth"))
+plot(m, type = c("p", "smooth"), ylim = c(-2, 2))
+```
+
+Looking at the residuals by group is slightly more useful:
+
+```{r}
+plot(m, species~resid(.,type = "pearson"), xlim = c(-5, 5))
+plot(m, treatment~resid(.,type = "pearson"), xlim = c(-5, 5))
+```
+
+We can use built-in functions to plot the random intercept estimates:
+
+```{r}
+lattice::dotplot(ranef(m, condVar = TRUE))
+```
+
+We can access the various confidence intervals with:
+
+```{r}
+confint(m, method = "Wald")
+```
+
+And compare our model without a predictor, say species, via AIC or likelihood ratio test:
+
+```{r}
+m1 <- update(m,.~.-species)
+anova(m, m1)
+```
+
+Perhaps we want to let the effect of time vary by species:
+
+```{r}
+m2 <- update(m,.~. + week_centered:species) 
+summary(m2, correlation = FALSE)
+bbmle::AICtab(m, m2)
+```
+
+So the AIC is substantially lower letting the slope vary by species. 
+
+Let's try plotting the predictions for each frog in each tank:
+
+```{r}
+new_data <- unique(select(d, day:week_centered, -frog))
+new_data$prediction <- predict(m2, type = "response", newdata = new_data)
+ggplot(new_data, aes(day, prediction, group = tank, color = species_true)) +
+  geom_line(alpha = 0.8) +
+  facet_wrap(~treatment) +
+  geom_point(aes(y = meta), alpha = 0.5, 
+    position = position_jitter(height = 0.05)) +
+  ylab("Probability of metamorphosis")
+```
+
+We might want to consider letting some of these effects vary by tank. This model will not fit with lme4. Instead we will rely on TMB.
+
+```{r}
+# m3 <- glmer(meta ~ week_centered * species + warming * drying + 
+#   (1 + week_centered | tank), 
+#   family = binomial(link = "logit"), data = d)
+
+library("glmmTMB")
+m3 <- glmmTMB(meta ~ week_centered * species + warming * drying + 
+  (1 + week_centered | tank), 
+  family = binomial(link = "logit"), data = d)
+summary(m3)
+new_data$prediction3 <- predict(m3, type = "response", newdata = new_data)
+```
+
+We would probably also want to consider if the effect of time it varies by treatment:
+
+```{r}
+m4 <- glmmTMB(meta ~ week_centered * species + 
+  (week_centered + warming + drying)^2 + 
+  (1 + week_centered | tank), 
+  family = binomial(link = "logit"), data = d)
+summary(m4)
+bbmle::AICtab(m3, m4)
+```
+
+Indeed the data support including both of these interactions with time. 
+
+Let's plot these final probability of metamorphosis curves:
+
+```{r}
+new_data$prediction4 <- predict(m4, type = "response", newdata = new_data)
+ggplot(new_data, aes(day, prediction4, group = tank, color = species_true)) +
+  geom_line(alpha = 0.8) +
+  facet_wrap(~treatment) +
+  geom_point(aes(y = meta), alpha = 0.5, 
+    position = position_jitter(height = 0.05)) +
+  ylab("Probability of metamorphosis")
+```
+
