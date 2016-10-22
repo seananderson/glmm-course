@@ -64,7 +64,7 @@ air_wide
 
 `gather` takes wide data and makes it long.
 
-The first argument is the data, the second argument represents whatever we want to call the ID columns in the long dataset, and the rest of the (unnamed) arguments use the syntax from the `dplyr::select` function to specify which columsn to gather (i.e. all non ID columns.)
+The first argument is the data, the second argument represents whatever we want to call the ID columns in the long dataset, and the rest of the (unnamed) arguments use the syntax from the `dplyr::select` function to specify which colums to gather (i.e. all non ID columns.)
 
 As an example: let's turn `air_wide` back into `air`.
 
