@@ -159,8 +159,7 @@ new_data$prediction3 <- predict(m3, type = "response", newdata = new_data)
 We would probably also want to consider if the effect of time varies by treatment:
 
 ```{r}
-m4 <- glmmTMB(meta ~ week_centered * species + 
-  (week_centered + warming + drying)^2 + 
+m4 <- glmmTMB(meta ~ (week_centered + species + warming + drying)^2 + 
   (1 + week_centered | tank), 
   family = binomial(link = "logit"), data = d)
 summary(m4)
@@ -179,5 +178,39 @@ ggplot(new_data, aes(day, prediction4, group = tank, color = species_true)) +
   geom_point(aes(y = meta), alpha = 0.5, 
     position = position_jitter(height = 0.05)) +
   ylab("Probability of metamorphosis")
+
+ggplot(new_data, aes(day, prediction4, group = tank, color = treatment)) +
+  geom_line(alpha = 0.8) +
+  facet_wrap(~species_true) +
+  geom_point(aes(y = meta), alpha = 0.5, 
+    position = position_jitter(height = 0.05)) +
+  ylab("Probability of metamorphosis")
 ```
 
+```{r}
+comparison_effect <- function(model, base_par, comparison_par) {
+  if (class(model) == "glmmTMB") {
+    fe <- fixef(model)$cond
+    se <- coef(summary(model))$cond[,"Std. Error"]
+  } else {
+    se <- arm::se.fixef(model)
+    fe <- fixef(model)
+  }
+  if (base_par != comparison_par) {
+    fe_comp <- fe[[comparison_par]] + fe[[base_par]]
+    se_comp <- sqrt(se[[comparison_par]]^2 - se[[base_par]]^2)
+  } else {
+    fe_comp <- fe[[base_par]]
+    se_comp <- se[[base_par]]
+  }
+  ci <- fe_comp + c(-1.96, 1.96) * se_comp
+  data.frame(lwr = ci[1], est = fe_comp, upr = ci[2])
+}
+
+summary(m4)
+comparison_effect(m4, "drying", "drying")
+comparison_effect(m4, "drying", "speciesc:drying")
+comparison_effect(m4, "drying", "speciesb:drying")
+
+comparison_effect(m4, "warming", "speciesb:warming")
+```
