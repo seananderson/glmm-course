@@ -2,7 +2,7 @@
 
 Goals:
 
-- Become familiar building, checking, and plotting a binomial GLMM
+- Become familiar with building, checking, and plotting a binomial GLMM
 
 Let's read in and wrangle the data from O'Regan et al. 2013.
 
@@ -30,11 +30,12 @@ d <- inner_join(d, species_letters) %>%
   mutate(treatment = paste(climate, drying, sep = "+")) %>% 
   mutate(warming = ifelse(climate == "warming", 1, 0),
     drying = ifelse(drying == "temp", 1, 0))  %>% 
-    select(-climate)
+    select(-climate)  %>% 
+  mutate(species = as.factor(species))
 d <- mutate(d, day_centered = day - mean(day), week_centered = day_centered/7)
 ```
 
-A good first step is to fit a global model with no random effects in separate models for each random effect level. 
+A good first step is to fit a global model with no random effects and separate models for each potential random effect level. 
 
 ```{r}
 library(lme4)
@@ -56,7 +57,7 @@ hist(intercepts)
 hist(slopes)
 ```
 
-Although we won't here, it would be a good idea to plot of the model fits on
+Although we won't here, it would be a good idea to plot the model fits on
 top of the data for each tank. 
 
 Let's try fitting a binomial GLMM with a random intercept for each tank:
@@ -99,10 +100,21 @@ We can access the various confidence intervals with:
 confint(m, method = "Wald")
 ```
 
+We can use the sjPlot package to make some quick plots:
+
+```{r}
+sjPlot::sjp.glmer(m)
+sjPlot::sjp.glmer(m, type = "re.qq")
+sjPlot::sjp.glmer(m, type = "fe")
+p <- sjPlot::sjp.glmer(m, type = "eff", show.ci = T)
+head(p$data)
+```
+
 And compare our model without a predictor, say species, via AIC or likelihood ratio test:
 
 ```{r}
 m1 <- update(m,.~.-species)
+bbmle::AICtab(m, m1)
 anova(m, m1)
 ```
 
@@ -144,7 +156,7 @@ summary(m3)
 new_data$prediction3 <- predict(m3, type = "response", newdata = new_data)
 ```
 
-We would probably also want to consider if the effect of time it varies by treatment:
+We would probably also want to consider if the effect of time varies by treatment:
 
 ```{r}
 m4 <- glmmTMB(meta ~ week_centered * species + 
@@ -155,7 +167,7 @@ summary(m4)
 bbmle::AICtab(m3, m4)
 ```
 
-Indeed the data support including both of these interactions with time. 
+Indeed the data support including both of these interactions with time and this would likely be an important scientific question from the experiment. 
 
 Let's plot these final probability of metamorphosis curves:
 
