@@ -176,7 +176,7 @@ m3_right <- update(m3, correlation = varIdent()) # exercise
 
 # Challenge 4
 
-This one, bonus question, is harder. Hint: you can combine multiple variance structures with `varComb` and will need to do that here.
+This bonus question is harder. Hint: you can combine multiple variance structures with `varComb` and will need to do that here.
 
 ```{r}
 ggplot(d, aes(x, y4)) + geom_point() + facet_wrap(~group)
