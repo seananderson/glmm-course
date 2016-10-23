@@ -1,9 +1,116 @@
-when things went wrong...
+# Variance structures
 
-temporal autocorrelation
-spatial autocorrelation
+# Goals
 
-approaches: fixed effect, model correlation in residuals
+- Gain familiarity with graphical model checking
+- Learn about variance structures in the nlme package
+- Learn to identify and deal with violations of assumptions about variance
+
+# A simulated data set
+
+I've simulated a data set with the predictor `x`, the response variables `y`
+through `y4`, collected for groups (`group`) A through L, and collected over
+time (`time`). Let's load that data set:
+
+```{r}
+library(tidyverse)
+library(nlme)
+library(lme4)
+d <- readRDS("data/generated/model-checking.rds")
+d
+# View(d)
+```
+
+All of the response variables are continuous with both negative and positive
+values and can be fitted with a linear mixed effects model.
+
+Let's quickly plot the data.
+
+```{r}
+ggplot(d, aes(x, y)) + geom_point() + facet_wrap(~group)
+```
+
+The response variable `y` can be fit without any issues with the following
+model:
+
+```{r}
+m <- lme(y ~ x, random = ~ 1 | group, data = d)
+summary(m)
+```
+
+Some of the most important ways that we can check our model are to plot our
+fitted (predicted) values overlaid on the data, plot the residuals against the
+fitted values, plot the fitted values against the observed values, and plot
+residuals against each of our predictors in the model and any predictors
+that were not included in the model.
+
+What are the model assumptions that these various plots help us check? What are
+we looking for when we make these plots?
+
+We will plot the residuals various ways now using the augment function from the broom package.
+
+```{r}
+aug <- broom::augment(m)
+
+ggplot(aug, aes(x, y)) + geom_point() + facet_wrap(~group) +
+  geom_line(aes(x, .fitted), colour = "red")
+
+ggplot(aug, aes(.fitted, .resid)) + geom_point() + facet_wrap(~group) +
+  geom_hline(yintercept = 0)
+
+ggplot(aug, aes(.fitted, y)) + geom_point() + facet_wrap(~group) +
+  geom_abline(intercept = 0, slope = 1)
+
+ggplot(aug, aes(time, .resid)) + geom_point() + facet_wrap(~group) +
+  geom_hline(yintercept = 0)
+
+ggplot(aug, aes(x, .resid)) + geom_point() + facet_wrap(~group) +
+  geom_hline(yintercept = 0)
+```
+
+Alternatively, as we have done before, we can use the plot functions built into
+the nlme (or the lme4) package. We will use this shortcut here and below for
+speed and to quickly access the "normalized" residuals which incorporate any
+variance or correlation structure.
+
+```{r}
+plot(m, resid(., type = "normalized") ~ fitted(.), abline = 0)
+plot(m, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
+plot(m, resid(., type = "normalized") ~ time | group, abline = 0)
+plot(ACF(m, resType = "normalized"))
+```
+
+We can also check the normality of the random effects, although we don't need
+to get too caught up checking these and there is no need to check these
+for the rest of these exercises.
+
+```{r}
+qqnorm(ranef(m)[,"(Intercept)"])
+```
+
+# When things go wrong
+
+There are at least 3 major ways I can think of that things might look wrong with residual plots.
+
+1. There might be large-scale trends in the residuals.
+2. There might be localized clumping or patterns in the residuals.
+3. The spread of the residuals may not be constant.
+
+## Challenge 0
+
+Turn to your neighbor and discuss the approaches you would try to solve the first 2 problems.
+
+# Variance structures
+
+The third problem, a problem with the variance of the residuals, can be solved by adding covariates to the variance of the residuals.
+
+The package nlme makes this relatively easy. (There is no other major R package that implements variance structures to my knowledge.)
+
+There are a number of possible variance structures. You can see a list of them with `?nlme::varClasses`. The best reference on these variance structures is in Pinheiro and Bates (2000) "Mixed-Effects Models in S and S-PLUS".
+
+The most common ones I've seen used are `nlme::varIdent`, `nlme::varExp`, and `nlme::varPower`.
+
+Let's take a look at the shape of the exponential and power variance functions in nlme:
 
 ```{r}
 get_varPower <- function(v, t1) abs(v)^(2 * t1)
@@ -17,11 +124,63 @@ v <- seq(0.05, 4, length.out = 100)
 manipulate({plot(v, get_varPower(v, t1), type = "l", main = "nlme::varPower()")},
   t1 = slider(-1, 2, 0.1, step = 0.1))
 
-manipulate({plot(v, get_varConstPower(v, t1, t2), type = "l", 
+manipulate({plot(v, get_varConstPower(v, t1, t2), type = "l",
   main = "nlme::varConstPower()")},
   t1 = slider(-4, 4, 1, step = 0.1),
   t2 = slider(-1, 2, 0.1, step = 0.1))
 
 manipulate({plot(v, get_varExp(v, t1), type = "l", main = "nlme::varExp()")},
   t1 = slider(-0.5, 1, 0.1, step = 0.1))
+```
+
+We can add one of these variant structures by passing it to the `weights` argument in `nlme::lme` or `nlme::gls`. E.g. `weights = varExp()`. Read the help for each of these functions to see what the default value for the argument `form` is inside the variance function. `?nlme::varExp`
+
+# Model checking exercises
+
+In the following challenges, there is something wrong in each case. The
+solution involves adding one of `varExp`, `varIdent`, or `corAR1` temporal
+correlation.
+
+I've started each one off. You will need to plot the residuals and figure out
+what variance or correlation structure is missing.
+
+Remember that you can use the `update` function to reduce copying and pasting
+of code.
+
+# Challenge 1
+
+```{r}
+ggplot(d, aes(x, y1)) + geom_point() + facet_wrap(~group)
+m1 <- lme(y1 ~ x, random = ~ 1 | group, data = d)
+
+m1_right <- update(m1, weights = varExp(form = ~ fitted(.))) # exercise
+```
+
+# Challenge 2
+
+```{r}
+ggplot(d, aes(x, y2)) + geom_point() + facet_wrap(~group)
+m2 <- lme(y2 ~ x, random = ~ 1 | group, data = d)
+
+m2_right <- update(m2, correlation = corAR1()) # exercise
+```
+
+# Challenge 3
+
+```{r}
+ggplot(d, aes(x, y3)) + geom_point() + facet_wrap(~group)
+m3 <- lme(y3 ~ x, random = ~ 1 | group, data = d)
+
+m3_right <- update(m3, correlation = varIdent()) # exercise
+```
+
+# Challenge 4
+
+This one, bonus question, is harder. Hint: you can combine multiple variance structures with `varComb` and will need to do that here.
+
+```{r}
+ggplot(d, aes(x, y4)) + geom_point() + facet_wrap(~group)
+m4 <- lme(y4 ~ x, random = ~ 1 | group, data = d)
+
+m4_right <- update(m4, weights = varComb(varIdent(), varExp())) # exercise
 ```
