@@ -1,6 +1,6 @@
 # Binomial GLMMs
 
-Goals:
+# Goals:
 
 - Gain familiarity with building, checking, and plotting a binomial GLMM
 - Learn about binned residual plots for checking binomial models
@@ -323,3 +323,10 @@ m5 <- glmmTMB(meta ~ (week_centered + species + warming + drying)^2 +
   (1 + week_centered | tank), 
   family = binomial(link = "probit"), data = d)
 ```
+
+# Addendum
+
+What assumptions does our model make? 
+
+If we are primarily interested in the effect of these treatments on time to
+metamorphosis what is another simpler way we could have modeled these data?
