@@ -7,13 +7,14 @@
 
 # Loading the data
 
-We are going to work with a data set from O'Regan et al. 2013. The data
-represent time to metamorphosis for 3 amphibian species in a mesocosm
-experiment. The experiment had 2 levels of warming (normal and accelerated) and
-to levels of pond drying (normal/permanent and accelerated/temporary). There
-were multiple tanks per treatment condition.
+We are going to work with a data set from 
+[O'Regan et al. 2013](http://doi.org/10.1890/13-0916.1). These data represent
+time to metamorphosis for 3 amphibian species in a mesocosm experiment. The
+experiment had 2 levels of warming (normal and accelerated) and 2 levels of
+pond drying (normal/permanent and accelerated/temporary). There were multiple
+tanks per treatment condition.
 
-Let's read in and wrangle the data from O'Regan et al. 2013:
+Let's read in and wrangle the data for our purposes.
 
 ```{r, message=FALSE}
 library(tidyverse)
