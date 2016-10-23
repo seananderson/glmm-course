@@ -52,9 +52,11 @@ having reached metamorphosis at any given point in time and for each of the
 treatments.
 
 In other words, `meta` (1 = metamorphosis) will be our response, and the
-predictors will be `day`, `warming`, `drying`, and `species`. I've also
-included columns for `treatment` (warming and drying combination) and
+predictors will be `week_centered`, `warming`, `drying`, and `species`. I've
+also included columns for `treatment` (warming and drying combination) and
 `species_true` to make plotting easier. 
+
+Why might I have chosen to work with `week_centered` instead of `day`?
 
 What are some useful ways we could look at the data before fitting a model? 
 
