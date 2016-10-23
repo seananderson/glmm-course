@@ -100,6 +100,29 @@ hist(slopes)
 Although we won't here, it would be a good idea to plot the model fits on
 top of the data for each tank. 
 
+We can do something similar with ggplot:
+
+```{r}
+ggplot(d, aes(day, meta, color = treatment)) +
+  facet_grid(treatment~species_true) +
+  geom_point(alpha = 0.05, position = position_jitter(height = 0.15)) +
+  ylab("Probability of metamorphosis") +
+  geom_smooth(method = "glm", 
+    method.args = list(family = binomial(link = "logit")), 
+      se = FALSE, alpha = 0.7, colour = "black")
+
+ggplot(d, aes(day, meta, group = tank, color = treatment)) +
+  facet_grid(treatment~species_true) +
+  geom_point(alpha = 0.05, position = position_jitter(height = 0.15)) +
+  ylab("Probability of metamorphosis") +
+  geom_smooth(method = "glm", 
+    method.args = list(family = binomial(link = "logit")), 
+      se = FALSE, colour = "black")
+```
+
+How do these plots help build our intuition about what we expect to find when
+we fit more complicated GLMMs?
+
 # Fitting an initial GLMM
 
 Let's try fitting a binomial GLMM with a random intercept for each tank:
