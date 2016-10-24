@@ -20,6 +20,7 @@ Zero-inflation: With probability 1-pz, Y comes from a Poisson (or negative binom
 <https://groups.nceas.ucsb.edu/non-linear-modeling/projects/owls/WRITEUP/owls.pdf>
 
 BB: <https://stat.ethz.ch/pipermail/r-sig-mixed-models/2012q3/018874.html>
+
 ```{r}
 # simulated zero-inflated Poisson example
 set.seed(1)
@@ -39,18 +40,18 @@ ggplot(d, aes(x, y, colour = f)) + geom_point() +
 ```
 
 ```{r, eval=FALSE}
-zip_admb <- glmmADMB::glmmadmb(y ~ x + (1 | f), 
-  data = d, family = "poisson", zeroInflation = TRUE)
-summary(zip_admb)
+# zip_admb <- glmmADMB::glmmadmb(y ~ x + (1 | f), 
+#   data = d, family = "poisson", zeroInflation = TRUE)
+# summary(zip_admb)
 ```
 
-```{r}
+```{r, eval=FALSE}
 zip_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "poisson", ziformula = ~ 1)
 summary(zip_tmb)
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 zi <- coef(summary(zip_tmb))$zi[1, "Estimate"]
 zi_se <- coef(summary(zip_tmb))$zi[1, "Std. Error"]
 
@@ -63,12 +64,33 @@ plogis(zi + 2 * zi_se) %>% round(2)
 # Hurdle/delta model
 
 ```{r}
+# simulated zero-inflated Poisson example
+set.seed(1)
+d <- data.frame(f = factor(rep(letters[1:10], each = 10)), x = runif(100))
+u <- rnorm(10, sd = 2)
+d$eta0 <- with(d, u[f] + 1 + 0.5 * x)
+d$eta <- with(d, u[f] + 1 + 4 * x)
+pz <- plogis(d$eta0) # probability of excess zeros
+zi <- rbinom(100, size = 1, prob = pz)
+rtpois <- function(N, lambda) qpois(runif(N, dpois(0, lambda), 1), lambda)
+d$y <- ifelse(zi==0, 0, rtpois(100, lambda = exp(d$eta)))
+d$zi <- zi
+
+ggplot(d, aes(x, y, colour = f, shape = as.factor(zi))) + geom_point() +
+  scale_shape_manual(values = c(20, 21))
+
+ggplot(d, aes(x, y, colour = f)) + geom_point() +
+  facet_wrap(~zi)
+```
+
+
+```{r, eval=FALSE}
 hurd_a <- glmmTMB(y ~ x + (1 | f), data = dplyr::filter(d, y > 0), 
   family = list(family = "truncated_poisson", link = "log"))
 summary(hurd_a)
 ```
 
-```{r}
+```{r, eval=FALSE}
 d <- mutate(d, y1 = y > 0)
 hurd_b <- glmmTMB(y1 ~ x + (1 | f), data = d, 
   family = binomial(link = "logit"))
@@ -77,7 +99,7 @@ summary(hurd_b)
 
 We can derive the prediction of the hurdle model by 
 
-```{r}
+```{r, eval=FALSE}
 pred_a <- predict(hurd_a, newdata = d)
 pred_b <- predict(hurd_b, newdata = d)
 
@@ -91,7 +113,8 @@ ggplot(d, aes(y, pred, colour = f, shape = as.factor(zi))) +
 
 We can calculate the AIC of the hurdle model simply by adding the AIC of the 2 component models.
 
-```{r}
+```{r, eval=FALSE}
 AIC(zip_tmb)
 AIC(hurd_a) + AIC(hurd_b)
 ```
+
