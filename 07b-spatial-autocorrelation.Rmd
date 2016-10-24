@@ -1,0 +1,74 @@
+# Spatial autocorrelation 
+
+# Goals
+
+- Learn to identify and deal with spatial autocorrelation through correlation structures in nlme
+
+# Loading the data 
+
+We will work with an example data set from the nlme package. This data set is also used as an example in the accompanying textbook by Pinheiro and Bates.
+
+```{r}
+library(nlme)
+library(tidyverse)
+d <- Wheat2 # loaded with nlme
+glimpse(d)
+```
+
+TODO FINISH
+
+So far we have used the `lme` function from the nlme package to fit linear mixed effect models. This package also has the function `gls`, which lets you use the features of nlme when fitting linear models without random effects.
+
+```{r}
+# P + B 2000:
+m1 <- gls(yield ~ variety - 1, data = d)
+plot(Variogram(m1, form = ~ latitude + longitude))
+
+m1
+
+d$res <- as.numeric(residuals(m1))
+
+ggplot(d, aes(longitude, latitude, colour = res)) + 
+  geom_point(size = 5) + scale_color_gradient2()
+
+# A nugget eﬀect of about 0.2 seems to be present and the semivariogram appears to approach 1 around distance 28.
+# Littell et al. (1996, §9.6.2) 
+# noting that, in corSpher, the range is the distance at which the semivariogram ﬁrst equals 1
+# fm2Wheat2 <- update(fm1Wheat2, corr = corSpher(c(30, 0.2), 
+  # form = ~ latitude + longitude, nugget = TRUE))
+
+m2 <- update(m1, 
+  corr = corSpher(c(30, 0.2), form = ~ latitude + longitude, nugget = TRUE))
+
+# no!
+# m3 <- update(m1, 
+#   corr = corSpher(form = ~ latitude + longitude, nugget = TRUE))
+
+m2
+
+d$res2 <- as.numeric(residuals(m2, type = "normalized"))
+
+ggplot(d, aes(longitude, latitude, colour = res2)) + geom_point(size = 5) +
+  scale_color_gradient2()
+
+plot(Variogram(m2, form = ~ latitude + longitude, resType = "normalized"))
+
+bbmle::AICtab(m1, m2)
+
+library(mgcv)
+m1_ml <- gls(yield ~ variety - 1, data = d, method = "ML")
+# m2_ml <- gls(yield ~ variety - 1, data = d, method = "ML",
+#   corr = corSpher(c(30, 0.2), form = ~ latitude + longitude, nugget = TRUE))
+m_gam1 <- gam(yield ~ variety - 1, data = d)
+bbmle::AICtab(m_gam1, m1_ml)
+m_gam2 <- gam(yield ~ variety - 1 + te(latitude, longitude), data = d)
+
+bbmle::AICtab(m_gam1, m_gam2)
+plot(m_gam2, pers = TRUE)
+
+d$res_gam2 <- as.numeric(residuals(m_gam2))
+
+ggplot(d, aes(longitude, latitude, colour = res_gam2)) + 
+  geom_point(size = 5) + scale_color_gradient2()
+```
+
