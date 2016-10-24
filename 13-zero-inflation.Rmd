@@ -1,9 +1,12 @@
+# Zero-inflated models 
 
-demo again - can get a lot of zeros
+# Goals 
 
-hurdle, zero-inflation parameter
+- Gain familiarity with the concept of zero-inflated models
+- Understand the difference between estimating a zero-inflated parameter and a hurdle/delta model
+- Learn how to approach continuous positive data that also has zeros
 
-what if continuous with zeros? link to blog
+# Introduction 
 
 Let's try fitting models with a zero inflation parameter.
 
@@ -14,14 +17,12 @@ library(glmmTMB)
 
 Zero-inflation: With probability 1-pz, Y comes from a Poisson (or negative binomial) distribution, and with probability pz, Y is zero (Bohning et al. 1999).
 
-Bohning, D., E. Dietz, and P. Schlattmann. 1999. The zero-inflated Poisson model and the decayed, missing and filled teeth index in dental epidemiology. Journal of the Royal Statistical Society. Series A (Statistics in Society) 162:195–209.
-
 <https://groups.nceas.ucsb.edu/non-linear-modeling/projects/owls/WRITEUP/owls.pdf>
 
 BB: <https://stat.ethz.ch/pipermail/r-sig-mixed-models/2012q3/018874.html>
 ```{r}
 # simulated zero-inflated Poisson example
-set.seed(99)
+set.seed(1)
 d <- data.frame(f = factor(rep(letters[1:10], each = 10)), x = runif(100))
 u <- rnorm(10, sd = 2)
 d$eta <- with(d, u[f] + 1 + 4 * x)
@@ -48,11 +49,6 @@ zip_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "poisson", ziformula = ~ 
 summary(zip_tmb)
 ```
 
-```{r}
-# nb_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "nbinom2")
-# summary(nb_tmb)
-```
-
 
 ```{r}
 zi <- coef(summary(zip_tmb))$zi[1, "Estimate"]
@@ -64,7 +60,7 @@ plogis(zi) %>% round(2)
 plogis(zi + 2 * zi_se) %>% round(2)
 ```
 
-Hurdle / delta model:
+# Hurdle/delta model
 
 ```{r}
 hurd_a <- glmmTMB(y ~ x + (1 | f), data = dplyr::filter(d, y > 0), 
@@ -79,28 +75,23 @@ hurd_b <- glmmTMB(y1 ~ x + (1 | f), data = d,
 summary(hurd_b)
 ```
 
-Predictions:
+We can derive the prediction of the hurdle model by 
 
 ```{r}
-hurd_b_lme4 <- lme4::glmer(y1 ~ x + (1 | f), data = d, 
-  family = binomial(link = "logit"))
-summary(hurd_b_lme4)
-
 pred_a <- predict(hurd_a, newdata = d)
-pred_b <- predict(hurd_b_lme4, newdata = d) %>% plogis
+pred_b <- predict(hurd_b, newdata = d)
 
 head(pred_a)
 head(pred_b)
 d$pred <- pred_a * pred_b
 
-filter(d, zi == 1 | !y1) %>%
-ggplot(aes(y, pred, colour = f, shape = as.factor(zi))) + 
+ggplot(d, aes(y, pred, colour = f, shape = as.factor(zi))) + 
   geom_point() + scale_shape_manual(values = c(20, 21))
-
 ```
+
+We can calculate the AIC of the hurdle model simply by adding the AIC of the 2 component models.
 
 ```{r}
 AIC(zip_tmb)
 AIC(hurd_a) + AIC(hurd_b)
-AIC(nb_tmb)
 ```
