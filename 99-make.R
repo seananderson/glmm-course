@@ -7,3 +7,10 @@ remove_exercises <- function(x) {
   writeLines(as.character(f_ex), con = file.path("exercises", x))
 }
 exercises <- lapply(files, remove_exercises)
+
+# knit all exercises
+
+knit_exercises <- function(x) {
+  rmarkdown::render(x, "github_document")
+}
+ignore_me <- lapply(files, knit_exercises)
