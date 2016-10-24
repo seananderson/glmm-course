@@ -1,6 +1,4 @@
----
-title: GLMM confidence intervals
----
+# GLMM confidence intervals
 
 Confidence intervals on random effects or on predictions including the random effects in GLMMs are complicated. 
 
@@ -10,7 +8,7 @@ The single best resource aggregating information on this topic (and other issues
 
 Below we'll work through some the options. 
 
-```{r}
+```{r, eval=FALSE}
 confint(m, method = "profile")
 confint(m, method = "Wald")
 confint(m, method = "boot")
@@ -20,7 +18,7 @@ From <https://rpubs.com/bbolker/glmmchapter>
 
 Population level predictions:
 
-```{r}
+```{r, eval=FALSE}
 predict_pop_ci <- function(model, newdata, alpha = 0.05) {
   # baseline prediction, on the linear predictor (logit) scale:
   pred0 <- predict(model, re.form = NA, newdata = newdata)
@@ -51,7 +49,7 @@ confint(m_slope, method = "Wald")
 confint(m_slope, method = "boot")
 ```
 
-```{r}
+```{r, eval=FALSE}
 library(simr)
 (model1 <- lmer(y ~ x + (1|g), data=simdata))
 fixef(model1)["x"] <- -0.1
@@ -75,44 +73,3 @@ pc4 <- powerCurve(model4, within="x+g", breaks=1:5, nsim = 50)
 plot(pc4)
 
 ```
-
-```{r}
-d <- read_tsv("data/raw/postma-2014/postma_data.txt")
-head(d)
-ggplot(d, aes(attractiveness, performance.2013)) + geom_point()
-length(unique(d$id.rater))
-length(unique(d$id.rider))
-d$id.rater <- as.factor(d$id.rater)
-d$id.rider <- as.factor(d$id.rider)
-m <- lmer(attractiveness~performance.2012 + 
-    relationship + age.rater + relationship + age.rider + sexual.orientation +
-    (1|nationality.rater/id.rater) + 
-    (1|id.rider), 
-  data = d)
-arm::display(m)
-m2 <- arm::standardize(m)
-arm::display(m2)
-
-m <- lmer(attractiveness~performance.2012 + 
-    age.rater + 
-    (1|nationality.rater/id.rater) + 
-    (1|id.rider), 
-  data = d)
-arm::display(m)
-m2 <- arm::standardize(m)
-arm::display(m2)
-
-fixef(m)["performance.2012"] <- 8
-(ps1 <- powerSim(m, nsim = 15))
-
-library(ordinal)
-d$attractiveness <- ordered(d$attractiveness)
-m_ord <- clmm(attractiveness~performance.2012 + 
-    age.rater + 
-    (1|id.rater) + 
-    (1|id.rider), 
-  data = d)
-summary(m_ord)
-```
-
-
