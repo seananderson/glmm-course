@@ -222,10 +222,6 @@ ggplot(dg, aes(m, v)) +
   geom_point()
 ```
 
-<!-- b <- broom::augment(m2) -->
-<!-- plot(b$.fitted, sqrt(abs(b$.resid))) -->
-<!-- plot(m2, gbpu ~ resid(.,type="pearson")) -->
-
 It's always a good idea to fit GLMMs with multiple methods if possible to ensure the conclusions are not sensitive to the optimization method or that your model has not converged.
 
 One of the greatest things since sliced bread is the new TMB package for R. TMB normally requires you to write your own model template, but the package glmmTMB comes with a number of pre-written and tested GLMMs.
@@ -273,16 +269,16 @@ ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
 
 Quick Bayesian version:
 
-```{r}
+```{r stan, eval=FALSE}
 library(rstanarm)
 library(rstan)
 options(mc.cores = parallel::detectCores())
 
 mstan <- rstanarm::stan_glmer(f_lme4, data = d, 
-  family = poisson(link = "log"), chains = 4, iter = 300)
+  family = poisson(link = "log"), chains = 2, iter = 300)
 summary(mstan)
 
-mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 4,
+mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 2,
   iter = 300)
 
 summary(mstan_nb)
@@ -301,11 +297,13 @@ stan_est %>% filter(grepl("gbpu", term)) %>%
 stan_re_int <- stan_est %>% filter(grepl("gbpu", term))
 qqnorm(stan_re_int$estimate)
 qqline(stan_re_int$estimate)
+save(mstan, mstan_nb, file = "data/generated/stan-models.rda")
 ```
 
 Let's compare confidence intervals:
 
-```{r}
+```{r compare}
+load("data/generated/stan-models.rda")
 get_tmb_cis <- function(x, name) {
   ci <- list()
   ci <- data.frame(confint(x), fixef(x)[[1]])
@@ -331,7 +329,7 @@ cis[[6]] <- stan_est %>%
 cis_df <- bind_rows(cis) %>% filter(term != "(Intercept)")
 ```
 
-```{r}
+```{r plot-comparison}
 ggplot(cis_df, aes(term, estimate, 
   ymin = conf.low, ymax = conf.high, colour = model)) +
   geom_pointrange(position = position_dodge(width = 0.5)) +
