@@ -21,7 +21,7 @@ So far we have used the `lme` function from the nlme package to fit linear
 mixed effect models. This package also has the function `gls`, which lets you
 use the features of nlme when fitting linear models without random effects.
 
-This data set represents yield from various variety of wheat collected at
+This data set represents yield from various varieties of wheat collected at
 different latitudes and longitudes.
 
 ```{r}
