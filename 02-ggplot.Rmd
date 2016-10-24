@@ -165,7 +165,7 @@ ggplot(morph, aes(wingl, beakh)) +
 
 Try the same scatterplot but show the upper beak length with colour (note how ggplot treats `ubeakl` differently than `taxon` when it picks a colour scale -- why is that?):
 
-```{r aes2-ex}
+```{r aes3-ex}
 ggplot(morph, aes(wingl, beakh)) +
   geom_point(aes(colour = ubeakl)) # exercise
 ```
