@@ -83,7 +83,7 @@ m_global <- glm(meta ~ week_centered + species + warming * drying,
   family = binomial(link = "logit"), data = d)
 arm::display(m_global)
 
-m_list <- lmList(meta ~ week_centered | tank, data = d, 
+m_list <- lme4::lmList(meta ~ week_centered | tank, data = d, 
   family = binomial(link = "logit"))
 
 intercepts <- map_dbl(m_list, function(x) coef(x)[[1]])

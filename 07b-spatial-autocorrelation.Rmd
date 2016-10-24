@@ -13,7 +13,7 @@ also used as an example in the accompanying textbook by Pinheiro and Bates.
 ```{r}
 library(nlme)
 library(tidyverse)
-d <- Wheat2 # loaded with nlme
+d <- nlme::Wheat2
 glimpse(d)
 ```
 
