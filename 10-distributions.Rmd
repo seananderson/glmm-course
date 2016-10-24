@@ -10,7 +10,7 @@
 
 ## Normal
 
-```{r}
+```{r, eval=FALSE}
 library(manipulate)
 
 x <- seq(-10, 10, length.out = 300)
@@ -27,7 +27,7 @@ manipulate({
 
 ## Log normal
 
-```{r}
+```{r, eval=FALSE}
 x <- seq(0, 100, length.out = 300)
 manipulate({
   y <- dlnorm(
@@ -50,7 +50,7 @@ is small?
 
 What distributions do these resemble? Why is that useful? 
 
-```{r}
+```{r, eval=FALSE}
 x <- seq(0, 100, length.out = 300)
 manipulate({
   y <- dgamma(
@@ -71,7 +71,7 @@ What happens to the width of the poisson as the mean (lambda) increases?
 
 When might you expect to observe a poisson distribution?
 
-```{r}
+```{r, eval=FALSE}
 x <- seq(0, 100)
 manipulate({
   y <- dpois(x,
@@ -87,7 +87,7 @@ What happens when the `size` parameter gets really small? What distribution does
 
 When might you expect to observe a negative binomial distribution?
 
-```{r}
+```{r, eval=FALSE}
 x <- seq(0, 100)
 manipulate({
   y <- dnbinom(
@@ -106,7 +106,7 @@ Read the help `?dbinom` and play with the sliders. What do `size` and `prob` arg
 
 Think in terms of flipping a coin. What would the `prob` parameter be for a typical coin? If I flipped a coin 6 times what would the parameter `size` be?
 
-```{r}
+```{r, eval=FALSE}
 x <- seq(0, 10)
 manipulate({
   y <- dbinom(x,
