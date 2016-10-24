@@ -20,7 +20,7 @@ n <- 10
 y <- rnorm(n = n, mean = mu, sd = sigma)
 ```
 
-We will estimate a mean temperature by fitting and intercept only linear regression model:
+We will estimate a mean temperature by fitting an intercept only linear regression model:
 
 ```{r}
 mean(y)
@@ -33,7 +33,7 @@ summary(m)
 
 Let's illustrate what those confidence intervals really represent. 
 
-Imagine you went outside 20 times and each time you measure the cup of water 10 times. Then you fit a linear regression model with an intercept only each time and plot the confidence intervals.
+Imagine you went outside 20 times and each time you measured the cup of water 10 times. Then you fitted a linear regression model with an intercept only each time and plotted the confidence intervals.
 
 ```{r}
 calc_mean <- function(i) {
@@ -52,11 +52,21 @@ ggplot(sim_ci, aes(1, y)) + facet_wrap(~i) +
   geom_hline(yintercept = mu, colour = "red")
 ```
 
-# Illustrate p-values:
+19 times out 20 (95%) the 95% confidence intervals should contain the true value. Check the above plot. Does that look approximately correct?
+
+So that means our calculated confidence intervals are just one realization of a theoretically repeated experiment.
+
+# P-values
+
+P-values tell us the long term frequency with which we would expect to calculate a value as extreme or more if the null hypothesis were actually true (assuming a two-side p-value). Usually, our null hypothesis is that a parameter is equal to zero.
+
+So now we imagine thousands of parallel universes where he went out and performed the exact same experiment but the true temperature was 0. And we want to know what fraction of those times we would observe calculate a mean temperature at least as extreme as `r mean(y)` (i.e. greater than the absolute value of `r mean(y)`).
+
+Sound convoluted? It kind of is in many cases.
+
+```{r}
 calc_mean_zero <- function(i) {
   y <- rnorm(n = n, mean = 0, sd = sigma)
-  # y <- runif(n = n, -3, 3)
-  # y <- runif(n = n, -3, 3)
   m <- lm(y~1)
   tibble(i = i, mu_hat_sim = coef(m)[[1]])
 }
@@ -71,10 +81,11 @@ ggplot(sim_pvals, aes(mu_hat_sim, fill = tail)) +
   geom_vline(xintercept = mu_hat, lty = "solid") +
   geom_vline(xintercept = 0, lty = "dashed")
 
-# ggplot(sim_pvals, aes(abs(mu_hat_sim), fill = tail)) +
-#   geom_histogram(bins = 50) +
-#   geom_vline(xintercept = mu_hat, lty = "solid") +
-#   geom_vline(xintercept = 0, lty = "dashed")
+ggplot(sim_pvals, aes(abs(mu_hat_sim), fill = tail)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = mu_hat, lty = "solid") +
+  geom_vline(xintercept = 0, lty = "dashed")
 
 summary(m)
 sum(sim_pvals$tail)/N
+```
