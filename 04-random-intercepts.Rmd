@@ -1,4 +1,4 @@
-% Introduction to random intercept models
+# Introduction to random intercept models
 
 # Goals
 

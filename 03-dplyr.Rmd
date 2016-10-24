@@ -1,4 +1,4 @@
-% Manipulating data with dplyr and pipes
+# Manipulating data with dplyr and pipes
 
 # Goals
 
@@ -45,8 +45,8 @@ library(dplyr)
 
 Next we'll read it in and simplify it. This gets a bit ugly, but you can safely just run this code chunk and ignore the details. Later you might want to come back and work through the code if any looks new to you. This type of data cleaning is commonly required:
 
-```{r}
-mammals <- readr::read_tsv("data/generated/mammals.txt")
+```{r, message=FALSE}
+mammals <- readr::read_tsv("data/raw/mammals.txt")
 names(mammals) <- sub("[0-9._-]+", "", names(mammals))
 names(mammals) <- sub("MSW", "", names(mammals))
 mammals <- select(mammals, Order, Binomial, AdultBodyMass_g, 
@@ -96,10 +96,10 @@ filter(mammals, species == "Balaena mysticetus")
 filter(mammals, order == "Carnivora", adult_body_mass_g < 200)
 ```
 
-Your turn: filter `mammals` for all rows where `adult_body_mass_g` is `NA` and `adult_head_body_len_mm` is greater than 2000. Hint (use `is.na()`):
+Challenge: filter `mammals` for all rows where `adult_body_mass_g` is `NA` and `adult_head_body_len_mm` is greater than 2000. Hint (use `is.na()`):
 
 ```{r}
-filter(mammals, is.na(home_range_km2), adult_head_body_len_mm > 2000)
+filter(mammals, is.na(home_range_km2), adult_head_body_len_mm > 2000) # exercise
 ```
 
 # Arranging rows
@@ -204,7 +204,7 @@ mammals %>% group_by(order) %>%
   summarise(median_litter = median(litter_size, na.rm = TRUE))
 ```
 
-## Your turn 1
+## Challenge 1
 
 Take what I started and add a line that keeps only the rows where `median_litter` is less than 3:
 
@@ -224,7 +224,7 @@ mammals %>% group_by(order) %>%
   arrange(-median_litter) # exercise
 ```
 
-## Your turn 2
+## Challenge 2
 
 Again, your turn: make the following piece of code easier to read by converting it to use pipes (hint: work from the inside out):
 

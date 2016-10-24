@@ -1,4 +1,4 @@
-% Introduction to random intercept and slope models
+# Introduction to random intercept and slope models
 
 # Goals
 
@@ -139,6 +139,8 @@ ggplot(d, aes(log_wingl_centered, log(beakh), colour = taxon, group = taxon)) +
   geom_vline(xintercept = 0, linetype = 2)
 ```
 
+## Challenge
+
 Ignoring phylogenetic relatedness (some taxa are more related to each other than others), what is an issue with our model? 
 
 Hint 1: "random" intercepts are supposed to be just that: random. There shouldn't be any systematic pattern in their values that we can explain. If there is, we can include that in the model.
@@ -166,6 +168,8 @@ ggplot(taxa_dat, aes(mean_log_wingl, intercept)) + geom_point()
 ```
 
 How can we include this information in our model? 
+
+## Adding a group-level predictor
 
 ```{r}
 d <- left_join(d, taxa_dat, by = "taxon")

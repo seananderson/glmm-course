@@ -1,10 +1,23 @@
+# Spatial autocorrelation 
+
+# Goals
+
+- Learn to identify and deal with spatial autocorrelation through correlation structures in nlme
+
+# Loading the data 
+
+We will work with an example data set from the nlme package. This data set is also used as an example in the accompanying textbook by Pinheiro and Bates.
+
 ```{r}
 library(nlme)
 library(tidyverse)
-
 d <- Wheat2 # loaded with nlme
 glimpse(d)
 ```
+
+TODO FINISH
+
+So far we have used the `lme` function from the nlme package to fit linear mixed effect models. This package also has the function `gls`, which lets you use the features of nlme when fitting linear models without random effects.
 
 ```{r}
 # P + B 2000:

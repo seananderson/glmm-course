@@ -1,9 +1,8 @@
-% Manipulating data with tidyr
+# Manipulating data with tidyr
 
 # Goals
 
-- Be able to identify wide- and long-format data and why we might need one or
-  the other
+- Be able to identify wide- and long-format data and why we might need one or the other
 - Be able to convert between the two formats with the tidyr package
 
 # Introduction
@@ -72,14 +71,14 @@ As an example: let's turn `air_wide` back into `air`.
 gather(air_wide, month, temp, -day)
 ```
 
-## Your turn 1
+## Challenge 1
 
 Try and answer the following questions before running the code:
 
 What will the following do?
 
 ```{r}
-gather(air_wide, zebra, aligator, -day)
+gather(air_wide, zebra, aligator, -day) # exercise
 ```
 
 Is this the same as above?
@@ -94,9 +93,9 @@ Why doesn't the following do what we want?
 gather(air_wide, month, temp)
 ```
 
-## Your turn 2
+## Challenge 2
 
-Make this fake dataset:
+Start by running the following code to create a data set:
 
 ```{r fake-data}
 # from ?tidyr::spread

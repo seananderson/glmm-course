@@ -1,13 +1,11 @@
----
-Title: R formula and random effect grouping syntax
----
+# R formula and random effect grouping syntax
 
 # Goals
 
-- review R formula syntax including some lesser known shortcuts
-- be able to identify possible random effect grouping structures
-- be able to write out random effect formulas for `lme4::lmer()`
-- be able to convert `lme4::lmer()` random effect syntax to `nlme::lme()` syntax
+- Review R formula syntax including some lesser known shortcuts
+- Be able to identify possible random effect grouping structures
+- Be able to write out random effect formulas for `lme4::lmer()`
+- Be able to convert `lme4::lmer()` random effect syntax to `nlme::lme()` syntax
 
 # Formula syntax
 
@@ -20,7 +18,7 @@ class(f)
 
 We covered R's formula syntax in the slides. Below are some exercises to solidify your understanding. 
 
-## Your turn
+## Challenge 1
 
 For this course, I'm assuming you're already somewhat familiar with R formulas. Let's review some more edge-case R formula syntax quickly. Read `?formula` if needed.
 
@@ -72,7 +70,7 @@ y ~ 0 + x # exercise
 
 We'll cover random effect syntax in the slides. Below are some exercises.
 
-## Your turn 1
+## Challenge 2
 
 A group of grad students are trying to model log(frog density) as a function of vegetation characteristics. What might their model look like in the following cases (using `lme4::lmer`)? Give cases with random intercepts only and cases with random intercepts and slopes.
 
@@ -109,7 +107,7 @@ Bonus 2: How can you specify one of the above models with a random slope but no 
 log(frog_dens) ~ vegetation + (0 + vegetation | transect) # exercise
 ```
 
-## Your turn 2
+## Challenge 3
 
 Jane measures frog density and vegetation characteristics from 2 transects (`transect`) within 4 ponds (`pond`). Assume her data are structured like this:
 
@@ -175,7 +173,7 @@ ranef(m_wrong) # exercise
 ranef(m3) # exercise
 ```
 
-## Your turn 3
+## Challenge 4
 
 For practice, how can we write the following model using `nlme::lme()` syntax?
 
