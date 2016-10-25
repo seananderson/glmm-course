@@ -10,7 +10,7 @@
 
 ggplot2 is an R package by Hadley Wickham and Winston Chang that implements Wilkinson's Grammar of Graphics. The emphasis of ggplot2 is on rapid exploration of data, and especially high-dimensional data. Think of base graphic functions as drawing with data (examples of base graphic functions are `plot()`, `points()`, and `lines()`. With base graphics, you have complete control over every pixel in a plot but it can take a lot of time and code to produce a plot.
 
-Good graphical displays of data require rapid iteration and lots of exploration. If it takes you hours to code a plot in base graphics, you're unlikely to throw it out and explore other ways of visualizing the data, you're unlikely to explore all the dimensions of your data, and your unlikely to discover.
+Good graphical displays of data require rapid iteration and lots of exploration. If it takes you hours to code a plot in base graphics, you're unlikely to throw it out and explore other ways of visualizing the data, you're unlikely to explore all the dimensions of your data, and you're unlikely to discover problems with your data or models. 
 
 Let's look at some illustrative ggplot2 code:
 
@@ -186,7 +186,7 @@ To specify the data frame columns that are mapped to the rows and columns of fac
 
 ## Challenge 2
 
-Try a scatterplot of beak height against wing length with a different panel for each taxon. I've started it for your. Use `facet_wrap()` (hint: the synatax is `+ facet_wrap(~column_name)`:
+Try a scatterplot of beak height against wing length with a different panel for each taxon. I've started it for your. Use `facet_wrap()` (hint: the syntax is `+ facet_wrap(~column_name)`:
 
 ```{r facet1}
 ggplot(morph, aes(wingl, beakh)) + geom_point() + 
@@ -211,7 +211,7 @@ ggplot(morph, aes(wingl, beakh)) + geom_point() +
 
 A great way to visualize coefficients from models is with dot and line plots.
 
-To illustrate how to make this style of plot, let's make a plot that shows a dot for the median and line segment for the quantiles. First, we'll calculate these values. For now, just run this code. We'll learn about dplyr next.
+To illustrate how to make this style of plot, let's make a plot that shows a dot for the median and a line segment for the quantiles. First, we'll calculate these values. For now, just run this code. We'll learn about dplyr next.
 
 ```{r calc-medians}
 morph_quant <- morph %>%

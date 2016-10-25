@@ -3,7 +3,7 @@
 # Goals
 
 - Learn to identify and deal with spatial autocorrelation through correlation structures in nlme
-- Very briefly get introduced to the idea of GAMs
+- Very briefly introduce the idea of GAMs for dealing with spatial data
 
 # Loading the data 
 
@@ -17,22 +17,26 @@ d <- nlme::Wheat2
 glimpse(d)
 ```
 
+This data set represents yield from various varieties of wheat collected at
+different latitudes and longitudes.
+
+# Fitting a model with `nlme::gls`
+
 So far we have used the `lme` function from the nlme package to fit linear
 mixed effect models. This package also has the function `gls`, which lets you
 use the features of nlme when fitting linear models without random effects.
-
-This data set represents yield from various varieties of wheat collected at
-different latitudes and longitudes.
 
 ```{r}
 m1 <- gls(yield ~ variety - 1, data = d)
 m1
 ```
 
-The nlme package comes with a built in function for plotting a semivariogram.
-You can think of this like an inverse of a correlation of the residuals at
-increasing distance. So low values correspond to high correlation and high
-values correspond to low correlation. 
+The nlme package comes with a built-in function for plotting a semivariogram.
+This represents half the average squared difference between residuals at
+increasing distances from each other. So this is inversely related to
+correlation. Small values mean that the residuals are very similar to each
+other. This is a common plot in spatial statistics and there are plenty of
+references on the topic you can find online. 
 
 ```{r}
 plot(Variogram(m1, form = ~ latitude + longitude))
@@ -49,9 +53,14 @@ ggplot(d, aes(longitude, latitude, colour = res)) +
 We can clearly see that the residuals have spatial clumping patterns. Why is this a problem?
 
 If we look at the semivariogram that we plotted earlier, we can take a guess at
-good initial starting values for a range value and nugget effect. The nugget
-represents the intercept value and the range represents the distance at which
-the semivariogram reaches 1.
+good initial starting values for a range value and nugget effect. For the
+`nlme::corSpher()` correlation structure, the nugget represents the intercept
+value and the range represents the distance at which the semivariogram reaches
+1.
+
+By looking at the above semivariogram we can eyeball what those values should
+be. We will give the correlation function starting values close to what we
+expect. 
 
 ```{r}
 m2 <- update(m1, 
@@ -90,6 +99,15 @@ bbmle::AICtab(m1, m2)
 So we are estimating 2 extra parameters as part of the spatial correlation
 structure, but the AIC strongly supports adding this model complexity. 
 
+We have used just one of a number of spatial correlation structures available
+in the nlme package. In fact, in their textbook (Mixed-Effects Models in S and
+S-PLUS), Pinheiro and Bates illustrate that the `nlme::corRatio()` structure
+provides a slightly better fit to this data set. If you are considering
+a spatial correlation structure, take a look at your various options: `corExp,
+corGaus, corLin, corRatio, corSpher`, linked to from `?nlme::corSpatial`
+
+# A quick version with GAMs
+
 A disadvantage of modeling spatial correlation this way is that there is no
 easy way to extract a spatial surface of predictions. An alternative and common
 way of dealing with spatial autocorrelation is to model the spatial process as
@@ -100,7 +118,7 @@ GAMs are just like GLMs except that predictors can be allowed to follow
 a smoothed squiggly line. And the degree of squiggliness can be determined
 objectively within the fitting algorithm.
 
-As a demonstration, we will fit version of this model with a GAM. The main
+As a demonstration, we will fit a version of this model with a GAM. The main
 package for fitting these models in R is mgcv. We will refit the `gls` model
 with maximum likelihood so that we can compare it to the GAM.
 
@@ -114,7 +132,7 @@ m_gam2 <- gam(yield ~ variety - 1 + te(latitude, longitude), data = d)
 bbmle::AICtab(m_gam1, m_gam2)
 ```
 
-We can now plot of the spatial predictions:
+We can now make it a plot of the spatial predictions:
 
 ```{r}
 plot(m_gam2, pers = TRUE)
@@ -127,4 +145,12 @@ d$res_gam2 <- as.numeric(residuals(m_gam2))
 ggplot(d, aes(longitude, latitude, colour = res_gam2)) + 
   geom_point(size = 5) + scale_color_gradient2()
 ```
+
+# Additional information 
+
+Pinheiro, J. C., and D. M. Bates. 2000. Mixed-Effects Models in S and S-PLUS. Springer-Verlag, New York, NY, USA.
+
+Zuur, A., E. Ieno, N. Walker, A. Saveliev, and G. Smith. 2009. Mixed effects models and extensions in ecology with R. Springer.
+
+Wood, S. N. 2006. Generalized Additive Models: An Introduction with R. Chapman and Hall, New York.
 

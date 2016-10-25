@@ -34,9 +34,9 @@ ggplot(d, aes(temperature, -log(depth_mean_day))) +
   facet_wrap(~fish)
 ```
 
-Why does it make sense to work with log(depth)?
+Why does it make sense to work with log depth?
 
-Let's fit a basic mixed effects model predicting dive depth from temperature that allows the intercept and sloped to vary with each fish. We are going to center the temperature predictor first to reduce correlation between the intercepts and slopes.
+Let's fit a basic mixed-effects model predicting dive depth from surface temperature that allows the intercept and sloped to vary with each fish. We are going to center the temperature predictor first to reduce correlation between the intercepts and slopes.
 
 ```{r, message=FALSE}
 d <- d %>% mutate(temperature_centered = temperature - mean(temperature))
@@ -71,7 +71,7 @@ ggplot(aug, aes(.fitted, .resid)) +
   geom_hline(yintercept = 0, colour = "red")
 ```
 
-Something looks a bit funny there with the strips of residuals, but it's not yet clear what is causing that. Can you guess what might be doing this? 
+Something looks a bit funny there with the strips of residuals, but it's not yet clear what is causing that. Can you guess what it might be? 
 
 We also know the day of each measurement. Let's try plotting the residuals against date with a panel for each fish. 
 
@@ -104,7 +104,7 @@ arm::display(m1)
 summary(m2)
 ```
 
-nlme has some built in residual plotting functions that we will use. (Alternatively, we could easily extract the residuals like we have before and plot them with ggplot2.) Let's reproduce our last plot. It's important that we specify `type = "normalized"`. The reason will become apparent soon. The `.` it refers to our model. The syntax might look strange, but just go with it because it will save us writing a lot of code.
+nlme has some built-in residual plotting functions that we will use. (Alternatively, we could easily extract the residuals like we have before and plot them with ggplot2.) Let's reproduce our last plot. It's important that we specify `type = "normalized"`. The reason will become apparent soon. The `.` it refers to our model. The syntax might look strange, but just go with it because it will save us writing a lot of code.
 
 ```{r}
 plot(m2, resid(., type = "normalized") ~ fitted(.) | fish, abline = 0)
@@ -118,7 +118,7 @@ plot(ACF(m2, resType = "normalized"))
 
 So the residuals one day apart are correlated at a value of almost 0.8! That's far from our assumption of independent residuals.
 
-Let's add a temporal autocorrelation structure. We'll start with the simplest: `corAR1()`. By default, this will estimate a correlation between subsequent residuals within each fish. This correlation value will be shared across all fish and assume that our data were correctly ordered by time with no gaps. 
+Let's add a temporal autocorrelation structure. We'll start with the simplest: `corAR1()`. By default, this will estimate a regression coefficient between subsequent residuals within each fish. This regression coefficient will be shared across all fish and assume that our data were correctly ordered by time with no gaps. 
 
 ```{r}
 m3 <- lme(log(depth_mean_day) ~ temperature_centered, 
@@ -144,6 +144,10 @@ plot(m3, resid(.) ~ fitted(.) | fish, abline = 0)
 ```
 
 The default, "response", does not incorporate the correlation structure. That's not very helpful when we are trying to tell if our correlation structure helped.
+
+# Other temporal correlation structures 
+
+The `corAR1()` correlation structure is just one of a number of temporal correlation structures we could have fit. It is the simplest, and probably most common to use. nmle allows us to also fit higher order auto regressive models in the residuals. For example, an AR 2 model would also estimate a regression parameter for residuals that are 2 time steps apart. This, and possible moving average coefficients, can be estimated with the `nlme::corARMA()`. Models with different correlation structures can be compared via AIC, and perhaps more importantly, by inspecting the residuals yourself with well-thought-out plots. Zuur et al. in "Mixed Effects Models and Extensions in Ecology with R" makes the point that fitting any temporal autocorrelation structure is usually far more important than getting the perfect structure. Start with AR 1 and try more complicated structures if that seems insufficient. 
 
 # Making a more useful plot of our predictions
 
@@ -175,7 +179,7 @@ newdata$pred_fish <- predict(m3, newdata = newdata)
 We'll also make predictions for an average or "population"-level fish. This is our prediction for a new fish of unknown identity.
 
 ```{r}
-source("drafts/predict_pop_ci.R")
+source("drafts/predict_pop_ci.R") # from <https://rpubs.com/bbolker/glmmchapter>
 pop_predictions <- predict_pop_ci(m3, newdata = newdata)
 head(pop_predictions)
 newdata <- data.frame(newdata, pop_predictions)
@@ -193,12 +197,10 @@ ggplot(newdata) +
   scale_colour_distiller(palette = "Greys", direction = 1)
 ```
 
-# Writing out our model
+# Additional information 
 
-$$
-\log(D_i) = \alpha_j + \beta_j T_i + \epsilon_i, 
-  \; \epsilon_i \sim \text{N}(\phi \epsilon_{i-1}, \sigma^2), 
-  \; \text{for } i = 1, ..., n, \\
-\alpha_j \sim \text{N}(\mu_\alpha, \sigma_\alpha^2),
-  \; \beta_j \sim \text{N}(\mu_\beta, \sigma_\beta^2),
-  \; \text{for } j = 1, ..., J.$$
+Two of the best references on temporal correlation structures in nlme are:
+
+Pinheiro, J. C., and D. M. Bates. 2000. Mixed-Effects Models in S and S-PLUS. Springer.
+
+Zuur, A., E. Ieno, N. Walker, A. Saveliev, and G. Smith. 2009. Mixed effects models and extensions in ecology with R. Springer.

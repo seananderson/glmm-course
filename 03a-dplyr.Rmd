@@ -171,7 +171,7 @@ mammals %>% arrange(adult_body_mass_g)
 
 # A better example
 
-Here's where it gets interesting We can chain dplyr functions in succession. This lets us write data manipulation steps in the order we think of them and avoid creating temporary variables in the middle to capture the output. This works because the output from every dplyr function is a data frame and the first argument of every dplyr function is a data frame.
+Here's where it gets interesting. We can chain dplyr functions in succession. This lets us write data manipulation steps in the order we think of them and avoid creating temporary variables in the middle to capture the output. This works because the output from every dplyr function is a data frame and the first argument of every dplyr function is a data frame.
 
 Say we wanted to find the species with the highest body-mass-to-length ratio:
 
@@ -197,7 +197,7 @@ select(
 
 But the problem here is that you have to read it inside out, it's easy to miss a bracket, and the arguments get separated from the function (e.g. see `mutate()` and `desc(mass_to_length))`). Plus, this is a rather trivial example. Chain together even more steps and it quickly gets out of hand.
 
-Here's one more example. Let's ask what taxonomic orders have a median litter size greater than 3. I'll start by grouping by `order` and calculating the median litter sizes:
+Here's one more example. Let's ask what taxonomic orders have a median litter size less than 3. I'll start by grouping by `order` and calculating the median litter sizes:
 
 ```{r}
 mammals %>% group_by(order) %>%

@@ -2,7 +2,7 @@
 
 # Goals
 
-- Learn to fit a "random intercepts" models with the `lme4::lmer` function
+- Learn to fit a "random intercepts" model with the `lme4::lmer` function
 - Learn to plot the output from a `lme4::lmer` model
 - Learn to interpret the output from a `lme4::lmer` model
 
@@ -94,7 +94,7 @@ Notice the new piece `+ (1 | taxon)`. The `1` refers to "intercept" and the `| t
 
 # Plotting the predictions
 
-Let's look at what we just did. We'll start by plotting the predictions. To do that, we'll use the `predict` function. Because we are applying it an object of class `merMod` (meaning it was created by the `lmer` function), we can get details on that function at `?predict.merMod`.
+Let's look at what we just did. We'll start by plotting the predictions. To do that, we'll use the `predict` function. Because we are applying it to an object of class `merMod` (meaning it was created by the `lmer` function), we can get details on that function at `?predict.merMod`.
 
 ```{r}
 d$predict_lmer <- predict(m_lmer)
@@ -213,7 +213,7 @@ log(wingl) -0.951
 
 This tells us that our intercept and slope are highly correlated. Why is this?
 
-This isn't a great, and if this correlation is very strong and our model is complicated it might result in computational problems. Later we will talk about ways of solving this (hint: we'll "center" the predictor by subtracting the mean). 
+This isn't great, and if this correlation is very strong and our model is complicated it might result in computational problems. Later we will talk about ways of solving this (hint: we'll "center" the predictor by subtracting the mean). 
 
 There are a lot of details in the output from `summary.merMod` and usually a lot more decimal places than are reasonable. 
 
@@ -241,7 +241,7 @@ Here, our slope indicates that a 1% change in wing length corresponds to a `r sl
 
 What does our intercept mean?
 
-In this case, it's not very meaningful. It's the expected log(beak length) when log(wing length) = 0. In other words, we would expect a bird with a wing length of 1 to have a beak length of `r round(exp(fixef(m_lmer)[[1]]), 2)`.
+In this case, it's not very meaningful. It's the expected log(beak length) when log(wing length) = 0. In other words, we would expect a bird with a wing length of 1mm to have a beak height of `r round(exp(fixef(m_lmer)[[1]]), 2)`mm.
 
 How might we make the intercept more meaningful if we were to refit this model?
 

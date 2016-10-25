@@ -1,4 +1,4 @@
-# from bolker...
+# from <https://rpubs.com/bbolker/glmmchapter>
 predict_pop_ci <- function(model, newdata, alpha = 0.05) {
   # baseline prediction, on the linear predictor (logit) scale:
   pred0 <- predict(model, re.form = NA, newdata = newdata, level = 0)

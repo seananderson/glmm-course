@@ -65,7 +65,7 @@ arm::display(m_slopes)
 
 A useful package that we will use repeatedly is the broom package. This package provides a set of consistent functions for extracting information from nearly any type of model in R. In particular, we will use the function `broom::tidy`, which returns information about parameter estimates in a tidy data frame, and the function `broom::augment`, which returns a tidy data frame of predictions, residuals, and other useful columns.
 
-To read the documentation for the functions as they apply to `lme4`, see `broom::tidy.merMod` or `broom::augment.merMod`.
+To read the documentation for the functions as they apply to `lme4`, see `?broom::tidy.merMod` or `?broom::augment.merMod`.
 
 ```{r}
 library(broom)
@@ -75,7 +75,7 @@ tidy(m_int, conf.int = TRUE)
 
 Inspect the output. Do you understand what all the terms mean?
 
-What has changed? In particular, what has changed about the main effect slope estimate for `log(wingl)` and uncertainty about this estimate? Why might this be?
+What has changed? In particular, what has changed about the main effect slope estimate for `log(wingl)` and uncertainty about this estimate?
 
 # Criticizing the models 
 
@@ -84,6 +84,7 @@ Let's extract residuals, predictions, and fitted values from the model objects u
 ```{r}
 aug_int <- augment(m_int)
 aug_slopes <- augment(m_slopes)
+head(aug_slopes)
 ```
 
 One important model diagnostic is plotting the residuals against the fitted values. Here, "fitted" is another word for the predictions.
@@ -122,12 +123,13 @@ For now, we are going to move on. But how might we fix this?
 
 There is another, perhaps less obvious, issue with our model. 
 
-Before we dig into this, we're going to refit the models with a centered predictor. This just means we will subtract the mean of log(wing length) from the predictor. In a later exercise we will dive more into this. For now, just know that this will make the rest of this exercise easier to interpret because our intercept estimates will be at `log(wingl)` = `r round(mean(log(d$wingl)), 1)` instead of `log(wingl)` = 0.
+Before we dig into this, we're going to refit the models with a centered predictor. This just means we will subtract the mean of log(wing length) from the predictor. In a later exercise we will dive more into this. For now, just know that this will make the rest of this exercise easier to interpret because our intercept estimates will be at `wingl` = `r round(exp(mean(log(d$wingl))), 0)`mm instead of `log(wingl)` = 0.
 
 ```{r}
 d <- d %>% mutate(log_wingl_centered = log(wingl) - mean(log(wingl)))
-m_int <-  lmer(log(beakh) ~ log_wingl_centered + (1 | taxon), data = d)
+m_int <- lmer(log(beakh) ~ log_wingl_centered + (1 | taxon), data = d)
 m_slopes <- lmer(log(beakh) ~ log_wingl_centered + (1 + log_wingl_centered | taxon), data = d)
+d$predict_slopes <- predict(m_slopes)
 ```
 
 Let's look at our model predictions overlaid with the data again:
@@ -145,13 +147,13 @@ Ignoring phylogenetic relatedness (some taxa are more related to each other than
 
 Hint 1: "random" intercepts are supposed to be just that: random. There shouldn't be any systematic pattern in their values that we can explain. If there is, we can include that in the model.
 
-Hint 2: What do you think a plot of the intercepts (where the solid prediction lines cross the dashed zero line) against mean log(wing length) would look like?
+Hint 2: What do you think a plot of the intercepts (where the solid prediction lines cross the dashed zero line) against mean log(wing length) for each taxa would look like?
 
-Let's make a plot of the intercepts against the mean of log(wing length). Try finishing the last line of dplyr code to calculate the mean log(wing length) for each value of the `taxon` column.
+Let's make a plot of the intercepts against the mean of log(wing length) for each taxa. Try finishing the last line of dplyr code to calculate the mean log(wing length) for each value of the `taxon` column.
 
 ```{r}
 taxa_dat <- group_by(d, taxon) %>% 
-  summarise(mean_log_wingl = 
+  summarise(mean_log_wingl_centered = 
       mean(log_wingl_centered)) # exercise
 ```
 
@@ -159,12 +161,12 @@ In the last lesson, we learned how to extract the random effect coefficient esti
 
 ```{r}
 re_int <- 
-  coef(m_slopes)$taxon[,1] # exercise
+  coef(m_slopes)$taxon[, "(Intercept)"] # exercise
 taxa_dat$intercept <- re_int
 ```
 
 ```{r}
-ggplot(taxa_dat, aes(mean_log_wingl, intercept)) + geom_point()
+ggplot(taxa_dat, aes(mean_log_wingl_centered, intercept)) + geom_point()
 ```
 
 How can we include this information in our model? 
@@ -173,8 +175,9 @@ How can we include this information in our model?
 
 ```{r}
 d <- left_join(d, taxa_dat, by = "taxon")
-d %>% select(taxon, wingl, log_wingl_centered, mean_log_wingl)
-m_slopes_gr <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl +
+d %>% select(taxon, wingl, log_wingl_centered, mean_log_wingl_centered)
+saveRDS(d, file = "data/generated//morph-geospiza-group.rds")
+m_slopes_gr <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl_centered +
     (1 + log_wingl_centered | taxon), data = d)
 ```
 
@@ -191,9 +194,9 @@ Let's check our random intercepts again:
 
 ```{r}
 taxa_dat$intercept_with_group_predictor <- coef(m_slopes_gr)$taxon[,1]
-p1 <- ggplot(taxa_dat, aes(mean_log_wingl, intercept)) + geom_point() +
+p1 <- ggplot(taxa_dat, aes(mean_log_wingl_centered, intercept)) + geom_point() +
   ylim(2.1, 2.8)
-p2 <- ggplot(taxa_dat, aes(mean_log_wingl, intercept_with_group_predictor)) + 
+p2 <- ggplot(taxa_dat, aes(mean_log_wingl_centered, intercept_with_group_predictor)) + 
   geom_point() + ylim(2.1, 2.8)
 gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```

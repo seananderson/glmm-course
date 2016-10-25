@@ -1,5 +1,7 @@
 # GLMM confidence intervals
 
+help("pvalues",package="lme4") 
+
 Confidence intervals on random effects or on predictions including the random effects in GLMMs are complicated. 
 
 There is no one magic bullet if you are using the lme4 package. Various options make different assumptions and range from simple to complex. 
@@ -8,17 +10,35 @@ The single best resource aggregating information on this topic (and other issues
 
 Below we'll work through some the options. 
 
-```{r, eval=FALSE}
-confint(m, method = "profile")
-confint(m, method = "Wald")
-confint(m, method = "boot")
+```{r}
+library(tidyverse)
+library(lme4)
+d <- readRDS("data/generated//morph-geospiza-group.rds")
+set.seed(1)
+d <- d[sample(seq_len(nrow(d)), 700), ] # downsample for-speed 
 ```
 
-From <https://rpubs.com/bbolker/glmmchapter>
+```{r}
+m <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl_centered +
+    (1 | taxon), data = d)
+arm::display(m)
+```
 
-Population level predictions:
 
 ```{r, eval=FALSE}
+ci <- list()
+ci[[1]] <- confint(m, method = "Wald", oldNames = FALSE)
+ci[[2]] <- confint(m, method = "profile", oldNames = FALSE)
+ci[[3]] <- confint(m, method = "boot", oldNames = FALSE, nsim = 200, .progress="txt")
+
+ci
+
+arm::display(m)
+```
+
+Population level predictions with confidence intervals:
+
+```{r}
 predict_pop_ci <- function(model, newdata, alpha = 0.05) {
   # baseline prediction, on the linear predictor (logit) scale:
   pred0 <- predict(model, re.form = NA, newdata = newdata)
@@ -43,33 +63,12 @@ predict_pop_ci <- function(model, newdata, alpha = 0.05) {
     upr = pred0 + crit * pred.se
   ))
 }
-predict_pop_ci(m_slope, d)
-confint(m_slope, method = "profile")
-confint(m_slope, method = "Wald")
-confint(m_slope, method = "boot")
-```
 
-```{r, eval=FALSE}
-library(simr)
-(model1 <- lmer(y ~ x + (1|g), data=simdata))
-fixef(model1)["x"] <- -0.1
-ps1 <- powerSim(model1, nsim = 25)
-print(ps1)
+new_data <- select(islandid, )
+p <- predict_pop_ci(m, d)
+p
 
-model2 <- extend(model1, along="x", n=20)
-powerSim(model2, nsim = 25)
+newdata <- cbind(d, p)
 
-pc2 <- powerCurve(model2, nsim = 10)
-plot(pc2)
-
-model3 <- extend(model1, along="g", n=15) 
-pc3 <- powerCurve(model3, along="g", nsim = 50) 
-plot(pc3)
-
-# The output for this analysis is shown in Fig. 3. To reach 80% power, we would need at least 11 sites.
-
-model4 <- extend(model1, within="x+g", n=5)
-pc4 <- powerCurve(model4, within="x+g", breaks=1:5, nsim = 50)
-plot(pc4)
-
+ggplot(p, aes(aes))) + 
 ```
