@@ -4,7 +4,7 @@
 
 - Review the most common probability distributions used in GLMs and GLMMs
 - Get a feeling for how the parameters affect the distribution shapes
-- Have an interactive resource to come back to as needed
+- Have an interactive resource to use in the future 
 
 # Continuous distributions
 
@@ -84,6 +84,10 @@ manipulate({
 ## Negative binomial
 
 What happens when the `size` parameter gets really small? What distribution does this resemble if the `size` parameter gets big?
+
+There are 2 main parameterizations of the negative binomial distribution. The most common, and the one represented by `dnbinom` is one in which the variance scales as a quadratic function of the mean. `variance = mu + mu^2/size`. This is often referred to as the NB2 parameterization.
+
+The alternative, NB1, allows the variance to scale linearly with the mean. See Hardin and Hilbe "Generalized Linear Models and Extensions".
 
 When might you expect to observe a negative binomial distribution?
 
