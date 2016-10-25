@@ -8,9 +8,54 @@ d <- inner_join(d, species_letters) %>%
   mutate(warming = ifelse(climate == "warming", 1, 0),
     drying = ifelse(drying == "temp", 1, 0)) %>%
   select(tank, date, drying, warming, species, species_true, svl, mass, time) %>%
-  mutate(species = as.factor(species), tank = as.factor(tank))
+  mutate(species = as.factor(species), tank = as.factor(tank)) %>%
+  select(-time, -date)
 d
 ```
+
+```{r}
+d <- mutate(d,
+  sp_a = ifelse(species == "a", 1, 0),
+  sp_b = ifelse(species == "b", 1, 0),
+  sp_c = ifelse(species == "c", 1, 0),
+  sp_a_cent = sp_a - mean(sp_a),
+  sp_b_cent = sp_b - mean(sp_b),
+  sp_c_cent = sp_c - mean(sp_c),
+  warming_cent = warming - mean(warming))
+select(d, -drying, -mass, -species_true)
+d <- filter(d, species != "c")
+
+# implicit comparison to species a
+(m <- lmer(svl ~ (warming + species)^2 + (1 | tank), data = d))
+(m <- lmer(svl ~ warming * species + (1 | tank), data = d))
+(m <- lmer(svl ~ warming * sp_b + warming * sp_c + (1 | tank), data = d))
+
+# intercept removed
+(m <- lmer(svl ~ 0 + warming * species + (1 | tank), data = d))
+(m <- lmer(svl ~ 0 + sp_a + warming * sp_b + warming * sp_c + 
+    (1 | tank), data = d))
+
+# centered
+(m <- lmer(svl ~ 0 + warming_cent * sp_b_cent + warming_cent * sp_c_cent + 
+    (1 | tank), data = d))
+
+(m <- lmer(svl ~ warming + species + (1 | tank), data = d))
+
+(m1 <- lmer(svl ~ warming * species + (1 | tank), data = d))
+fixef(m1)[[1]] + fixef(m1)[[3]]
+
+(m2 <- lmer(svl ~ warming_cent * sp_b_cent + (1 | tank), data = d))
+
+x <- max(d$sp_b_cent)
+x <- max(d$sp_b_cent)
+fixef(m2)[[1]] + x * fixef(m2)[[3]]
+fixef(m2)[[1]] + (x - 1) * fixef(m2)[[3]]
+
+17.9294 + 0.8529063 * 1.0893 
+17.9294 + 0.8529063 * 1.0893 
+```
+
+
 
 ```{r}
 library(lme4)
