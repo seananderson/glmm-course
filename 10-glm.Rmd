@@ -3,11 +3,10 @@
 # Goals
 
 - Gain familiarity and intuition with common GLMs
-- Learn to detect and deal with overdispersion
 
 # Data
 
-We are going to simulate our own data for this exercise. The following will be common parameters. `N` is the number of data points. `x` is our predictor variable. `a` is the intercept. And `b` is the slope.
+We are going to simulate our own data for this exercise. The following will be common throughout: `N` is the number of data points. `x` is our predictor variable. `a` is the intercept, and `b` is the slope.
 
 ```{r}
 library(ggplot2)
@@ -21,7 +20,9 @@ d <- data_frame(x = x)
 d
 ```
 
-So our data frame includes a column for one predictor, `x`. This can represent any variable that you might try and predict some other process with. 
+So our data frame includes a column for one predictor, `x`. This can represent any variable that you might try to predict some other process with. 
+
+# A function to plot our GLM predictions
 
 We will use the following function to quickly plot the predictions from our models. 
 
@@ -39,6 +40,8 @@ plot_glm <- function(model, dat) {
   invisible(p)
 }
 ```
+
+# Link functions 
 
 Remember that there are two components to a GLM: a link function that describes what is happening with the mean of the data, and an error distribution that describes the variability around the mean. 
 
@@ -146,7 +149,7 @@ plot_glm(m_nb, d)
 
 ## Binomial, logit link
 
-We can use a binomial response and logit link if we have response data represented by 0s and 1s. This is commonly referred to as a logistic regression. 
+We can use a binomial response and logit link if we have response data represented by 0s and 1s. This is commonly referred to as logistic regression. 
 
 ```{r}
 y_linear <- a + b * x
@@ -174,10 +177,10 @@ How do we interpret the slope coefficient? A unit increase in `x` corresponds to
 That means the inverse-logit transformed true probabilities follow our estimated intercept and slope.
 
 ```{r}
-plot(sort(x), prob_true[order(x)]) # true probabilities 
 # inverse-logit transformed probabilities (aka log odds)
 plot(sort(x), qlogis(prob_true[order(x)]), ylab = "log odds")
-abline(a = int, b = slope, col = "red")
+abline(a = a, b = b, col = "red")
+abline(a = int, b = slope, col = "blue")
 ```
 
 What does that mean? If we exponentiate the slope coefficient we get the expected fold increase in the *odds* of observing a `1`: `r exp(slope)` per unit increase in `x`.
@@ -202,133 +205,3 @@ g + geom_vline(xintercept = c(-0.5, 0, 0.5), lty = 2) +
 
 For more details see: Gelman, A., and J. Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press, Cambridge, UK.
 
-# Overdispersion
-
-“Overdispersion is the polite statistician’s version of Murphy’s Law: if something can go wrong, it will”
-
-Crawley (2007, p. 522)
-
-So far, all our fitted models have matched the simulated data. One common thing that can go wrong is that there is more variability in the data than allowed by a distribution. 
-
-This isn't a problem for distributions like the normal, Gamma, or negative binomial, because these distributions have a parameter that lets them be as narrow or wide as they need to be.
-
-But some distributions, notably the poisson and binomial, assume a fixed level of variability for a given mean value. But the real world is messy and this isn't always the case. Let's take a look at what that means. 
-
-## Quasipoisson, log link
-
-We'll start by using the negative binomial distribution to generate count data that we know are overdispersed for a poisson. 
-
-```{r}
-y_true <- exp(a + b * x)
-set.seed(99)
-y <- MASS::rnegbin(N, mu = y_true, theta = 0.25)
-plot(x, y)
-```
-
-Let's fit a GLM with a poisson distribution and a log link even though we know that the true underlying distribution is negative binomial. 
-
-```{r}
-(m_poisson_nb <- glm(y ~ x, family = poisson(link = "log")))
-plot_glm(m_poisson_nb, d)
-```
-
-If we look at the deviance residuals, these should be constant with the predicted mean value:
-
-```{r}
-plot(fitted(m_poisson_nb), residuals(m_poisson_nb, type = "deviance"))
-```
-
-TODO TESTING
-
-But they aren't.
-
-We can compare these to what we would have expected when the model was correctly specified. 
-
-```{r}
-plot(fitted(m_nb), residuals(m_nb, type = "deviance"))
-plot(fitted(m_poisson), residuals(m_poisson, type = "deviance"))
-```
-
-Note that this does not look the same as the residuals on the "response" scale.
-
-TODO FIX THIS UP
-
-```{r}
-plot(fitted(m_nb), residuals(m_nb, type = "response"))
-plot(fitted(m_nb), residuals(m_nb, type = "pearson"))
-plot(fitted(m_nb), residuals(m_nb, type = "deviance"))
-```
-
-What are we looking at here?
-
-We can also look at whether the deviance is approximately equal to the residual degrees of freedom.
-
-TODO DEFINE DEVIANCe
-
-```{r}
-deviance(m_poisson_nb)/m_poisson_nb$df.residual
-AER::dispersiontest(m_poisson_nb) # Cameron, A.C. & Trivedi, P.K. (1990). Regression-based tests for overdispersion in the Poisson model. Journal of Econometrics, 46, 347–364.
-```
-
-We know the correct model to fit here would be the negative binomial. But in reality we would not know this. An alternative, and simpler model to fit, is one with a "quasipoisson" error distribution.
-
-This simply estimates how overdispersed the data are and scales the standard errors on our parameter estimates appropriately.
-
-```{r}
-(m_qp <- glm(y ~ x, family = quasipoisson(link = "log")))
-confint(m_qp)
-confint(m_poisson_nb)
-```
-
-# Quasibinomial, logit link
-
-We can end up with overdispersed data from a binomial distribution if we have repeated trials.
-
-When might that happen? For example, maybe you are measuring the proportion of frogs that survive in a given tank.
-
-For this example, let's say you have 30 frogs per tank and 40 tanks.
-
-Let's simulate the proportion of frogs that survived after some experiment in a case with overdispersed data, and in a case with no overdispersion:
-
-```{r}
-set.seed(1)
-n <- 30
-y <- emdbook::rbetabinom(40, 0.5, size = n, theta=1)
-y2 <- rbinom(40, 0.5, size = n)
-par(mfrow = c(2, 1))
-plot(table(y/n)/length(y), xlim = c(0, 1), ylab = "prop.", 
-  main = "Overdispersed")
-plot(table(y2/n)/length(y2), xlim = c(0, 1), ylab = "prop.",
-  main = "Not overdispersed")
-```
-
-What we are looking at here is a histogram of the proportion of frogs that survived in each tank. Note how much more spread out the values are in the overdispersed scenario compared to the pure binomial distribution. 
-
-Let's plot the estimated mean proportion survived with a GLM fitted with the binomial error distribution, and a GLM that allows for overdispersion with the quasibinomial distribution.
-
-```{r}
-par(mfrow = c(1, 1))
-plot(table(y/n)/length(y), xlim = c(0, 1), ylab = "prop.", col = "grey80")
-abline(v = 0.5, col = "black", lwd = 10)
-
-m <- glm(y/n ~ 1, family = binomial(link = "logit"),
-  weights = rep(n, length(y)))
-ci <- plogis(confint(m))
-abline(v = ci, col = "red", lwd = 5)
-
-m2 <- glm(y/n ~ 1, family = quasibinomial(link = "logit"),
-  weights = rep(n, length(y)))
-ci2 <- plogis(confint(m2))
-
-abline(v = ci2, col = "blue", lwd = 5)
-```
-
-In the above plot, the true value is indicated by the thick black vertical line. 
-
-The binomial GLM 95% confidence interval is indicated by the red vertical lines. 
-
-And the quasibinomial GLM 95% confidence interval is indicated by the blue vertical lines.
-
-Note how our confidence intervals look too small if we don't allow for overdispersion.
-
-Since this is a course on GLMMs, an alternative way to deal with over dispersion here would be to model a random intercept for each tank. But we won't get into that yet.
