@@ -1,0 +1,23 @@
+# Schedule
+
+```{r, echo=FALSE, message=FALSE}
+library(dplyr)
+d <- readxl::read_excel("99-outline.xlsx") %>% na.omit()
+```
+
+## Day 1
+
+```{r, echo=FALSE}
+filter(d, Day == 1) %>% 
+  select(-`Time end`, -Day) %>% 
+  knitr::kable()
+```
+
+## Day 2
+
+```{r, echo=FALSE}
+filter(d, Day == 2) %>% 
+  select(-`Time end`, -Day) %>% 
+  knitr::kable()
+```
+

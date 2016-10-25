@@ -1,41 +1,42 @@
-# Day 1
 
-Time  | Topic
------ | ---------------------------
-10:00 | introduction + overview presentation .5
-10:30 | visualization: ggplot .5
-11:00 | break .25
-11:15 | data manipulation: dplyr + tidyr .75
-12:00 | varying intercepts .5
-12:30 | lunch 1
-1:30  | varying intercepts cont. .5
-2:00  | varying slopes 1
-3:00  | break .25
-3:15  | random effect structures .5
-3:45  | variance and correlation structures .75
-3:30  | model checking .5
-4:55  | post-it note check-in: too fast, too slow, missed something, 
-        intermediate feedback?
+Schedule
+========
 
-# Day 2
+Day 1
+-----
 
-Time  | Topic
------ | ---------------------------
-10:00 | recap + overview presentation .25
-10:15 | GLM primer 1
-11:15 | break .25
-11:30 | binomial GLMMs .5
-12:00 | poisson/negative binomial GLMMs .75
-12:30 | lunch 1
-11:30 | zero inflation .5
-1:30  | scaling and centering predictors .5
-1:30  | model building + selection process .5
-2:00  | brainstorm about own research 0.05
-2:05  | group brainstorming about own research .45
-2:30  | break .25
-2:45  | extra time, summary + extras presentation, question time 1
-3:45  | feedback form .25
+| Topic                    |  Hours|   Time|
+|:-------------------------|------:|------:|
+| introduction             |   0.50|  10.00|
+| ggplot                   |   0.75|  10.50|
+| dplyr                    |   0.75|  11.25|
+| lunch                    |   1.00|  12.00|
+| random-intercepts        |   1.00|  13.00|
+| random-slopes            |   1.00|  14.00|
+| break                    |   0.25|  15.00|
+| grouping-structures      |   0.50|  15.25|
+| temporal-autocorrelation |   0.75|  15.75|
+| break                    |   0.25|  16.50|
+| variance-structures      |   0.75|  16.75|
+| spatial-autocorrelation  |   0.25|  17.50|
+| distributions            |   0.25|  17.75|
+| quick feedback           |   0.05|  18.00|
 
-Too add:
-- p-values and CIs
-- re-levelling comparisons
+Day 2
+-----
+
+| Topic                      |  Hours|   Time|
+|:---------------------------|------:|------:|
+| recap                      |   0.50|  10.00|
+| glms                       |   1.00|  10.50|
+| overdispersed-glms         |   0.75|  11.50|
+| lunch                      |   1.00|  12.25|
+| binomial-glmm              |   1.00|  13.25|
+| poisson-negbin-glmm        |   1.00|  14.25|
+| break                      |   0.25|  15.25|
+| zero-inflation             |   0.50|  15.50|
+| group-brainstorm           |   0.50|  16.00|
+| break                      |   0.25|  16.50|
+| extra-confidence-intervals |   0.25|  16.75|
+| extras-summary-questions   |   0.75|  17.00|
+| feedback                   |   0.25|  17.75|

@@ -13,4 +13,6 @@ exercises <- lapply(files, remove_exercises)
 knit_exercises <- function(x) {
   rmarkdown::render(x, "github_document")
 }
-ignore_me <- lapply(files, knit_exercises)
+#ignore_me <- lapply(files, knit_exercises)
+
+rmarkdown::render("00-schedule.Rmd", "github_document")
