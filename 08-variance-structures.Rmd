@@ -4,13 +4,13 @@
 
 - Gain familiarity with graphical model checking
 - Learn about variance structures in the nlme package
-- Learn to identify and deal with violations of assumptions about variance
+- Learn to identify and deal with violations of assumptions about variance (heteroscedasticity)
 
 # A simulated data set
 
-I've simulated a data set with the predictor `x`, the response variables `y`
-through `y4`, collected for groups (`group`) A through L, and collected over
-time (`time`). Let's load that data set:
+I've simulated a data set for us to work with. It has a predictor `x`, the
+response variables `y` through `y4`, collected for groups (`group`) A through
+L, and collected over time (`time`). Let's load that data set:
 
 ```{r}
 library(tidyverse)
@@ -22,9 +22,9 @@ d
 ```
 
 All of the response variables are continuous with both negative and positive
-values and can be fitted with a linear mixed effects model.
+values and can be fitted with a linear mixed-effects model.
 
-Let's quickly plot the data.
+Let's plot the data.
 
 ```{r}
 ggplot(d, aes(x, y)) + geom_point() + facet_wrap(~group)
@@ -38,11 +38,13 @@ m <- lme(y ~ x, random = ~ 1 | group, data = d)
 summary(m)
 ```
 
-Some of the most important ways that we can check our model are to plot our
-fitted (predicted) values overlaid on the data, plot the residuals against the
-fitted values, plot the fitted values against the observed values, and plot
-residuals against each of our predictors in the model and any predictors
-that were not included in the model.
+Some of the most important ways that we can check our model are to:
+
+- plot our fitted (predicted) values overlaid on the data
+- plot the fitted values against the observed values
+- plot the residuals against the fitted values
+- plot residuals against each of our predictors in the model
+- plot residuals against any predictors that were not included in the model
 
 What are the model assumptions that these various plots help us check? What are
 we looking for when we make these plots?
@@ -90,7 +92,7 @@ qqnorm(ranef(m)[,"(Intercept)"])
 
 # When things go wrong
 
-There are at least 3 major ways I can think of that things might look wrong with residual plots.
+Besides influence from massive outliers, there are at least 3 major ways I can think of that things might look wrong with residual plots.
 
 1. There might be large-scale trends in the residuals.
 2. There might be localized clumping or patterns in the residuals.
@@ -102,13 +104,24 @@ Turn to your neighbor and discuss the approaches you would try to solve the firs
 
 # Variance structures
 
-The third problem, a problem with the variance of the residuals, can be solved by adding covariates to the variance of the residuals.
+The third problem, a problem with the variance of the residuals
+(heteroscedasticity), may be solved in a number of ways. The first thing to
+think about would be whether a data transformation would help (e.g. a log or
+square root transformation). Next, it's possible you are missing some important
+predictor. If these approaches fail, heteroscedasticity can be solved by adding
+covariates to the variance of the residuals.
 
-The package nlme makes this relatively easy. (There is no other major R package that implements variance structures to my knowledge.)
+The package nlme makes this relatively easy. (There is no other major R package
+that implements variance structures to my knowledge.)
 
-There are a number of possible variance structures. You can see a list of them with `?nlme::varClasses`. The best reference on these variance structures is in Pinheiro and Bates (2000) "Mixed-Effects Models in S and S-PLUS".
+There are a number of possible variance structures. You can see a list of them
+with `?nlme::varClasses`. The best reference on these variance structures is in
+Pinheiro and Bates (2000) "Mixed-Effects Models in S and S-PLUS".
 
-The most common ones I've seen used are `nlme::varIdent`, `nlme::varExp`, and `nlme::varPower`.
+The most common ones I've seen used are `nlme::varIdent`, `nlme::varExp`, and
+`nlme::varPower`. `varIdent` allows for different residual variances for
+different grouping factors. The other 2 model a relationship between
+a predictor (or, lead the fitted values) and the variance.
 
 Let's take a look at the shape of the exponential and power variance functions in nlme:
 
@@ -133,7 +146,10 @@ manipulate({plot(v, get_varExp(v, t1), type = "l", main = "nlme::varExp()")},
   t1 = slider(-0.5, 1, 0.1, step = 0.1))
 ```
 
-We can add one of these variant structures by passing it to the `weights` argument in `nlme::lme` or `nlme::gls`. E.g. `weights = varExp()`. Read the help for each of these functions to see what the default value for the argument `form` is inside the variance function. `?nlme::varExp`
+We can add one of these variance structures by passing it to the `weights`
+argument in `nlme::lme` or `nlme::gls`. E.g. `weights = varExp()`. Read the
+help for each of these functions to see what the default value for the argument
+`form` is inside the variance function. E.g. `?nlme::varExp`.
 
 # Model checking exercises
 
@@ -176,7 +192,8 @@ m3_right <- update(m3, correlation = varIdent()) # exercise
 
 # Challenge 4
 
-This bonus question is harder. Hint: you can combine multiple variance structures with `varComb` and will need to do that here.
+This bonus question is harder. Hint: you can combine multiple variance
+structures with `varComb` and will need to do that here. See `?varComb`.
 
 ```{r}
 ggplot(d, aes(x, y4)) + geom_point() + facet_wrap(~group)
