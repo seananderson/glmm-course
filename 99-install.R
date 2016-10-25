@@ -1,6 +1,8 @@
 install.packages(c("tidyverse", "lme4", "nlme", "manipulate", "rstanarm",
   "simr", "TMB"))
 
+install.packages(c("stanarm", "emdbook", "AER", "arm"))
+
 # If you are on Mac OS X:
 install.packages("http://seananderson.ca/bin/glmmTMB_0.0.2.tgz", repos = NULL)
 
