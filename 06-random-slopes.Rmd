@@ -147,7 +147,9 @@ Ignoring phylogenetic relatedness (some taxa are more related to each other than
 
 Hint 1: "random" intercepts are supposed to be just that: random. There shouldn't be any systematic pattern in their values that we can explain. If there is, we can include that in the model.
 
-Hint 2: What do you think a plot of the intercepts (where the solid prediction lines cross the dashed zero line) against mean log(wing length) for each taxa would look like?
+Hint 2: Right now we are modeling slopes within each taxa. Is there another relationship you see across taxa?
+
+What do you think a plot of the intercepts (where the solid prediction lines cross the dashed zero line) against mean log(wing length) for each taxa would look like?
 
 Let's make a plot of the intercepts against the mean of log(wing length) for each taxa. Try finishing the last line of dplyr code to calculate the mean log(wing length) for each value of the `taxon` column.
 
