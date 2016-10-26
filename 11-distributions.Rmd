@@ -59,8 +59,8 @@ manipulate({
     scale = scale)
   plot(x = x, y = y, type = "l", ylim = c(0, max(y)),
     main = "Gamma")},
-  shape = slider(0.1, 10, 3),
-  scale = slider(0.1, 60, 2))
+  shape = slider(1, 10, 3),
+  scale = slider(0.1, 30, 2))
 ```
 
 # Discrete distributions
@@ -116,8 +116,8 @@ manipulate({
   y <- dbinom(x,
     size = size,
     prob = prob)
-  plot(x = x, y = y, type = "h", xlim = c(0, 20), ylim = c(0, max(y)),
+  plot(x = x, y = y, type = "h", xlim = c(0, 10), ylim = c(0, max(y)),
     main = "Binomial")},
-  size = slider(1, 7, initial = 1, step = 1),
+  size = slider(1, 10, initial = 1, step = 1),
   prob = slider(0, 1, initial = 0.5, step = 0.1))
 ```
