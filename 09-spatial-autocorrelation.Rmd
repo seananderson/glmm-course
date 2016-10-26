@@ -17,6 +17,11 @@ d <- nlme::Wheat2
 glimpse(d)
 ```
 
+```{r}
+ggplot(d, aes(longitude, latitude, size = yield, colour = variety)) + 
+  geom_point()
+```
+
 This data set represents yield from various varieties of wheat collected at
 different latitudes and longitudes.
 
@@ -31,6 +36,17 @@ m1 <- gls(yield ~ variety - 1, data = d)
 m1
 ```
 
+We can extract and plot the residuals (by colour) spatially ourselves. 
+
+```{r}
+d$res <- as.numeric(residuals(m1))
+ggplot(d, aes(longitude, latitude, colour = res)) + 
+  geom_point(size = 5) + scale_color_gradient2()
+```
+
+We can clearly see that the residuals have spatial clumping patterns. Why is this a 
+problem?
+
 The nlme package comes with a built-in function for plotting a semivariogram.
 This represents half the average squared difference between residuals at
 increasing distances from each other. So this is inversely related to
@@ -42,21 +58,10 @@ references on the topic you can find online.
 plot(Variogram(m1, form = ~ latitude + longitude))
 ```
 
-We can also extract and plot the residuals spatially ourselves. 
-
-```{r}
-d$res <- as.numeric(residuals(m1))
-ggplot(d, aes(longitude, latitude, colour = res)) + 
-  geom_point(size = 5) + scale_color_gradient2()
-```
-
-We can clearly see that the residuals have spatial clumping patterns. Why is this a problem?
-
-If we look at the semivariogram that we plotted earlier, we can take a guess at
-good initial starting values for a range value and nugget effect. For the
-`nlme::corSpher()` correlation structure, the nugget represents the intercept
-value and the range represents the distance at which the semivariogram reaches
-1.
+If we look at the semivariogram, we can take a guess at good initial starting 
+values for a range value and nugget effect. For the `nlme::corSpher()` 
+correlation structure, the nugget represents the intercept value and the range 
+represents the distance at which the semivariogram reaches 1.
 
 By looking at the above semivariogram we can eyeball what those values should
 be. We will give the correlation function starting values close to what we
