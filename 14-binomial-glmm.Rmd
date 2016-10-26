@@ -7,12 +7,10 @@
 
 # Loading the data
 
-We are going to work with a data set from 
-[O'Regan et al. 2013](http://doi.org/10.1890/13-0916.1). These data represent
-time to metamorphosis for 3 amphibian species in a mesocosm experiment. The
-experiment had 2 levels of warming (normal and accelerated) and 2 levels of
-pond drying (normal/permanent and accelerated/temporary). There were multiple
-tanks per treatment condition.
+We are going to work with a data set from [O'Regan et al. 2013](http://doi.org/10.1890/13-0916.1.
+O’Regan, S. M., W. J. Palen, and S. C. Anderson. 2013. Climate warming mediates negative impacts of rapid pond drying for three amphibian species. Ecology 95:845–855.
+
+These data represent time to metamorphosis for 3 amphibian species in a mesocosm experiment. The experiment had 2 levels of warming (normal and accelerated) and 2 levels of pond drying (normal/permanent and accelerated/temporary). There were multiple tanks per treatment condition.
 
 Let's read in and wrangle the data for our purposes.
 
@@ -42,7 +40,8 @@ d <- inner_join(d, species_letters) %>%
     drying = ifelse(drying == "temp", 1, 0))  %>% 
     select(-climate)  %>% 
   mutate(species = as.factor(species))
-d <- mutate(d, day_centered = day - mean(day), week_centered = day_centered/7)
+day_reference <- 60 # set day sixty as our reference date (intercept)
+d <- mutate(d, day_centered = day - day_reference, week_centered = day_centered/7)
 ```
 
 # Plot the data 
@@ -63,7 +62,7 @@ What are some useful ways we could look at the data before fitting a model?
 Here is one way I thought of:
 
 ```{r}
-ggplot(d, aes(day, meta, color = treatment)) +
+ggplot(d, aes(week_centered, meta, color = treatment)) +
   facet_grid(treatment~species_true) +
   geom_point(alpha = 0.05, position = position_jitter(height = 0.15)) +
   ylab("Probability of metamorphosis")
@@ -143,8 +142,7 @@ Default residual plots are not particularly useful for a binomial response,
 although adding a smooth function helps a little bit. 
 
 ```{r}
-plot(m, type = c("p", "smooth"))
-plot(m, type = c("p", "smooth"), ylim = c(-2, 2))
+plot(m, type = c("p", "smooth"), ylim = c(-3, 3))
 ```
 
 Looking at the residuals by group can also be useful. What are we looking for
@@ -179,7 +177,7 @@ ggplot(binned, aes(mean_fitted, mean_residual, color = species)) +
   geom_smooth(se = FALSE, method = "loess", colour = "black")
 ```
 
-This does not look great.
+This does not look great, but this was just a starting point. We will be improving this model below. 
 
 # Plotting the random and fixed estimates
 
@@ -189,11 +187,24 @@ We can use built-in functions to plot the random intercept estimates:
 lattice::dotplot(ranef(m, condVar = TRUE))
 ```
 
-We can access the various confidence intervals with:
+We can access Wald various confidence intervals with:
 
 ```{r}
 confint(m, method = "Wald")
 ```
+
+These assume that the log-likelihood surface follows a quadratic shape.
+
+We won't calculate profile or bootstrap confidence intervals here because they would take a long time to run. But we could calculate those with:
+
+```{r}
+# confint(m, method = "profile")
+# confint(m, method = "boot")
+```
+
+The profile confidence intervals do not assume a quadratic log-likelihood surface but ignore "finite-size" issues. (They assume a very large number of groups, e.g. > 50.)
+
+The bootstrap confidence intervals are the most trustworthy but will take a long time to generate.
 
 We can use the sjPlot package to make some quick plots:
 
@@ -205,9 +216,11 @@ p <- sjPlot::sjp.glmer(m, type = "eff", show.ci = T)
 head(p$data)
 ```
 
+The sjPlot package has automatically exponentiated the estimates so these are multiplicative effects on the odds of metamorphosing. 
+
 # Model comparison 
 
-And compare our model without a predictor, say species, via AIC or likelihood ratio test:
+We can compare our model without a predictor, say species, via AIC or likelihood ratio test:
 
 ```{r}
 m1 <- update(m,.~.-species)
@@ -227,7 +240,7 @@ So the AIC is substantially lower letting the slope vary by species.
 
 # Plotting the predictions 
 
-Let's try plotting the predictions for each frog in each tank:
+Let's try plotting the predictions for each tank:
 
 ```{r}
 new_data <- unique(select(d, day:week_centered, -frog))
@@ -299,7 +312,7 @@ How can we derive estimates at any given factor levels? What does the slope
 estimate for `week_centered` represent? What is the slope estimate for
 `week_centered` for species `b`? How can we get a quick estimate of the rate of
 change of proportion metamorphosed per week at the steepest point on the curve?
-(Hint: remember the divide by 4 rule.)
+(Remember the divide by 4 rule.)
 
 ```{r}
 comparison_effect <- function(model, base_par, comparison_par) {
@@ -340,7 +353,7 @@ ggplot(binned4, aes(mean_fitted, mean_residual, colour = species)) +
   geom_smooth(se = FALSE, method = "loess", colour = "black")
 ```
 
-This looks substantially better, although not perfect. It's possible that
+This looks better, although not perfect. It's possible that
 a different link function would fit the data better although none of the
 obvious alternatives looked much better to me. For example:
 
