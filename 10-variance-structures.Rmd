@@ -187,7 +187,7 @@ m2_right <- update(m2, correlation = corAR1()) # exercise
 ggplot(d, aes(x, y3)) + geom_point() + facet_wrap(~group)
 m3 <- lme(y3 ~ x, random = ~ 1 | group, data = d)
 
-m3_right <- update(m3, correlation = varIdent()) # exercise
+m3_right <- update(m3, weights = varIdent(form = ~ 1 | group)) # exercise
 ```
 
 # Challenge 4
