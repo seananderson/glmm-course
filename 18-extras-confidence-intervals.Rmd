@@ -58,9 +58,9 @@ So that means our calculated confidence intervals are just one realization of a 
 
 # P-values
 
-P-values tell us the long term frequency with which we would expect to calculate a value as extreme or more if the null hypothesis were actually true (assuming a two-side p-value). Usually, our null hypothesis is that a parameter is equal to zero.
+P-values tell us the long term frequency with which we would expect to calculate a value as extreme or more if the null hypothesis were actually true (assuming a two-side p-value). Usually, our null hypothesis is that a parameter is equal to zero. (Of course we know that no parameter is precisely equal to zero, and this is one reason why hypothesis testing can seem silly if you think about it carefully. Gather enough data and you can reject any null hypothesis.)
 
-So now we imagine thousands of parallel universes where he went out and performed the exact same experiment but the true temperature was 0. And we want to know what fraction of those times we would observe calculate a mean temperature at least as extreme as `r mean(y)` (i.e. greater than the absolute value of `r mean(y)`).
+Now we imagine thousands of parallel universes where we went out and performed the exact same experiment but the true temperature was 0. And we want to know what fraction of those times we would observe a mean temperature at least as extreme as `r mean(y)` (i.e. greater than the absolute value of `r mean(y)`).
 
 Sound convoluted? It kind of is in many cases.
 
