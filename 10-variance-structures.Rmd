@@ -121,29 +121,25 @@ Pinheiro and Bates (2000) "Mixed-Effects Models in S and S-PLUS".
 The most common ones I've seen used are `nlme::varIdent`, `nlme::varExp`, and
 `nlme::varPower`. `varIdent` allows for different residual variances for
 different grouping factors. The other 2 model a relationship between
-a predictor (or, lead the fitted values) and the variance.
+a predictor (or, the fitted values) and the variance.
 
 Let's take a look at the shape of the exponential and power variance functions in nlme:
 
 ```{r, eval=FALSE}
 get_varPower <- function(v, t1) abs(v)^(2 * t1)
-get_varConstPower <- function(v, t1, t2) (t1 + abs(v)^t2)^2
 get_varExp <- function(v, t1) exp(2 * t1 * v)
 
 library(manipulate)
 
 v <- seq(0.05, 4, length.out = 100)
 
-manipulate({plot(v, get_varPower(v, t1), type = "l", main = "nlme::varPower()")},
-  t1 = slider(-1, 2, 0.1, step = 0.1))
+manipulate({plot(v, get_varPower(v, t1), type = "l", main = "nlme::varPower()", 
+  xlab = "Variance covariate, e.g the fitted values", ylab = "Variance multiplier")},
+  t1 = slider(0, 2, 0.1, step = 0.1))
 
-manipulate({plot(v, get_varConstPower(v, t1, t2), type = "l",
-  main = "nlme::varConstPower()")},
-  t1 = slider(-4, 4, 1, step = 0.1),
-  t2 = slider(-1, 2, 0.1, step = 0.1))
-
-manipulate({plot(v, get_varExp(v, t1), type = "l", main = "nlme::varExp()")},
-  t1 = slider(-0.5, 1, 0.1, step = 0.1))
+manipulate({plot(v, get_varExp(v, t1), type = "l", main = "nlme::varExp()",
+  xlab = "Variance covariate, e.g the fitted values", ylab = "Variance multiplier")},
+  t1 = slider(-0.3, 0.5, 0.1, step = 0.1))
 ```
 
 We can add one of these variance structures by passing it to the `weights`
@@ -155,7 +151,9 @@ help for each of these functions to see what the default value for the argument
 
 In the following challenges, there is something wrong in each case. The
 solution involves adding one of `varExp`, `varIdent`, or `corAR1` temporal
-correlation.
+correlation. Note that for `varIdent` you will need to specify the grouping
+variable `varIdent(form = ~ 1 | group)`. For `varExp`, you can assume the 
+variance is predicted by the fitted values (the default).
 
 I've started each one off. You will need to plot the residuals and figure out
 what variance or correlation structure is missing.
