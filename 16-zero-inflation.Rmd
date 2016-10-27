@@ -87,7 +87,7 @@ plogis(zi + 2 * zi_se) %>% round(2)
 
 # Hurdle/delta model
 
-An alternative is to fit two separate models: one to the 0s vs non-0s, and another to the positive values only with a truncated distribution. 
+An alternative is to fit two separate models: one to the 0s vs non-0s, and another to the positive values only with a truncated distribution.
 
 Run the following code to generate a small simulated data set. 
 
@@ -132,7 +132,7 @@ hurd_b <- glmmTMB(y1 ~ x + (1 | f), data = d,
 summary(hurd_b)
 ```
 
-We can derive the prediction of the hurdle model by multiplying the probability predicted by the binomial model with the production from the positive-value model:
+We can derive the prediction of the hurdle model by multiplying the probability predicted by the binomial model with the prediction from the positive-value model:
 
 ```{r, eval=FALSE}
 pred_a <- predict(hurd_a, newdata = d)
