@@ -6,24 +6,36 @@
 - Understand the difference between estimating a zero-inflated parameter and a hurdle/delta model
 - Learn how to approach continuous positive data that also has zeros
 
-# Introduction 
+# Introduction
 
-Let's try fitting models with a zero inflation parameter.
+In my experience, everyone thinks they need a zero inflated model when they work with count data but they rarely do. For example, a negative binomial distribution with a small mean can generate a ton of zeros.
+
+For example:
+
+```{r}
+hist(rnbinom(200, size = 0.1, mu = 0.5))
+```
+
+Nonetheless, sometimes there is an issue with an excess of zeros compared to what the Poisson or negative binomial allows.
+
+What are some situations that could cause this? 
+
+# Adding a zero-inflation parameter 
+
+Let's try fitting models with a zero-inflation parameter. To keep this example small we will work with a simulated data set.
+
+
+If our zero inflation parameter is `pz`, then our model will that with probability 1-pz, the response data comes from a Poisson (or negative binomial) distribution, and with probability pz, the data is zero.
+
+To avoid reinventing the wheel we will work with a modified version of a small simulation written by Ben Bolker <https://stat.ethz.ch/pipermail/r-sig-mixed-models/2012q3/018874.html>
 
 ```{r}
 library(tidyverse)
-library(glmmTMB)
 ```
 
-Zero-inflation: With probability 1-pz, Y comes from a Poisson (or negative binomial) distribution, and with probability pz, Y is zero (Bohning et al. 1999).
-
-<https://groups.nceas.ucsb.edu/non-linear-modeling/projects/owls/WRITEUP/owls.pdf>
-
-BB: <https://stat.ethz.ch/pipermail/r-sig-mixed-models/2012q3/018874.html>
 
 ```{r}
-# simulated zero-inflated Poisson example
-set.seed(1)
+set.seed(123)
 d <- data.frame(f = factor(rep(letters[1:10], each = 10)), x = runif(100))
 u <- rnorm(10, sd = 2)
 d$eta <- with(d, u[f] + 1 + 4 * x)
@@ -31,13 +43,23 @@ pz <- 0.2 # probability of excess zeros
 zi <- rbinom(100, size = 1, prob = pz)
 d$y <- ifelse(zi, 0, rpois(100, lambda = exp(d$eta)))
 d$zi <- zi
+```
 
+In the next plot, the open circles are access zeros and the closed circles are the ones derived from the Poisson.
+
+```{r}
 ggplot(d, aes(x, y, colour = f, shape = as.factor(zi))) + geom_point() +
   scale_shape_manual(values = c(20, 21))
+```
 
+Here I have split them up into 2 panels:
+
+```{r}
 ggplot(d, aes(x, y, colour = f)) + geom_point() +
   facet_wrap(~zi)
 ```
+
+The glmmADMB package lets you fit zero-inflated GLMMs, but we are going to use glmmTMB, which is newer, usually faster, and less likely to cause strange errors. 
 
 ```{r, eval=FALSE}
 # zip_admb <- glmmADMB::glmmadmb(y ~ x + (1 | f), 
@@ -46,10 +68,12 @@ ggplot(d, aes(x, y, colour = f)) + geom_point() +
 ```
 
 ```{r, eval=FALSE}
+library(glmmTMB)
 zip_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "poisson", ziformula = ~ 1)
 summary(zip_tmb)
 ```
 
+glmmTMB returns the zero inflation parameter on the logit scale. But we can back transform that with the inverse logit transformation `plogis`. Remember, the true value was 0.2.
 
 ```{r, eval=FALSE}
 zi <- coef(summary(zip_tmb))$zi[1, "Estimate"]
@@ -63,32 +87,43 @@ plogis(zi + 2 * zi_se) %>% round(2)
 
 # Hurdle/delta model
 
+An alternative is to fit two separate models: one to the 0s vs non-0s, and another to the positive values only with a truncated distribution. 
+
+Run the following code to generate a small simulated data set. 
+
 ```{r}
 # simulated zero-inflated Poisson example
-set.seed(1)
-d <- data.frame(f = factor(rep(letters[1:10], each = 10)), x = runif(100))
+set.seed(99)
+d <- data.frame(f = factor(rep(letters[1:10], each = 10)), x = runif(400))
 u <- rnorm(10, sd = 2)
-d$eta0 <- with(d, u[f] + 1 + 0.5 * x)
+d$eta0 <- with(d, u[f] + 1 + 0.6 * x)
 d$eta <- with(d, u[f] + 1 + 4 * x)
 pz <- plogis(d$eta0) # probability of excess zeros
-zi <- rbinom(100, size = 1, prob = pz)
-rtpois <- function(N, lambda) qpois(runif(N, dpois(0, lambda), 1), lambda)
-d$y <- ifelse(zi==0, 0, rtpois(100, lambda = exp(d$eta)))
+zi <- rbinom(400, size = 1, prob = pz)
+rtpois <- function(N, lambda) qpois(runif(N, dpois(0, lambda), 1), lambda) # truncated poisson
+d$y <- ifelse(zi==0, 0, rtpois(400, lambda = exp(d$eta)))
 d$zi <- zi
+```
 
+Let's plot the data we just created. Now we have zeros and positive discrete values. 
+
+```{r}
 ggplot(d, aes(x, y, colour = f, shape = as.factor(zi))) + geom_point() +
-  scale_shape_manual(values = c(20, 21))
+  scale_shape_manual(values = c(21, 20))
 
 ggplot(d, aes(x, y, colour = f)) + geom_point() +
   facet_wrap(~zi)
 ```
 
+Let's fit 2 separate models. First a truncated Poisson to the positive values. This is a Poisson distribution that starts at one instead zero.
 
 ```{r, eval=FALSE}
 hurd_a <- glmmTMB(y ~ x + (1 | f), data = dplyr::filter(d, y > 0), 
   family = list(family = "truncated_poisson", link = "log"))
 summary(hurd_a)
 ```
+
+Next we fit a binomial model to the 0s vs. non-0s.
 
 ```{r, eval=FALSE}
 d <- mutate(d, y1 = y > 0)
@@ -97,7 +132,7 @@ hurd_b <- glmmTMB(y1 ~ x + (1 | f), data = d,
 summary(hurd_b)
 ```
 
-We can derive the prediction of the hurdle model by 
+We can derive the prediction of the hurdle model by multiplying the probability predicted by the binomial model with the production from the positive-value model:
 
 ```{r, eval=FALSE}
 pred_a <- predict(hurd_a, newdata = d)
@@ -108,13 +143,43 @@ head(pred_b)
 d$pred <- pred_a * pred_b
 
 ggplot(d, aes(y, pred, colour = f, shape = as.factor(zi))) + 
-  geom_point() + scale_shape_manual(values = c(20, 21))
+  geom_point() + scale_shape_manual(values = c(21, 20))
+
+ggplot(d, aes(y, pred, colour = f)) + geom_point() +
+  facet_wrap(~zi)
 ```
 
-We can calculate the AIC of the hurdle model simply by adding the AIC of the 2 component models.
+We can calculate the AIC of the hurdle model simply by adding the AIC of the 2 component models, although we have nothing to compare it to here. 
 
 ```{r, eval=FALSE}
-AIC(zip_tmb)
 AIC(hurd_a) + AIC(hurd_b)
 ```
 
+# Positive continuous data with zeros 
+
+A relatively common scenario is to have positive continuous data that also has zeros. 
+
+For example, maybe you are calculating density of sea urchins in quadrats, but some of your quadrats are empty. 
+
+Another example is fish trawl survey data where we have a positive continuous measure of catch per unit effort but sometimes a trawl doesn't bring up any of a given species, so we have zeros.
+
+We can apply a similar concept to above where we model the zeros versus non-zeros and the positive values separately. The difference is that you don't have to worry about a truncated distribution for the positive values. You could use a Gamma distribution for the positive values or use a linear model on a log scale. Again, you can combine your predictions at the end as we did above.
+
+I have written more about this here <http://seananderson.ca/2014/05/18/gamma-hurdle.html>
+
+# Additional information 
+
+An excellent write up of a zero-inflation model fit to real data:
+<https://groups.nceas.ucsb.edu/non-linear-modeling/projects/owls/WRITEUP/owls.pdf>
+
+The best textbook on the subject for R:
+Zuur, A. F. S., A. A. Ieno. 2012. Zero Inflated Models and Generalized Linear Mixed Models with R.
+
+Also the newer:
+Zuur A.F.,  Ieno E. N. 2016. A Beginner's Guide to Zero-Inflated Models with R.
+
+The pscl package for fitting zero-inflated models without random effects:
+https://CRAN.R-project.org/package=pscl 
+
+The vignette for the pscl R package:
+https://cran.r-project.org/web/packages/pscl/vignettes/countreg.pdf
