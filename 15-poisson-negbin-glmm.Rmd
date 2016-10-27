@@ -7,8 +7,12 @@
 - Learn how to check for overdispersion in GLMMs
 - Learn how to interpret and plot output from count GLMMs
 
+# Data
+
 We are going to work with one of the data sets from:
 Artelle, K. A., S. C. Anderson, J. D. Reynolds, A. B. Cooper, P. C. Paquet, and C. T. Darimont. 2016. Ecology of conflict: marine food supply affects human-wildlife interactions on land. Scientific Reports 6:25936.
+
+The data set represents the number of grizzly bears that were killed because of conflict with humans (`late_kills`) across various Grizzly Bear Population Units (`gbpu`). There are a number of possible predictors. First of the annual predictors: an index of salmon biomass, the number of conflict kills in the previous 3 years, the numeric year, and the mean annual temperature. Then a number of group-level predictors: mean temperature, mean annual precipitation, human population, and the number of grizzly bears in the unit. There is an offset term for usable area for grizzly bears in the population unit so that the number of kills is scaled to be per available area. These predictors have been transformed (e.g. log), centered, and scaled by 2 times their standard deviations to make the magnitude of their effects approximately comparable. This is a slightly simplified version of the data set and model used in the paper. 
 
 Let's read in the data and look at it:
 
@@ -70,18 +74,54 @@ ggplot(d, aes(salmon_scaled, log((late_kills+0.5)/gbpu_usable_area),
 ```
 
 ```{r}
-ggplot(d, aes(salmon_scaled, log((late_kills+0.5)), color = gbpu)) +
+ggplot(d, aes(salmon_scaled, log(late_kills+0.5), color = gbpu)) +
   geom_point(position = position_jitter(height = 0.4, width = 0), alpha = 0.3) +
   geom_smooth(method = "lm", se = FALSE, colour = "black")
 ```
 
 ```{r}
-ggplot(d, aes(salmon_scaled, log((late_kills+0.5)), 
+ggplot(d, aes(salmon_scaled, log(late_kills+0.5), 
   color = gbpu, group = gbpu)) +
   geom_point(position = position_jitter(height = 0.4, width = 0), 
     alpha = 0.3) +
   geom_smooth(method = "lm", se = FALSE, alpha = 0.7, colour = "black")
 ```
+
+```{r}
+ggplot(d, aes(salmon_scaled, late_kills, color = gbpu, group = gbpu)) +
+  geom_point(position = position_jitter(height = 0.4, width = 0), 
+    alpha = 0.3) +
+  geom_smooth(method = "glm", method.args = c(family = poisson), se = FALSE, colour = "black")
+```
+
+```{r}
+ggplot(d, aes(salmon_scaled, late_kills, color = gbpu)) +
+  geom_point(position = position_jitter(height = 0.4, width = 0), 
+    alpha = 0.3) +
+  geom_smooth(method = "glm", method.args = c(family = poisson), se = FALSE, 
+    colour = "black")
+```
+
+Are there other useful ways you can think of looking at the data?
+
+# Considering various response distributions
+
+We can get a feeling for what distribution might work best by plotting the mean and variance for each group level:
+
+```{r}
+dg <- group_by(d, gbpu) %>%
+  summarise(m = mean(late_kills), v = var(late_kills))
+ggplot(dg, aes(m, v)) +
+  geom_smooth(method = "lm", formula = y ~ x - 1, se = F, color = "blue") +
+  geom_smooth(method = "lm", 
+    formula = y ~ I(x^2) + offset(x) - 1, colour = "red", se = F) +
+  geom_abline(intercept = 0, slope = 1, lty = 2) +
+  geom_point()
+```
+
+In the above plot, the dashed line represents the poisson (one-to-one), the blue line represents the NB1 negative binomial parameterization, and the red line represents the NB2 negative binomial parameterization (the more usual one we have been working with previously).
+
+The NB2 looks like it fits the smaller values the best, although the NB1 better represents some of the larger values. We can tell that the Poisson doesn't represent the data very well. The variance is growing faster as the mean increases than it allows. Nonetheless, we will start off with the simpler Poisson distribution as a learning exercise and build from there.
 
 # Modeling 
 
@@ -94,7 +134,7 @@ library(lme4)
 f_lme4 <- paste(c(f, "+ (1 | gbpu)"), collapse = " ")
 f_lme4
 m_glmer <- glmer(f_lme4, data = d, family = poisson(link = "log"))
-summary(m_glmer)
+summary(m_glmer, correlation = FALSE)
 ```
 
 We can look at these default plots, but the default residual plot is not that helpful here. 
@@ -128,17 +168,15 @@ One useful summary function is
 coef(summary(m_glmer))
 ```
 
-Now we should check for overdispersion.
+# Checking for overdispersion 
 
-We can do that by comparing the sum of the pearson residuals squared with the residual degrees of freedom. 
+Now we should check for overdispersion. We can do that by comparing the residual deviance and the sum of the pearson residuals squared with the residual degrees of freedom. These should be approximately the same. If the degrees of freedom are considerably smaller then we have evidence of over dispersion. If the residual deviance and some of Pearson residuals squared  disagree, then use the Pearson residuals. See Ben Bolker's worked examples here for more details <https://rpubs.com/bbolker/glmmchapter>.
 
-We can see the degrees of freedom from the output of `summary()`.
-
-And we can calculate the sum of the pearson residuals squared:
+We can see the degrees of freedom from the output of `summary()`. And we can calculate the sum of the Pearson residuals squared:
 
 ```{r}
 sum(residuals(m_glmer, "pearson")^2)
-aods3::gof(m_glmer) # alternative
+aods3::gof(m_glmer) # alternative shortcut
 ```
 
 So it looks like we have some overdispersion here.
@@ -152,30 +190,18 @@ Theoretically, we could fit a negative binomial GLMM with the function `lme4::gl
 # summary(m_glmer_nb)
 ```
 
-We could try removing the offset term. 
-
-```{r}
-f2 <- late_kills ~ 
-  salmon_scaled + 
-  prev_3yr_conflict_scaled +
-  mean_annual_temp_scaled +
-  mean_temp_scaled +
-  total_log_precip_scaled +
-  year_scaled +
-  log_humanpop_scaled +
-  log_grizzly_pop_est_scaled
-
-f_lme4_no_offset <- paste(c(f2, "+ (1 | gbpu)"), collapse = " ")
-# m_glmer_nb <- glmer.nb(f_lme4_no_offset, data = d)
-```
-
-But that doesn't converge for me either.
+We could try removing the offset term (or simplified by removing any other terms). Removing the offset term did not help with convergence for me. 
 
 So instead, let's start by adding an observation-level random intercept. This simply requires making a dummy variable with a level for each row of data:
 
 ```{r}
 d$obs <- seq_len(nrow(d))
-f_lme4_obs <- paste(c(f2, "+ (1 | gbpu) + (1 | obs)"), collapse = " ")
+```
+
+We then fit the model:
+
+```{r}
+f_lme4_obs <- paste(c(f, "+ (1 | gbpu) + (1 | obs)"), collapse = " ")
 m_lme4_obs <- glmer(f_lme4_obs, data = d, family = poisson(link = "log"))
 summary(m_lme4_obs)
 aods3::gof(m_lme4_obs)
@@ -189,10 +215,11 @@ Before we move on to other packages, let's quickly look at some plots we can get
 sjPlot::sjp.glmer(m_glmer)
 sjPlot::sjp.glmer(m_glmer, type = "fe")
 sjPlot::sjp.glmer(m_glmer, type = "re.qq")
-# sjPlot::sjp.glmer(m, type = "ma") # many
 p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = T)
 head(p$data)
 ```
+
+# MASS package penalized quasi-likelihood version
 
 We can try the function `glmmPQL` in the package MASS, which lets us fit the model with something fancy called penalized quasi-likelihood. "Penalized quasi-likelihood" doubles as a great conservation starter at cocktail parties.
 
@@ -208,19 +235,7 @@ This one converges. In the background the function is using nlme. Therefore, we 
 nlme::intervals(m_pql)
 ```
 
-What distribution might work best?
-
-```{r}
-dg <- group_by(d, gbpu) %>%
-  summarise(m = mean(late_kills), v = var(late_kills))
-ggplot(dg, aes(m, v)) +
-  geom_smooth(method = "lm", formula = y ~ x - 1, se = F) +
-  geom_smooth(colour = "red", se = F) +
-  geom_smooth(method = "lm", 
-    formula = y ~ I(x^2) + offset(x) - 1, colour = "purple", se = F) +
-  geom_abline(intercept = 0, slope = 1, lty = 2) +
-  geom_point()
-```
+# glmmTMB with negative binomial distributions
 
 It's always a good idea to fit GLMMs with multiple methods if possible to ensure the conclusions are not sensitive to the optimization method or that your model has not converged.
 
@@ -246,17 +261,12 @@ summary(m_tmb_nb1)
 bbmle::AICtab(m_tmb, m_tmb_nb, m_tmb_nb1)
 ```
 
+So the NB2 parameterization has the lowest AIC.
+
+The residuals are hard to interpret still, although they may suggest that our model is poor at predicting low levels of conflict kills compared to large levels. 
+
 ```{r}
-plot(log(fitted(m_tmb)), residuals(m_tmb, type = "pearson"))
-plot(log(fitted(m_tmb_obs)), residuals(m_tmb_obs, type = "pearson"))
 plot(log(fitted(m_tmb_nb)), residuals(m_tmb_nb, type = "pearson"))
-plot(log(fitted(m_tmb_nb1)), residuals(m_tmb_nb1, type = "pearson"))
-```
-
-The residuals from the negative binomial model look the best to me.
-
-```{r}
-plot(log(fitted(m_tmb)), sqrt(abs(residuals(m_tmb, type = "pearson"))))
 plot(log(fitted(m_tmb_nb)), sqrt(abs(residuals(m_tmb_nb, type = "pearson"))))
 ```
 
@@ -267,19 +277,22 @@ d$res_nb <- residuals(m_tmb_nb, type = "pearson")
 ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
 ```
 
-Quick Bayesian version:
+# Brief introduction to a Bayesian Stan version
+
+If we want to explore the full probability distribution on all parameters, including what we have been calling random effects, then we can fit a Bayesian version. The new package rstanarm makes this relatively simple with a function that mimics the function `lme4::lmer` but fits a Stan model in the background. Stan is a programming language and software implementation of the Bayesian Hamiltonian Monte Carlo No-U-Turn Sampler (not a good cocktail party topic). Any more than that is well beyond the focus of this workshop.
+
+Warning: If you are considering using a similar model yourself you will have to do some considerable reading first or find somebody to work with. Note that because this is a Bayesian model you have to choose prior distributions on your parameters. rstanarm has carefully thought out priors that apply to most conditions, but it's important that you understand what these are and whether they make sense for your data. See the additional information section at the bottom. 
 
 ```{r stan, eval=FALSE}
 library(rstanarm)
 library(rstan)
-options(mc.cores = parallel::detectCores())
+options(mc.cores = parallel::detectCores()) # setup parallel processing
 
-mstan <- rstanarm::stan_glmer(f_lme4, data = d, 
-  family = poisson(link = "log"), chains = 2, iter = 300)
-summary(mstan)
+# mstan <- rstanarm::stan_glmer(f_lme4, data = d, 
+#   family = poisson(link = "log"), chains = 2, iter = 300)
+# summary(mstan)
 
-mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 2,
-  iter = 300)
+mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 3, iter = 300)
 
 summary(mstan_nb)
 stan_plot(mstan_nb)
@@ -299,6 +312,8 @@ qqnorm(stan_re_int$estimate)
 qqline(stan_re_int$estimate)
 save(mstan, mstan_nb, file = "data/generated/stan-models.rda")
 ```
+
+# Comparing estimates across methods 
 
 Let's compare confidence intervals:
 
@@ -344,10 +359,23 @@ filter(cis_df, term == "salmon_scaled") %>%
   geom_hline(yintercept = 0, linetype = 2)
 ```
 
-Harrison, X. A. 2014. Using observation-level random effects to model overdispersion in count data in ecology and evolution. PeerJ 2:e616.
+What do you notice about the various models?
 
-https://peerj.com/articles/616/
+# Additional information 
 
+Very useful worked examples by Ben Bolker of GLMMs:
+<https://rpubs.com/bbolker/glmmchapter>
 
-Y ~ NB(lambda, alpha)
-Var(Y) = lambda + lambda^2 / alpha
+Using observation-level random effects for overdispersion:\
+Harrison, X. A. 2014. Using observation-level random effects to model overdispersion in count data in ecology and evolution. PeerJ 2:e616. https://peerj.com/articles/616/
+
+The Bayesian data analysis Bible:\
+Gelman, A., J. B. Carlin, H. S. Stern, D. B. Dunson, A. Vehtari, and D. B. Rubin. 2014. Bayesian Data Analysis. Chapman & Hall, Boca Raton, FL.
+
+A good introduction to Bayesian data analysis, although the current version uses WinBUGS/JAGS:\
+Gelman, A., and J. Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press, Cambridge, UK.
+
+A great recent and modern introduction to Bayesian modeling with Stan:\
+McElreath, R. 2016. Statistical rethinking: A Bayesian course with examples in R and Stan. CRC Press.
+
+Stan: <http://mc-stan.org/>
