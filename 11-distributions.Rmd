@@ -83,13 +83,13 @@ manipulate({
 
 ## Negative binomial
 
-What happens when the `size` parameter gets really small? What distribution does this resemble if the `size` parameter gets big?
-
-There are 2 main parameterizations of the negative binomial distribution. The most common, and the one represented by `dnbinom` is one in which the variance scales as a quadratic function of the mean. `variance = mu + mu^2/size`. This is often referred to as the NB2 parameterization.
+There are 2 main parameterizations of the negative binomial distribution. The most common, and the one represented by `dnbinom` is one in which the variance scales as a quadratic function of the mean. `variance = mu + mu^2/size`. This is often referred to as the NB2 parameterization. Note there is an alternative parameterization of NB2: <http://stats.stackexchange.com/a/103579>
 
 The alternative, NB1, allows the variance to scale linearly with the mean. See Hardin and Hilbe "Generalized Linear Models and Extensions".
 
 When might you expect to observe a negative binomial distribution?
+
+What happens when the `size` parameter gets really small? What distribution does this resemble if the `size` parameter gets big?
 
 ```{r, eval=FALSE}
 x <- seq(0, 100)
