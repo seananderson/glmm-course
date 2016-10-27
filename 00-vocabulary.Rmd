@@ -1,0 +1,133 @@
+# Vocabulary 
+
+To quote Hadley Wickham from his excellent book *Advanced R* <http://adv-r.had.co.nz/Vocabulary.html>:
+
+"An important part of being fluent in R is having a good working vocabulary. [...] I have listed the functions that I believe constitute such a vocabulary. You don't need to be intimately familiar with the details of every function, but you should at least be aware that they all exist. If there are functions in this list that you've never heard of, I strongly recommend that you read their documentation."
+
+I encourage you to look through Hadley's full list at the link above. 
+
+Below, I have reduced Hadley's list to those most relevant to this workshop.
+
+## The basics
+
+```{r, eval = FALSE}
+# The first functions to learn
+?
+str
+
+# Important operators and assignment
+%in%
+$, [, [[, head, tail, subset
+
+# Comparison 
+!=, ==, >, >=, <, <=
+is.na
+
+# Basic math
+*, +, -, /, ^
+abs
+ceiling, floor, round
+exp, log, log10, log2, sqrt
+
+max, min, prod, sum
+range
+mean, median, cor, sd, var
+
+# Logical & sets 
+&, |, !, xor
+all, any
+which
+
+# Vectors and matrices
+c, matrix
+length, dim, ncol, nrow
+cbind, rbind
+names, colnames, rownames
+
+# Making vectors 
+c
+rep, rep_len
+seq, seq_len, seq_along
+rev
+sample
+(is/as).(character/numeric/logical/...)
+
+# Lists & data.frames 
+list
+data.frame, as.data.frame
+expand.grid
+
+# Control flow 
+if
+for, while
+ifelse
+
+# Apply & friends
+lapply, sapply
+```
+
+
+## Common data structures
+
+```{r, eval = FALSE}
+# Date time
+library(lubridate)
+
+# Character manipulation 
+grep
+gsub
+strsplit
+tolower, toupper
+substr
+paste, paste0
+
+# Factors 
+factor, levels
+reorder, relevel
+findInterval
+```
+
+## Statistics
+
+```{r, eval = FALSE}
+# Ordering and tabulating 
+duplicated, unique
+quantile
+sort
+
+# Linear models 
+fitted, predict, resid
+lm, glm
+I
+anova, coef, confint
+
+# Random variables
+rnorm, rlnorm, plogis, qlogis, ...
+```
+
+## Working with R
+
+```{r, eval = FALSE}
+# Workspace 
+ls, exists, rm
+getwd, setwd
+source
+install.packages, library
+
+# Help
+help, ?
+citation
+example
+vignette
+```
+
+## I/O
+
+```{r, eval = FALSE}
+# Reading and writing data
+data
+read.csv, write.csv
+readLines, writeLines
+readRDS, saveRDS
+load, save
+```
