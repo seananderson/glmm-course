@@ -1,4 +1,4 @@
-# Advanced (Generalized) Linear Mixed-Effects Modeling in R
+# Generalized Linear Mixed-Effects Modeling in R
 
 This two-day workshop will focus on generalized linear mixed-effects models (GLMMs; hierarchical/multilevel models) using the R programming language. We will concentrate on practical elements of GLMMs such as choosing a modeling approach, the process of building up and understanding a model, model checking, and plotting and interpreting model output. We will focus mainly on linear mixed-effects models, but we will also cover generalized linear mixed-effect models, variance and correlation structures, and zero-inflated models.
 
