@@ -6,7 +6,7 @@ To quote Hadley Wickham from his excellent book *Advanced R* <http://adv-r.had.c
 
 I encourage you to look through Hadley's full list at the link above. 
 
-Below, I have reduced Hadley's list to those most relevant to this workshop.
+Below, I have reduced Hadley's list to those most relevant to this workshop. It will help you follow the material if you are at least somewhat aware of the following functions and their purpose.
 
 ## The basics
 
