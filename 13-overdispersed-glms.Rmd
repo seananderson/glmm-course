@@ -86,7 +86,7 @@ Let's fit a GLM with a Poisson distribution and a log link even though we know t
 plot_glm(m_poisson, d)
 ```
 
-If we look at the residuals, these should be constant with the predicted mean value. It can be hard to see these patterns in the residuals, included here where there is not a lot to see even though we know there is over dispersion.  
+If we look at the residuals, these should be constant with the predicted mean value. It can be hard to see these patterns in the residuals. There is not a lot to see here even though we know there is over dispersion.  
 
 ```{r}
 plot(fitted(m_poisson), residuals(m_poisson))
