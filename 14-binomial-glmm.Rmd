@@ -187,7 +187,7 @@ We can use built-in functions to plot the random intercept estimates:
 lattice::dotplot(ranef(m, condVar = TRUE))
 ```
 
-We can access Wald various confidence intervals with:
+We can access Wald confidence intervals with:
 
 ```{r}
 confint(m, method = "Wald")
