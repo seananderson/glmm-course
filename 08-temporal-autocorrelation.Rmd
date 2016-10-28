@@ -185,7 +185,7 @@ newdata$pred_fish <- predict(m3, newdata = newdata)
 We'll also make predictions for an average or "population"-level fish. This is our prediction for a new fish of unknown identity.
 
 ```{r}
-source("drafts/predict_pop_ci.R") # from <https://rpubs.com/bbolker/glmmchapter>
+source("99-predict_pop_ci.R") # from <https://rpubs.com/bbolker/glmmchapter>
 pop_predictions <- predict_pop_ci(m3, newdata = newdata)
 head(pop_predictions)
 newdata <- data.frame(newdata, pop_predictions)
