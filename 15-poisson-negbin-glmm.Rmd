@@ -2,7 +2,7 @@
 
 # Goals
 
-- Learn to fit poisson and negative binomial GLMMs with various packages in R
+- Learn to fit Poisson and negative binomial GLMMs with various packages in R
 - Learn how to criticize GLMM fit
 - Learn how to check for overdispersion in GLMMs
 - Learn how to interpret and plot output from count GLMMs
@@ -119,7 +119,7 @@ ggplot(dg, aes(m, v)) +
   geom_point()
 ```
 
-In the above plot, the dashed line represents the poisson (one-to-one), the blue line represents the NB1 negative binomial parameterization, and the red line represents the NB2 negative binomial parameterization (the more usual one we have been working with previously).
+In the above plot, the dashed line represents the Poisson (one-to-one), the blue line represents the NB1 negative binomial parameterization, and the red line represents the NB2 negative binomial parameterization (the more usual one we have been working with previously).
 
 The NB2 looks like it fits the smaller values the best, although the NB1 better represents some of the larger values. We can tell that the Poisson doesn't represent the data very well. The variance is growing faster as the mean increases than it allows. Nonetheless, we will start off with the simpler Poisson distribution as a learning exercise and build from there.
 

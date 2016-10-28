@@ -2,7 +2,7 @@
 
 # Goals
 
-- Learn to detect and deal with overdispersion in poisson and binomial GLMs
+- Learn to detect and deal with overdispersion in Poisson and binomial GLMs
 
 # What is overdispersion? 
 
@@ -14,11 +14,11 @@ So far, all our fitted GLM models have matched the simulated data. One common th
 
 This isn't a problem for distributions like the normal, Gamma, or negative binomial, because these distributions have a parameter that lets them be as narrow or wide as they need to be.
 
-But some distributions, notably the poisson and binomial (with multiple samples), assume a fixed level of variability for a given mean value. But the real world is messy and this isn't always the case. Let's take a look at what that means. 
+But some distributions, notably the Poisson and binomial (with multiple samples), assume a fixed level of variability for a given mean value. But the real world is messy and this isn't always the case. Let's take a look at what that means. 
 
 ## Quasipoisson, log link
 
-We'll start by generating count data that we know are overdispersed for a poisson. 
+We'll start by generating count data that we know are overdispersed for a Poisson. 
 
 ```{r}
 library(ggplot2)
@@ -61,7 +61,7 @@ plot(x, y)
 
 Let's look at the data that we just created. 
 
-In the following, the dashed line indicates the one-to-one line (poisson), the blue line indicates the variance scaling linearly with the mean but not one-to-one (the true relationship here, quasipoisson), and the red line indicates the variance scaling quadratically with the mean (negative binomial).
+In the following, the dashed line indicates the one-to-one line (Poisson), the blue line indicates the variance scaling linearly with the mean but not one-to-one (the true relationship here, quasipoisson), and the red line indicates the variance scaling quadratically with the mean (negative binomial).
 
 I've grouped the values along the x-axis into 15 bins in order to make this plot. 
 
@@ -79,7 +79,7 @@ d$x_group <- findInterval(d$x, seq(min(d$x), max(d$x), length.out = 15))
   geom_point()
 ```
 
-Let's fit a GLM with a poisson distribution and a log link even though we know that the data are overdispersed.
+Let's fit a GLM with a Poisson distribution and a log link even though we know that the data are overdispersed.
 
 ```{r}
 (m_poisson <- glm(y ~ x, family = poisson(link = "log")))

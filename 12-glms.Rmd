@@ -116,7 +116,7 @@ plot_glm(m_gamma, d)
 
 ## Poisson, log link
 
-The poisson distribution with a log link is commonly used to model count data or any data where the response is a whole number. The poisson distribution assumes that the variance scales one-to-one with the mean.
+The Poisson distribution with a log link is commonly used to model count data or any data where the response is a whole number. The Poisson distribution assumes that the variance scales one-to-one with the mean.
 
 ```{r}
 y_true <- exp(a + b * x)
@@ -134,7 +134,7 @@ plot_glm(m_gamma, d)
 
 ## Negative binomial, log link
 
-The negative binomial distribution with a log link can also model count data but allows the variance to grow as a quadratic function of the mean. In real data sets, it's probably more common to see the negative binomial than the poisson.
+The negative binomial distribution with a log link can also model count data but allows the variance to grow as a quadratic function of the mean. In real data sets, it's probably more common to see the negative binomial than the Poisson.
 
 ```{r}
 y_true <- exp(a + b * x)

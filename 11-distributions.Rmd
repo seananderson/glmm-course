@@ -67,9 +67,9 @@ manipulate({
 
 ## Poisson
 
-What happens to the width of the poisson as the mean (lambda) increases? 
+What happens to the width of the Poisson as the mean (lambda) increases? 
 
-When might you expect to observe a poisson distribution?
+When might you expect to observe a Poisson distribution?
 
 ```{r, eval=FALSE}
 x <- seq(0, 100)

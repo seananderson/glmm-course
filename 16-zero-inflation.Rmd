@@ -70,7 +70,7 @@ The glmmADMB package lets you fit zero-inflated GLMMs, but we are going to use g
 
 ```{r, eval=FALSE}
 library(glmmTMB)
-zip_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "poisson", ziformula = ~ 1)
+zip_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "Poisson", ziformula = ~ 1)
 summary(zip_tmb)
 ```
 
