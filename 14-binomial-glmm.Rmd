@@ -10,7 +10,7 @@
 We are going to work with a data set from [O'Regan et al. 2013](http://doi.org/10.1890/13-0916.1.
 O’Regan, S. M., W. J. Palen, and S. C. Anderson. 2013. Climate warming mediates negative impacts of rapid pond drying for three amphibian species. Ecology 95:845–855.
 
-These data represent time to metamorphosis for 3 amphibian species in a mesocosm experiment. The experiment had 2 levels of warming (normal and accelerated) and 2 levels of pond drying (normal/permanent and accelerated/temporary). There were multiple tanks per treatment condition.
+These data represent time to metamorphosis for 3 amphibian species in a mesocosm experiment. The experiment had 2 levels of warming (normal and warmed) and 2 levels of pond drying (normal/permanent and accelerated/temporary). There were multiple tanks per treatment condition.
 
 Let's read in and wrangle the data for our purposes.
 
