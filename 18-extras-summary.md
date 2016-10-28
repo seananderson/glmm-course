@@ -1,9 +1,3 @@
----
-title: Grab bag
----
-
-# Power analysis 
-
 Power simulation for GLMMs: <https://rpubs.com/bbolker/11703>
 
 simr package
@@ -45,3 +39,17 @@ Andrew Gelman
 https://www.youtube.com/watch?v=T1gYvX5c2sM
 "You can't fall in love with the one model you fit... you have to understand it."
 Paraphrasing: "You have to make decisions... you have to buy into a model and check it "
+
+Terminology - why Gelman refuses to call them random effects. 
+
+What to plot - some examples
+
+How to write model
+
+P values - lme4 help document, listserv link, wiki
+
+GAMMs
+
+Random fields and GP - ICES paper and books
+
+Best textbooks and papers on topics: emd, Gelman and hill, Statistical Rethinking, Zuur, Zuur zero inflation, BDA
