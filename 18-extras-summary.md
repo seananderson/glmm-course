@@ -45,3 +45,5 @@ Andrew Gelman
 https://www.youtube.com/watch?v=T1gYvX5c2sM
 "You can't fall in love with the one model you fit... you have to understand it."
 Paraphrasing: "You have to make decisions... you have to buy into a model and check it "
+
+Terminology - why Gelman refuses to call them random effects. 
