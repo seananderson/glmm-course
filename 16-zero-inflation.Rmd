@@ -31,6 +31,7 @@ To avoid reinventing the wheel we will work with a modified version of a small s
 
 ```{r}
 library(tidyverse)
+inverse_logit <- function(x) plogis(x)
 ```
 
 
@@ -73,16 +74,16 @@ zip_tmb <- glmmTMB(y ~ x + (1 | f), data = d, family = "poisson", ziformula = ~ 
 summary(zip_tmb)
 ```
 
-glmmTMB returns the zero inflation parameter on the logit scale. But we can back transform that with the inverse logit transformation `plogis`. Remember, the true value was 0.2.
+glmmTMB returns the zero inflation parameter on the logit scale. But we can back transform that with the inverse logit transformation. Remember, the true value was 0.2.
 
 ```{r, eval=FALSE}
 zi <- coef(summary(zip_tmb))$zi[1, "Estimate"]
 zi_se <- coef(summary(zip_tmb))$zi[1, "Std. Error"]
 
 # CIs:
-plogis(zi - 2 * zi_se) %>% round(2)
-plogis(zi) %>% round(2)
-plogis(zi + 2 * zi_se) %>% round(2)
+inverse_logit(zi - 2 * zi_se) %>% round(2)
+inverse_logit(zi) %>% round(2)
+inverse_logit(zi + 2 * zi_se) %>% round(2)
 ```
 
 # Hurdle/delta model
@@ -98,7 +99,7 @@ d <- data.frame(f = factor(rep(letters[1:10], each = 10)), x = runif(400))
 u <- rnorm(10, sd = 2)
 d$eta0 <- with(d, u[f] + 1 + 0.6 * x)
 d$eta <- with(d, u[f] + 1 + 4 * x)
-pz <- plogis(d$eta0) # probability of excess zeros
+pz <- inverse_logit(d$eta0) # probability of excess zeros
 zi <- rbinom(400, size = 1, prob = pz)
 rtpois <- function(N, lambda) qpois(runif(N, dpois(0, lambda), 1), lambda) # truncated poisson
 d$y <- ifelse(zi==0, 0, rtpois(400, lambda = exp(d$eta)))

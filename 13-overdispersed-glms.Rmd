@@ -41,12 +41,13 @@ plot_glm <- function(model, dat) {
   print(p)
   invisible(p)
 }
+inverse_logit <- function(x) plogis(x)
 ```
 
 ```{r}
 y_true <- exp(a + b * x)
 
-rqpois <- function (n, lambda, d = 1) {
+rqpois <- function (n, lambda, d = 1) { # generate random quasipoisson values
   if (d == 1)
     rpois(n, lambda)
   else
@@ -151,12 +152,12 @@ abline(v = 0.5, col = "black", lwd = 10)
 
 m <- glm(y/n ~ 1, family = binomial(link = "logit"),
   weights = rep(n, length(y)))
-ci <- plogis(confint(m))
+ci <- inverse_logit(confint(m))
 abline(v = ci, col = "red", lwd = 5)
 
 m2 <- glm(y/n ~ 1, family = quasibinomial(link = "logit"),
   weights = rep(n, length(y)))
-ci2 <- plogis(confint(m2))
+ci2 <- inverse_logit(confint(m2))
 
 abline(v = ci2, col = "blue", lwd = 5)
 ```

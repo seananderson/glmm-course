@@ -41,6 +41,14 @@ plot_glm <- function(model, dat) {
 }
 ```
 
+We will define the following functions to make our code easier to read later:
+
+```{r}
+logit <- function(x) qlogis(x)
+inverse_logit <- function(x) plogis(x)
+```
+
+
 # Link functions 
 
 Remember that there are two components to a GLM: a link function that describes what is happening with the mean of the data, and an error distribution that describes the variability around the mean. 
@@ -68,16 +76,14 @@ And if this is the curve we ultimately want to fit:
 
 ```{r}
 xx <- seq(-5, 5, length.out = 200)
-plot(xx, plogis(xx), type = "l")
+plot(xx, inverse_logit(xx), type = "l")
 ```
 
 Then we can make it linear by applying the logit link:
 
 ```{r}
-plot(xx, qlogis(plogis(xx)), type = "l")
+plot(xx, logit(inverse_logit(xx)), type = "l")
 ```
-
-Note that of the `qlogis()` function is also known as the logit function and the `plogis()` function is also known as the inverse logit function. logit(p) = log(p/(1-p)).
 
 There are many ways you can specify a distribution family and link function in R. I'm going to try and be consistent and specify them like this `family(link = "link")`.
 
@@ -153,8 +159,7 @@ We can use a binomial response and logit link if we have response data represent
 
 ```{r}
 y_linear <- a + b * x
-# prob_true <- 1/(1+exp(-y_linear)) # inverse logit
-prob_true <- plogis(y_linear) # inverse logit
+prob_true <- inverse_logit(y_linear)
 y <- rbinom(N, 1, prob_true)
 plot(x, jitter(y, 0.1));lines(sort(x), prob_true[order(x)])
 ```
@@ -178,7 +183,7 @@ That means the inverse-logit transformed true probabilities follow our estimated
 
 ```{r}
 # inverse-logit transformed probabilities (aka log odds)
-plot(sort(x), qlogis(prob_true[order(x)]), ylab = "log odds")
+plot(sort(x), inverse_logit(prob_true[order(x)]), ylab = "log odds")
 abline(a = a, b = b, col = "red")
 abline(a = int, b = slope, col = "blue")
 ```
@@ -195,7 +200,7 @@ Here's a quick illustration of that:
 
 ```{r}
 (approximate_slope <- slope/4)
-intercept <- plogis(int)
+intercept <- inverse_logit(int)
 
 g + geom_vline(xintercept = c(-0.5, 0, 0.5), lty = 2) +
   geom_abline(intercept = intercept, 
