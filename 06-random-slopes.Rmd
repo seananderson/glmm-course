@@ -59,7 +59,8 @@ ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
 Let's look at the output from those two models.
 
 ```{r}
-arm::display(m_int)
+install.packages("arm")
+arm::display(m_int) 
 arm::display(m_slopes)
 ```
 
