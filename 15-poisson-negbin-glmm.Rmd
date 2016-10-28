@@ -34,7 +34,6 @@ d <- readRDS("data/raw/conflict-salmon-for-modelling.rds") %>%
     year_scaled = year_centered / (2 * sd(year_centered)),
     gbpu_usable_area = gbpu_usable_area / 1e9) %>%
   rename(salmon_scaled = salmon_biomass_geo_mean)
-saveRDS(d, file = "data/generated/artelle-et-all-conflict.rds")
 head(d)
 ```
 
