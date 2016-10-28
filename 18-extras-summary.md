@@ -1,9 +1,3 @@
----
-title: Grab bag
----
-
-# Power analysis 
-
 Power simulation for GLMMs: <https://rpubs.com/bbolker/11703>
 
 simr package
