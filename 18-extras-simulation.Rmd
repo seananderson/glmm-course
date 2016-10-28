@@ -1,0 +1,72 @@
+# Illustration of partial pooling / shrinkage
+
+# Goals
+
+- Illustrate how mixed-effects models can generate better predictions than separate models 
+- Understand the effect of the number of random effect groups on the efficacy of mixed-effect models 
+
+# A simulation 
+
+The following code simulates data with a specified number of groups. The data for each group has the same intercept but a slope that is drawn from a normal distribution (random effect slopes).
+
+Each time you run the code chunk you will generate new data, fit separate linear regressions for each group, and fit a mixed-effect model with random slopes.
+
+The estimates for these 2 sets of models will be shown with open black circles and the true slope values will be shown with red circles. Which tends to be more accurate? 
+
+Try adjusting the number of groups `n_groups`. A common suggestion is that you shouldn't fit mixed effect models if the number of groups is too small, e.g. < 5. Based on your own judgment here, what happens when the number of groups gets very small? 
+
+```{r}
+# Set the number of groups here:
+n_groups <- 40
+
+# A common intercept:
+alpha <- 0.2
+
+# Standard deviation on the group-level slopes:
+sd_beta <- 0.2
+
+# Mean of the group-level slopes:
+mu_beta <- 0.5
+
+# Residual standard deviation:
+sigma <- 3
+
+# Number of data points per group:
+N <- 40
+
+# Simulate:
+betas <- rnorm(n_groups, mu_beta, sd_beta)
+x <- seq(-1, 1, length.out = N)
+d <- data.frame(alpha = rep(alpha, each = N), beta = rep(betas, each = N), n = 1,
+  sigma = sigma, x = rep(x, n_groups))
+d <- mutate(d,
+  mean = alpha + beta * x,
+  y = rnorm(N * n_groups, mean, sigma))
+d$group <- rep(seq_len(n_groups), each = N)
+
+# Fit individual models and extract slopes:
+med2 <- plyr::daply(d, "group", function(x) {
+  m2 <- lm(y ~ x, data = x)
+  coef(m2)[[2]]
+})
+
+## Plot the data:
+# library(ggplot2)
+# ggplot(d, aes(x, y)) + geom_point() + facet_wrap(~group)
+
+# Fit the model:
+m <- lme4::lmer(y ~ x + (0 + x | group), data = d)
+
+# Extract of the slope:
+med <- coef(m)$group[,2]
+
+# Plot the output:
+jit <- jitter(rep(0, n_groups), 0.3)
+plot(c(jit-0.5, jit+0.5), c(med2, med), xlim = c(-0.5, 0.6),
+  ylim = range(c(med2, betas)), xaxt = "n",
+  xlab = "Separate models (left), Mixed-effect model (right)",
+  ylab = "Slope estimate")
+legend("topright", legend = c("Estimate", "Truth"), col = c("black", "red"), pch = 21)
+segments(jit-0.5, med2, jit+0.5, med)
+points(jit + 0.55, betas, col = "red")
+```
