@@ -309,7 +309,7 @@ stan_est %>% filter(grepl("gbpu", term)) %>%
 stan_re_int <- stan_est %>% filter(grepl("gbpu", term))
 qqnorm(stan_re_int$estimate)
 qqline(stan_re_int$estimate)
-save(mstan, mstan_nb, file = "data/generated/stan-models.rda")
+save(mstan_nb, file = "data/generated/stan-models.rda")
 ```
 
 # Comparing estimates across methods 
