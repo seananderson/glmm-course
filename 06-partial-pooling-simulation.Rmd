@@ -2,7 +2,7 @@
 
 # Goals
 
-- Illustrate how mixed-effects models can generate better predictions than separate models 
+- Illustrate how mixed-effects models can generate better predictions than separate models
 - Understand the effect of the number of random effect groups on the efficacy of mixed-effect models 
 
 # A simulation 
@@ -17,26 +17,26 @@ Try adjusting the number of groups `n_groups`. A common suggestion is that you s
 
 ```{r}
 # Set the number of groups here:
-n_groups <- 40
+n_groups <- 25
 
 # A common intercept:
 alpha <- 0.2
 
 # Standard deviation on the group-level slopes:
-sd_beta <- 0.2
+sd_beta <- 0.4
 
 # Mean of the group-level slopes:
-mu_beta <- 0.5
+mu_beta <- 0.7
 
 # Residual standard deviation:
-sigma <- 3
+sigma <- 2
 
 # Number of data points per group:
-N <- 40
+N <- 20
 
 # Simulate:
 betas <- rnorm(n_groups, mu_beta, sd_beta)
-x <- seq(-1, 1, length.out = N)
+x <- rnorm(N)
 d <- data.frame(alpha = rep(alpha, each = N), beta = rep(betas, each = N), n = 1,
   sigma = sigma, x = rep(x, n_groups))
 d <- mutate(d,
