@@ -22,7 +22,7 @@ d <- data.frame(x = c(1:8, 1:8), y = runif(16),
   group1 = rep(gl(2, 4, labels = c("a", "b")), 2),
   group2 = gl(2, 8))
 head(d)
-ggplot(data = d) + geom_point(aes(x = x, y = y, colour = group1)) +
+ggplot(data = d, aes(x = x, y = y, colour = group1)) + geom_point() +
   facet_grid(~group2)
 ```
 
@@ -89,7 +89,7 @@ First, let's experiment with some geoms using the `morph` dataset that you downl
 ggplot(morph, aes(wingl, beakh)) + geom_point()
 ```
 
-## Your turn
+## Challenge 1
 
 Try showing the distribution of wing length for male and female birds by using `geom_violin()`:
 
@@ -145,7 +145,7 @@ ggplot(morph, aes(wingl, beakh)) +
   geom_point(aes(colour = sex))
 ```
 
-## Challenge 1
+## Challenge 2
 
 Explore the `morph` dataset yourself by applying some aesthetics. You can see all the available aesthetics for a given geom by looking at the documentation, e.g. `?geom_point`, or at <http://docs.ggplot2.org/current/>.
 
@@ -184,7 +184,7 @@ In ggplot2 parlance, small multiples are referred to as "facets". There are two 
 
 To specify the data frame columns that are mapped to the rows and columns of facets, separate them with a tilde. For example: `+ facet_grid(row_name~column_name)`. Usually you'll only give a row or column to `facet_wrap()`, but try and see what happens if you give it both. See the help `?facet_wrap`.
 
-## Challenge 2
+## Challenge 3
 
 Try a scatterplot of beak height against wing length with a different panel for each taxon. I've started it for your. Use `facet_wrap()` (hint: the syntax is `+ facet_wrap(~column_name)`:
 
@@ -224,7 +224,7 @@ morph_quant <- morph %>%
   mutate(taxon = reorder(taxon, m, function(x) x))
 ```
 
-## Challenge 3
+## Challenge 4
 
 Now we'll make the plot. Start by adding the geom `geom_pointrange` to the following code:
 
