@@ -16,9 +16,9 @@ Day 1
 | grouping-structures      |   0.50|  14.70|
 | break                    |   0.25|  15.20|
 | temporal-autocorrelation |   0.75|  15.45|
-| variance-structures      |   0.75|  16.20|
-| break                    |   0.25|  16.95|
-| spatial-autocorrelation  |   0.25|  17.20|
+| spatial-autocorrelation  |   0.25|  16.20|
+| break                    |   0.25|  16.45|
+| variance-structures      |   0.75|  16.70|
 | distributions            |   0.25|  17.45|
 | quick feedback           |   0.05|  17.70|
 
