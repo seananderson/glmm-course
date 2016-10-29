@@ -2,9 +2,9 @@
 
 # Goals
 
-- Learn to fit a "random intercepts" model with the `lme4::lmer` function
-- Learn to plot the output from a `lme4::lmer` model
-- Learn to interpret the output from a `lme4::lmer` model
+- Learn to fit a random intercepts model with the `lme4::lmer` function
+- Learn to plot the output from an `lme4::lmer` model
+- Learn to interpret the output from an `lme4::lmer` model
 
 # Data
 
