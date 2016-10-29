@@ -91,12 +91,12 @@ select(mammals, 1:3)
 `filter()` lets you subset by rows. You can use any valid logical statements:
 
 ```{r}
-filter(mammals, adult_body_mass_g > 1e7)[ , 1:3]
+filter(mammals, adult_body_mass_g > 1e7)
 filter(mammals, species == "Balaena mysticetus")
 filter(mammals, order == "Carnivora", adult_body_mass_g < 200)
 ```
 
-Challenge: filter `mammals` for all rows where `adult_body_mass_g` is `NA` and `adult_head_body_len_mm` is greater than 2000. Hint (use `is.na()`):
+Challenge: filter `mammals` for all rows where `adult_body_mass_g` is `NA` and `adult_head_body_len_mm` is greater than 2000. Hint (use `is.na()` and `>`):
 
 ```{r}
 filter(mammals, is.na(home_range_km2), adult_head_body_len_mm > 2000) # exercise
@@ -107,9 +107,9 @@ filter(mammals, is.na(home_range_km2), adult_head_body_len_mm > 2000) # exercise
 `arrange()` lets you order the rows by one or more columns in ascending or descending order. I'm selecting the first three columns only to make the output easier to read:
 
 ```{r}
-arrange(mammals, adult_body_mass_g)[ , 1:3]
-arrange(mammals, desc(adult_body_mass_g))[ , 1:3]
-arrange(mammals, order, adult_body_mass_g)[ , 1:3]
+arrange(mammals, adult_body_mass_g)
+arrange(mammals, desc(adult_body_mass_g))
+arrange(mammals, order, adult_body_mass_g)
 ```
 
 # Mutating columns
@@ -154,7 +154,7 @@ Pipes can work with nearly any functions. Let's start with a non-dplyr example:
 
 ```{r}
 x <- rnorm(10)
-x %>% max
+x %>% max()
 # is the same thing as:
 max(x)
 ```
@@ -226,7 +226,7 @@ mammals %>% group_by(order) %>%
 
 ## Challenge 2
 
-Again, your turn: make the following piece of code easier to read by converting it to use pipes (hint: work from the inside out):
+Again, your turn: make the following piece of code easier to read by converting it to use pipes (hint: work from the inside out starting with `select()`):
 
 ```{r}
 summarise(
