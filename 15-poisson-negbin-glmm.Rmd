@@ -365,16 +365,16 @@ What do you notice about the various models?
 Very useful worked examples by Ben Bolker of GLMMs:
 <https://rpubs.com/bbolker/glmmchapter>
 
-Using observation-level random effects for overdispersion:\
+Using observation-level random effects for overdispersion:
 Harrison, X. A. 2014. Using observation-level random effects to model overdispersion in count data in ecology and evolution. PeerJ 2:e616. https://peerj.com/articles/616/
 
-The Bayesian data analysis Bible:\
+The Bayesian data analysis Bible:
 Gelman, A., J. B. Carlin, H. S. Stern, D. B. Dunson, A. Vehtari, and D. B. Rubin. 2014. Bayesian Data Analysis. Chapman & Hall, Boca Raton, FL.
 
-A good introduction to Bayesian data analysis, although the current version uses WinBUGS/JAGS:\
+A good introduction to Bayesian data analysis, although the current version uses WinBUGS/JAGS:
 Gelman, A., and J. Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press, Cambridge, UK.
 
-A great recent and modern introduction to Bayesian modeling with Stan:\
+A great recent and modern introduction to Bayesian modeling with Stan:
 McElreath, R. 2016. Statistical rethinking: A Bayesian course with examples in R and Stan. CRC Press.
 
 Stan: <http://mc-stan.org/>
