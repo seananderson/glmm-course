@@ -40,3 +40,24 @@ Day 2
 | extra-confidence-intervals |   0.25|  16.75|
 | extras-summary-questions   |   0.75|  17.00|
 | feedback                   |   0.25|  17.75|
+
+These notes
+-----------
+
+<https://github.com/seananderson/glmm-course>
+
+Click "Clone or download", "Download ZIP".
+
+Etherpad collective notes
+-------------------------
+
+<https://public.etherpad-mozilla.org/p/glmm-course1>
+
+Generating the exercises
+------------------------
+
+Run the following:
+
+``` r
+source("99-make.R")
+```

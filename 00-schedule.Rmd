@@ -21,3 +21,20 @@ filter(d, Day == 2) %>%
   knitr::kable()
 ```
 
+## These notes
+
+<https://github.com/seananderson/glmm-course>
+
+Click "Clone or download", "Download ZIP".
+
+## Etherpad collective notes
+
+<https://public.etherpad-mozilla.org/p/glmm-course1>
+
+## Generating the exercises
+
+Run the following:
+
+```{r, echo=TRUE, eval=FALSE}
+source("99-make.R")
+```
