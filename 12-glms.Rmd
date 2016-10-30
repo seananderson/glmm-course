@@ -53,7 +53,7 @@ inverse_logit <- function(x) plogis(x)
 
 Remember that there are two components to a GLM: a link function that describes what is happening with the mean of the data, and an error distribution that describes the variability around the mean. 
 
-Put another way, the "link" is the transformation you need to apply to make your data linear with respect to the predictors.
+Put another way, the "link" is the transformation you need to apply to make the (mean of the) response data linear with respect to the predictors.
 
 The error distribution describes the spread of the data around the raw untransformed mean.
 
