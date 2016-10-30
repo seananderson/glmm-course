@@ -6,13 +6,13 @@ By the end of the two-day workshop, you will be able to develop models using you
 
 Prior to taking this workshop, you should be reasonably comfortable with R and linear regression, and ideally have some experience with GLMs (e.g. logistic regression). Some background with dplyr and ggplot2 would be helpful.
 
-# Downloading these notes/exercises
+## Downloading these notes/exercises
 
 <https://github.com/seananderson/glmm-course>
 
 Click "Clone or download", "Download ZIP".
 
-# Generating the exercises
+## Generating the exercises
 
 Run the following:
 
