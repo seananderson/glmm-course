@@ -14,7 +14,7 @@ Click "Clone or download", "Download ZIP".
 
 ## Generating the exercises
 
-Run the following:
+Open the file `glmm-course.Rproj` by double-clicking on it. Run the following:
 
 ``` r
 source("99-make.R")
