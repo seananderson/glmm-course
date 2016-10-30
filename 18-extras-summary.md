@@ -125,3 +125,9 @@ http://lme4.r-forge.r-project.org/lMMwR/lrgprt.pdf
 GLMMs are just one of many topics in this textbook, but if you are an ecologist interested in modeling, this textbook is well worth reading:
 Bolker, B. M. 2008. Ecological Models and Data in R. Princeton University Press.
 <https://ms.mcmaster.ca/~bolker/emdbook/>, which includes an old PDF draft copy <https://ms.mcmaster.ca/~bolker/emdbook/book.pdf>
+
+Advanced R:
+<http://adv-r.had.co.nz/>
+
+R for Data Science:
+<http://r4ds.had.co.nz/>
