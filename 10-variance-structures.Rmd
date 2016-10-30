@@ -8,9 +8,7 @@
 
 # A simulated data set
 
-I've simulated a data set for us to work with. It has a predictor `x`, the
-response variables `y` through `y4`, collected for groups (`group`) A through
-L, and collected over time (`time`). Let's load that data set:
+I've simulated a data set for us to work with. It has a predictor `x`, the response variables `y` through `y4`, collected for groups (`group`) A through L, and collected over time (`time`). Let's load that data set:
 
 ```{r}
 library(tidyverse)
@@ -21,8 +19,7 @@ d
 # View(d)
 ```
 
-All of the response variables are continuous with both negative and positive
-values and can be fitted with a linear mixed-effects model.
+All of the response variables are continuous with both negative and positive values and can be fitted with a linear mixed-effects model.
 
 Let's plot the data.
 
@@ -30,8 +27,7 @@ Let's plot the data.
 ggplot(d, aes(x, y)) + geom_point() + facet_wrap(~group)
 ```
 
-The response variable `y` can be fit without any issues with the following
-model:
+The response variable `y` can be fit without any issues with the following model:
 
 ```{r}
 m <- lme(y ~ x, random = ~ 1 | group, data = d)
@@ -46,8 +42,7 @@ Some of the most important ways that we can check our model are to:
 - plot residuals against each of our predictors in the model
 - plot residuals against any predictors that were not included in the model
 
-What are the model assumptions that these various plots help us check? What are
-we looking for when we make these plots?
+What are the model assumptions that these various plots help us check? What are we looking for when we make these plots?
 
 We will plot the residuals various ways now using the augment function from the broom package.
 
@@ -70,10 +65,7 @@ ggplot(aug, aes(x, .resid)) + geom_point() + facet_wrap(~group) +
   geom_hline(yintercept = 0)
 ```
 
-Alternatively, as we have done before, we can use the plot functions built into
-the nlme (or the lme4) package. We will use this shortcut here and below for
-speed and to quickly access the "normalized" residuals which incorporate any
-variance or correlation structure.
+Alternatively, as we have done before, we can use the plot functions built into the nlme (or the lme4) package. We will use this shortcut here and below for speed and to quickly access the "normalized" residuals which incorporate any variance or correlation structure.
 
 ```{r}
 plot(m, resid(., type = "normalized") ~ fitted(.), abline = 0)
@@ -82,9 +74,7 @@ plot(m, resid(., type = "normalized") ~ time | group, abline = 0)
 plot(ACF(m, resType = "normalized"))
 ```
 
-We can also check the normality of the random effects, although we don't need
-to get too caught up checking these and there is no need to check these
-for the rest of these exercises.
+We can also check the normality of the random effects, although we don't need to get too caught up checking these and there is no need to check these for the rest of these exercises.
 
 ```{r}
 qqnorm(ranef(m)[,"(Intercept)"])
@@ -104,24 +94,13 @@ Turn to your neighbor and discuss the approaches you would try to solve the firs
 
 # Variance structures
 
-The third problem, a problem with the variance of the residuals
-(heteroscedasticity), may be solved in a number of ways. The first thing to
-think about would be whether a data transformation would help (e.g. a log or
-square root transformation). Next, it's possible you are missing some important
-predictor. If these approaches fail, heteroscedasticity can be solved by adding
-covariates to the variance of the residuals.
+The third problem, a problem with the variance of the residuals (heteroscedasticity), may be solved in a number of ways. The first thing to think about would be whether a data transformation would help (e.g. a log or square root transformation). Next, it's possible you are missing some important predictor. If these approaches fail, heteroscedasticity can be solved by adding covariates to the variance of the residuals.
 
-The package nlme makes this relatively easy. (There is no other major R package
-that implements variance structures to my knowledge.)
+The package nlme makes this relatively easy. (There is no other major R package that implements variance structures to my knowledge.)
 
-There are a number of possible variance structures. You can see a list of them
-with `?nlme::varClasses`. The best reference on these variance structures is in
-Pinheiro and Bates (2000) "Mixed-Effects Models in S and S-PLUS".
+There are a number of possible variance structures. You can see a list of them with `?nlme::varClasses`. The best reference on these variance structures is in Pinheiro and Bates (2000) "Mixed-Effects Models in S and S-PLUS".
 
-The most common ones I've seen used are `nlme::varIdent`, `nlme::varExp`, and
-`nlme::varPower`. `varIdent` allows for different residual variances for
-different grouping factors. The other 2 model a relationship between
-a predictor (or, the fitted values) and the variance.
+The most common ones I've seen used are `nlme::varIdent`, `nlme::varExp`, and `nlme::varPower`. `varIdent` allows for different residual variances for different grouping factors. The other 2 model a relationship between a predictor (or, the fitted values) and the variance.
 
 Let's take a look at the shape of the exponential and power variance functions in nlme:
 
@@ -142,24 +121,16 @@ manipulate({plot(v, get_varExp(v, t1), type = "l", main = "nlme::varExp()",
   t1 = slider(-0.3, 0.5, 0.1, step = 0.1))
 ```
 
-We can add one of these variance structures by passing it to the `weights`
-argument in `nlme::lme` or `nlme::gls`. E.g. `weights = varExp()`. Read the
-help for each of these functions to see what the default value for the argument
-`form` is inside the variance function. E.g. `?nlme::varExp`.
+We can add one of these variance structures by passing it to the `weights` argument in `nlme::lme` or `nlme::gls`. E.g. `weights = varExp()`. Read the help for each of these functions to see what the default value for the argument `form` is inside the variance function. E.g. `?nlme::varExp`.
 
 # Model checking exercises
 
-In the following challenges, there is something wrong in each case. The
-solution involves adding one of `varExp`, `varIdent`, or `corAR1` temporal
-correlation. Note that for `varIdent` you will need to specify the grouping
-variable `varIdent(form = ~ 1 | group)`. For `varExp`, you can assume the 
+In the following challenges, there is something wrong in each case. The solution involves adding one of `varExp`, `varIdent`, or `corAR1` temporal correlation. Note that for `varIdent` you will need to specify the grouping variable `varIdent(form = ~ 1 | group)`. For `varExp`, you can assume the 
 variance is predicted by the fitted values (the default).
 
-I've started each one off. You will need to plot the residuals and figure out
-what variance or correlation structure is missing.
+I've started each one off. You will need to plot the residuals and figure out what variance or correlation structure is missing.
 
-Remember that you can use the `update` function to reduce copying and pasting
-of code.
+Remember that you can use the `update` function to reduce copying and pasting of code.
 
 # Challenge 1
 
@@ -190,12 +161,13 @@ m3_right <- update(m3, weights = varIdent(form = ~ 1 | group)) # exercise
 
 # Challenge 4
 
-This bonus question is harder. Hint: you can combine multiple variance
-structures with `varComb` and will need to do that here. See `?varComb`.
+This bonus question is harder. Hint: you can combine multiple variance structures with `varComb` and will need to do that here. See `?varComb`.
 
 ```{r}
 ggplot(d, aes(x, y4)) + geom_point() + facet_wrap(~group)
 m4 <- lme(y4 ~ x, random = ~ 1 | group, data = d)
+plot(m4, resid(., type = "normalized") ~ fitted(.) | group, abline = 0) # exercise
 
-m4_right <- update(m4, weights = varComb(varIdent(), varExp())) # exercise
+m4_right <- update(m4, weights = varComb(varIdent(form = ~ 1 | group), varExp())) # exercise
+plot(m4_right, resid(., type = "normalized") ~ fitted(.) | group, abline = 0) # exercise
 ```
