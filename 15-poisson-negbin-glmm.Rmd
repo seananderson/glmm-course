@@ -169,7 +169,7 @@ coef(summary(m_glmer))
 
 # Checking for overdispersion 
 
-Now we should check for overdispersion. We can do that by comparing the residual deviance and the sum of the pearson residuals squared with the residual degrees of freedom. These should be approximately the same. If the degrees of freedom are considerably smaller then we have evidence of over dispersion. If the residual deviance and some of Pearson residuals squared  disagree, then use the Pearson residuals. See Ben Bolker's worked examples here for more details <https://rpubs.com/bbolker/glmmchapter>.
+Now we should check for overdispersion. We can do that by comparing the residual deviance and the sum of the pearson residuals squared with the residual degrees of freedom. These should be approximately the same. If the degrees of freedom are considerably smaller then we have evidence of over dispersion. If the residual deviance and sum of Pearson residuals squared  disagree, then use the Pearson residuals. See Ben Bolker's worked examples here for more details <https://rpubs.com/bbolker/glmmchapter>.
 
 We can see the degrees of freedom from the output of `summary()`. And we can calculate the sum of the Pearson residuals squared:
 
@@ -203,7 +203,6 @@ We then fit the model:
 f_lme4_obs <- paste(c(f, "+ (1 | gbpu) + (1 | obs)"), collapse = " ")
 m_lme4_obs <- glmer(f_lme4_obs, data = d, family = poisson(link = "log"))
 summary(m_lme4_obs)
-aods3::gof(m_lme4_obs)
 ```
 
 That, too, has poor convergence.
@@ -262,9 +261,10 @@ bbmle::AICtab(m_tmb, m_tmb_nb, m_tmb_nb1)
 
 So the NB2 parameterization has the lowest AIC.
 
-The residuals are hard to interpret still, although they may suggest that our model is poor at predicting low levels of conflict kills compared to large levels. 
+The residuals are hard to interpret still: 
 
 ```{r}
+plot(log(fitted(m_tmb_nb)), residuals(m_tmb_nb, type = "response"))
 plot(log(fitted(m_tmb_nb)), residuals(m_tmb_nb, type = "pearson"))
 plot(log(fitted(m_tmb_nb)), sqrt(abs(residuals(m_tmb_nb, type = "pearson"))))
 ```
@@ -272,6 +272,9 @@ plot(log(fitted(m_tmb_nb)), sqrt(abs(residuals(m_tmb_nb, type = "pearson"))))
 Let's plot the residuals by group:
 
 ```{r}
+d$res_nb <- residuals(m_tmb_nb, type = "response")
+ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
+
 d$res_nb <- residuals(m_tmb_nb, type = "pearson")
 ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
 ```
@@ -298,6 +301,12 @@ stan_plot(mstan_nb)
 stan_trace(mstan_nb)
 stan_rhat(mstan_nb)
 stan_hist(mstan_nb)
+save(mstan_nb, file = "data/generated/stan-models.rda")
+```
+
+```{r}
+load("data/generated/stan-models.rda")
+
 stan_est <- broom::tidyMCMC(mstan_nb, conf.int = TRUE, 
   estimate.method = "median")
 
@@ -309,7 +318,6 @@ stan_est %>% filter(grepl("gbpu", term)) %>%
 stan_re_int <- stan_est %>% filter(grepl("gbpu", term))
 qqnorm(stan_re_int$estimate)
 qqline(stan_re_int$estimate)
-save(mstan_nb, file = "data/generated/stan-models.rda")
 ```
 
 # Comparing estimates across methods 
@@ -317,7 +325,6 @@ save(mstan_nb, file = "data/generated/stan-models.rda")
 Let's compare confidence intervals:
 
 ```{r compare}
-load("data/generated/stan-models.rda")
 get_tmb_cis <- function(x, name) {
   ci <- list()
   ci <- data.frame(confint(x), fixef(x)[[1]])
@@ -362,13 +369,13 @@ What do you notice about the various models?
 
 # Additional information 
 
-Very useful worked examples by Ben Bolker of GLMMs:
+Very useful worked examples of GLMMs by Ben Bolker:
 <https://rpubs.com/bbolker/glmmchapter>
 
 Using observation-level random effects for overdispersion:
 Harrison, X. A. 2014. Using observation-level random effects to model overdispersion in count data in ecology and evolution. PeerJ 2:e616. https://peerj.com/articles/616/
 
-The Bayesian data analysis Bible:
+The Bayesian data analysis bible, but not an easy read:
 Gelman, A., J. B. Carlin, H. S. Stern, D. B. Dunson, A. Vehtari, and D. B. Rubin. 2014. Bayesian Data Analysis. Chapman & Hall, Boca Raton, FL.
 
 A good introduction to Bayesian data analysis, although the current version uses WinBUGS/JAGS:
