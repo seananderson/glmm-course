@@ -7,7 +7,7 @@
 
 # Loading the data
 
-We are going to work with a data set from [O'Regan et al. 2013](http://doi.org/10.1890/13-0916.1.
+We are going to work with a data set from:
 O’Regan, S. M., W. J. Palen, and S. C. Anderson. 2013. Climate warming mediates negative impacts of rapid pond drying for three amphibian species. Ecology 95:845–855.
 
 These data represent time to metamorphosis for 3 amphibian species in a mesocosm experiment. The experiment had 2 levels of warming (normal and warmed) and 2 levels of pond drying (normal/permanent and accelerated/temporary). There were multiple tanks per treatment condition.
@@ -134,7 +134,7 @@ m <- glmer(meta ~ week_centered + species + warming * drying + (1 | tank),
 Let's look at the model:
 
 ```{r}
-summary(m, correlation = FALSE)
+summary(m)
 VarCorr(m)
 ```
 
@@ -177,7 +177,7 @@ ggplot(binned, aes(mean_fitted, mean_residual, color = species)) +
   geom_smooth(se = FALSE, method = "loess", colour = "black")
 ```
 
-This does not look great, but this was just a starting point. We will be improving this model below. 
+This does not look great, but this is just a starting point. We will be improving this model below. 
 
 # Plotting the random and fixed estimates
 
@@ -358,9 +358,9 @@ a different link function would fit the data better although none of the
 obvious alternatives looked much better to me. For example:
 
 ```{r, eval=FALSE}
-m5 <- glmmTMB(meta ~ (week_centered + species + warming + drying)^2 + 
-  (1 + week_centered | tank), 
-  family = binomial(link = "probit"), data = d)
+# m5 <- glmmTMB(meta ~ (week_centered + species + warming + drying)^2 + 
+#   (1 + week_centered | tank), 
+#   family = binomial(link = "probit"), data = d)
 ```
 
 # Addendum
