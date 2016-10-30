@@ -115,3 +115,13 @@ Royle, J. A., and R. M. Dorazio. 2008. Hierarchical modeling and inference in ec
 
 The Bayesian data analysis bible, but definitely not easy reading:
 Gelman, A., J. B. Carlin, H. S. Stern, D. B. Dunson, A. Vehtari, and D. B. Rubin. 2014. Bayesian Data Analysis. Chapman & Hall, Boca Raton, FL.
+
+The textbook that accompanies the nlme package:
+Pinheiro, J. C., and D. M. Bates. 2000. Mixed-Effects Models in S and S-PLUS. Springer-Verlag, New York, NY, USA.
+
+The (unfinished?) textbook on lme4 by Douglas Bates:
+http://lme4.r-forge.r-project.org/lMMwR/lrgprt.pdf
+
+GLMMs are just one of many topics in this textbook, but if you are an ecologist interested in modeling, this textbook is well worth reading:
+Bolker, B. M. 2008. Ecological Models and Data in R. Princeton University Press.
+<https://ms.mcmaster.ca/~bolker/emdbook/>, which includes an old PDF draft copy <https://ms.mcmaster.ca/~bolker/emdbook/book.pdf>
