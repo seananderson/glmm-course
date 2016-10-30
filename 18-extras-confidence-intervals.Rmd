@@ -78,7 +78,7 @@ sim_pvals <- mutate(sim_pvals,
 
 ggplot(sim_pvals, aes(mu_hat_sim, fill = tail)) +
   geom_histogram(bins = 50) +
-  geom_vline(xintercept = mu_hat, lty = "solid") +
+  geom_vline(xintercept = c(-mu_hat, mu_hat), lty = "solid") +
   geom_vline(xintercept = 0, lty = "dashed")
 
 ggplot(sim_pvals, aes(abs(mu_hat_sim), fill = tail)) +
