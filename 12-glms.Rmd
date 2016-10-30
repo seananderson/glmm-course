@@ -27,15 +27,15 @@ So our data frame includes a column for one predictor, `x`. This can represent a
 We will use the following function to quickly plot the predictions from our models. 
 
 ```{r}
-plot_glm <- function(model, dat) {
+plot_glm <- function(model, dat, x = "x", y = "y") {
   fit <- predict(model, type = "link", se = FALSE)
   se <- predict(model, type = "link", se = TRUE)$se
   dat$lwr <- family(model)$linkinv(fit - 1.96 * se)
   dat$upr <- family(model)$linkinv(fit + 1.96 * se)
   dat$fit <- family(model)$linkinv(fit)
-  p <- ggplot(dat) + geom_point(aes(x, y), alpha = 0.6) + 
-    geom_line(aes(x, fit), colour = "red", lwd = 1) +
-    geom_ribbon(aes(x, ymax = upr, ymin = lwr), alpha = 0.2)
+  p <- ggplot(dat) + geom_point(aes_string(x, y), alpha = 0.6) + 
+    geom_line(aes_string(x, "fit"), colour = "red", lwd = 1) +
+    geom_ribbon(aes_string(x, ymax = "upr", ymin = "lwr"), alpha = 0.2)
   print(p)
   invisible(p)
 }
@@ -47,7 +47,6 @@ We will define the following functions to make our code easier to read later:
 logit <- function(x) qlogis(x)
 inverse_logit <- function(x) plogis(x)
 ```
-
 
 # Link functions 
 
@@ -101,6 +100,7 @@ Here, and throughout, we will generate a true set of response data `y_true`. We 
 y_true <- exp(a + b * x)
 shape <- 8
 y <- rgamma(N, rate = shape / y_true, shape = shape)
+d$y <- y
 plot(x, y);lines(sort(x), y_true[order(x)])
 ```
 
@@ -121,6 +121,7 @@ The Poisson distribution with a log link is commonly used to model count data or
 ```{r}
 y_true <- exp(a + b * x)
 y <- rpois(N, lambda = y_true)
+d$y <- y
 plot(x, y);lines(sort(x), y_true[order(x)])
 ```
 
@@ -139,6 +140,7 @@ The negative binomial distribution with a log link can also model count data but
 ```{r}
 y_true <- exp(a + b * x)
 y <- MASS::rnegbin(N, mu = y_true, theta = 0.6)
+d$y <- y
 plot(x, y);lines(sort(x), y_true[order(x)])
 ```
 
@@ -161,6 +163,7 @@ We can use a binomial response and logit link if we have response data represent
 y_linear <- a + b * x
 prob_true <- inverse_logit(y_linear)
 y <- rbinom(N, 1, prob_true)
+d$y <- y
 plot(x, jitter(y, 0.1));lines(sort(x), prob_true[order(x)])
 ```
 
@@ -179,16 +182,20 @@ coef(m_bin)
 
 How do we interpret the slope coefficient? A unit increase in `x` corresponds to a `r slope` increase in the log odds of a `1` being observed.
 
-That means the inverse-logit transformed true probabilities follow our estimated intercept and slope.
+That means the logit-transformed true probabilities follow our estimated intercept and slope:
 
 ```{r}
-# inverse-logit transformed probabilities (aka log odds)
-plot(sort(x), inverse_logit(prob_true[order(x)]), ylab = "log odds")
+plot(sort(x), logit(prob_true[order(x)]), ylab = "log odds")
 abline(a = a, b = b, col = "red")
 abline(a = int, b = slope, col = "blue")
 ```
 
-What does that mean? If we exponentiate the slope coefficient we get the expected fold increase in the *odds* of observing a `1`: `r exp(slope)` per unit increase in `x`.
+If we exponentiate the slope coefficient we get the expected fold increase in the *odds* of observing a `1`: `r exp(slope)` per unit increase in `x`.
+
+```{r}
+plot(sort(x), exp(logit(prob_true[order(x)])), ylab = "odds")
+curve(exp(int + slope * x), min(x), max(x), add = TRUE, col = "blue")
+```
 
 Of course, most people have trouble wrapping their heads around odds and log odds, but those are the only scales on which our slope is constant.
 
@@ -208,5 +215,4 @@ g + geom_vline(xintercept = c(-0.5, 0, 0.5), lty = 2) +
   ylab("Probability of y = 1")
 ```
 
-For more details see: Gelman, A., and J. Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press, Cambridge, UK.
-
+For more details on the divide-by-4 trick see: Gelman, A., and J. Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press, Cambridge, UK.
