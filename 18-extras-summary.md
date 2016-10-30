@@ -18,6 +18,8 @@ simr package
  
 Green, P., and C. J. MacLeod. 2016. SIMR: an R package for power analysis of generalized linear mixed models by simulation. Methods in Ecology and Evolution 7:493–498.
 
+Gelman, A., and J. Carlin. 2014. Beyond Power Calculations: Assessing Type S (Sign) and Type M (Magnitude) Errors. Perspectives on Psychological Science 9:641–651.
+
 ## P-values
 
 Maybe don't? 
@@ -79,11 +81,9 @@ Gelman, A. 2008. Scaling regression inputs by dividing by two standard deviation
 
 Schielzeth, H. 2010. Simple means to improve the interpretability of regression coefficients. Methods in Ecology and Evolution 1:103–113.
 
-## Very important wisdom from Andrew Gelman
+## Something to keep in mind for all regression modeling:
 
-Gelman, A., and J. Carlin. 2014. Beyond Power Calculations: Assessing Type S (Sign) and Type M (Magnitude) Errors. Perspectives on Psychological Science 9:641–651.
-
-Gelman, A., and H. Stern. 2006. The Difference Between ``Significant’’ and ``Not Significant’’ is not Itself Statistically Significant. Amer. Stat. 60:328–331.
+Gelman, A., and H. Stern. 2006. The Difference Between "Significant" and "Not Significant" is not Itself Statistically Significant. Amer. Stat. 60:328–331.
 
 ## A few more great papers 
 
