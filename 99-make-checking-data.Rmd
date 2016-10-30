@@ -65,6 +65,8 @@ summary(m2_right)
 plot(m2_right, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
 ```
 
+varComb:
+
 ```{r}
 set.seed(222)
 sds <- rep(rlnorm(J, 0, 0.4), each = N)
@@ -115,11 +117,6 @@ plot(ACF(m4_right, resType = "normalized"))
 
 summary(m4_right)
 plot(m3_right, resid(., type = "normalized") ~ fitted(.) | group, abline = 0)
-```
-
-```{r}
-# group_means <- 
-# mean = alpha + beta * x,
 ```
 
 reorder:
