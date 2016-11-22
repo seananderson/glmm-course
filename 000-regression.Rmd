@@ -29,7 +29,9 @@ The column headers should be self-explanatory.
 
 Let's start with a simple model asking how global life expectancy has changed over time. 
 
-Use ggplot2 to visualize life expectancy (`lifeExp`) on the y-axis and time (`year`) on the x-axis. If you want to get fancy, you might consider lowering the `alpha` argument in `geom_point()` or adding some jittering to help with the overplotting (see `?position_jitter`). But don't worry about that for now if that doesn't seem easy:
+Use ggplot2 to visualize life expectancy (`lifeExp`) on the y-axis and time (`year`) on the x-axis. 
+
+Bonus: If you want to get fancy, you might consider lowering the `alpha` argument in `geom_point()` or adding some jittering to help with the overplotting (see `?position_jitter`).
 
 ```{r}
 ggplot(d, aes(year, lifeExp)) + # exercise
@@ -52,7 +54,7 @@ How do we interpret the slope? How would you fill in the following blank? With t
 
 ## Working with a transformed predictor and a log-transformed response variable 
 
-What if, we created a new variable `year_1990` as the following: 
+What if we created a new variable `year_1990` as the following: 
 
 ```{r}
 d <- mutate(d, decade_1990 = (year - 1990)/10)
@@ -70,7 +72,7 @@ coef(m2)
 
 What do the intercept and slope represent now? 
 
-How would answer the following questions based on the coefficients? 
+How would you answer the following questions based on the coefficients? 
 
 In 1990, the global expected life expectancy was:
 
@@ -130,7 +132,7 @@ Let's look at the summarized data:
 ggplot(life, aes(log(gdpPercap), log(lifeExp))) + geom_point()
 ```
 
-Fit a linear regression predicting log life expectancy from log GDP per capita. Why might it make sense to work with logs here?
+Fit a linear regression predicting log life expectancy from log GDP per capita with our new data set `life`. Why might it make sense to work with logs here?
 
 ```{r}
 m4 <- lm(log(lifeExp) ~ log(gdpPercap), data = life) # exercise
@@ -145,7 +147,7 @@ How would you fill in the following blank?
 For a 1% increase in GDP per capita, we expect a `___`% increase in life expectancy.
 
 ```{r}
-coef(m4)[2] # exercise
+coef(m4)[2] # exercise %>%
 ```
 
 # Addendum 
