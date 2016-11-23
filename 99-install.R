@@ -6,7 +6,6 @@
 # The following R code should walk you through it.
 
 # You will need to have the latest version of R, version 3.3.2.
-# (Or 3.3.1, which should be fine.)
 # Check with:
 sessionInfo()
 
