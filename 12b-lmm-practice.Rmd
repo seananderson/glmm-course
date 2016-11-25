@@ -6,7 +6,7 @@
 
 # Challenge: modeling life expectancy as a function GDP per capita
 
-For this challenge, we are going to work with the GapMinder data set again. But this time we are going to model it a bit more realistically. 
+For this challenge, we are going to work with the Gapminder data set again. But this time we are going to model it a bit more realistically. 
 
 Let's start by reading in the data:
 
@@ -119,18 +119,8 @@ arm::display(m3)
 What do you notice when comparing these models? Some things to look at:
 
 - In which model does the effect of GDP within a country (`log_gdp_percap_cent` overall slope) look stronger? Why is that? 
-- What does slope on the group-level predictor `mean_log_gdp_percap_cent` tell us? 
+- What does the slope on the group-level predictor `mean_log_gdp_percap_cent` tell us? 
 - What happened to the standard deviations on all of the random effect distributions when we added the group-level predictor? Why is that? 
-
-Our last plot was allowing for GDP per capita to vary both within and across countries. What if we just wanted to show the across country effect? One way to do that would be to set the within country GDP per capita variable to its mean value, 0:
-
-```{r}
-newdata <- mutate(gap, decade = 0, log_gdp_percap_cent = 0)
-newdata$predict3 <- predict(m3, newdata = newdata)
-ggplot(newdata, aes(mean_log_gdp_percap_cent, predict3, 
-  group = country, colour = continent)) + 
-  geom_point()
-```
 
 What are we looking at in the above plot?
 
@@ -158,7 +148,7 @@ broom::tidy(m3, conf.int = T) # exercise
 Is the effect of GDP per capita stronger within or across countries? How do you know this and what does this mean?
 
 ```{r}
-sjPlot::sjp.lmer(m3, type = "fe", p.kr = FALSE, show.p = FALSE) # exercise
+arm::display(m3)
 ```
 
 Controlling for differences in GDP, what is the estimated change in life expectancy per decade in Canada, China, and Zimbabwe? (Hint: either use `coef()` or combine the fixed and random effects from `fixef()` and `ranef()`. Just look at the output, you don't need to extract the values with R code.)
@@ -169,7 +159,6 @@ re$country <- row.names(re) # exercise
 filter(re, country == "Canada") %>% select(decade) %>% round(1) # exercise
 filter(re, country == "China") %>% select(decade) %>% round(1) # exercise
 filter(re, country == "Zimbabwe") %>% select(decade) %>% round(1) # exercise
-sjPlot::sjp.lmer(m3, type = "re") # exercise
 ```
 
 # Bonus 
