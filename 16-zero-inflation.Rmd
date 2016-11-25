@@ -82,9 +82,9 @@ zi <- coef(summary(zip_tmb))$zi[1, "Estimate"]
 zi_se <- coef(summary(zip_tmb))$zi[1, "Std. Error"]
 
 # CIs:
-inverse_logit(zi - 2 * zi_se) %>% round(2)
+inverse_logit(zi - 1.96 * zi_se) %>% round(2)
 inverse_logit(zi) %>% round(2)
-inverse_logit(zi + 2 * zi_se) %>% round(2)
+inverse_logit(zi + 1.96 * zi_se) %>% round(2)
 ```
 
 # Hurdle/delta model
@@ -120,7 +120,7 @@ ggplot(d, aes(x, y, colour = f)) + geom_point() +
 Let's fit 2 separate models. First a truncated Poisson to the positive values. This is a Poisson distribution that starts at one instead zero.
 
 ```{r, eval=FALSE}
-hurd_a <- glmmTMB(y ~ x + (1 | f), data = dplyr::filter(d, y > 0), 
+hurd_a <- glmmTMB(y ~ x + (1 | f), data = filter(d, y > 0), 
   family = list(family = "truncated_poisson", link = "log"))
 summary(hurd_a)
 ```
