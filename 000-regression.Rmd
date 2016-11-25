@@ -54,7 +54,7 @@ How do we interpret the slope? How would you fill in the following blank? With t
 
 ## Working with a transformed predictor and a log-transformed response variable 
 
-What if we created a new variable `year_1990` as the following: 
+What if we created a new variable `decade_1990` as the following: 
 
 ```{r}
 d <- mutate(d, decade_1990 = (year - 1990)/10)
@@ -62,7 +62,9 @@ ggplot(d, aes(decade_1990, log(lifeExp))) +
   geom_point(alpha = 0.5, position = position_jitter(width = 0.1))
 ```
 
-And then we fit the following model:
+The choice of the year 1990 was completely arbitrary simply to make the intercept in the following models more meaningful. We divided by 10 so that the effects are per decade instead of per year. This keeps us from working with really tiny numbers. 
+
+And then we fit the following model. Note that this time, for the purposes of this exercise, we are modeling the *log* of life expectancy as the response. 
 
 ```{r}
 m2 <- lm(log(lifeExp) ~ decade_1990, data = d)
@@ -83,8 +85,8 @@ exp(coef(m2)[1]) # exercise
 For every decade, global life expectancy increased on average `___` fold or `___`%.
 
 ```{r}
-exp(coef(m2)[2]) # exercise
-(exp(coef(m2)[2]) - 1) * 100 # exercise
+round(exp(coef(m2)[2]), 2)# exercise
+round(exp(coef(m2)[2]) * 100 - 100, 0)# exercise
 ```
 
 # Adding an interaction
@@ -132,7 +134,7 @@ Let's look at the summarized data:
 ggplot(life, aes(log(gdpPercap), log(lifeExp))) + geom_point()
 ```
 
-Fit a linear regression predicting log life expectancy from log GDP per capita with our new data set `life`. Why might it make sense to work with logs here?
+Fit a linear regression predicting log life expectancy from log GDP per capita with our new data set `life`.
 
 ```{r}
 m4 <- lm(log(lifeExp) ~ log(gdpPercap), data = life) # exercise
@@ -140,21 +142,21 @@ summary(m4)
 coef(m4)
 ```
 
-How do we interpret the intercept and slope?
+How do we interpret the intercept and slope in this model?
 
 How would you fill in the following blank?
 
 For a 1% increase in GDP per capita, we expect a `___`% increase in life expectancy.
 
 ```{r}
-coef(m4)[2] # exercise %>%
+round(coef(m4)[2], 2) # exercise %>%
 ```
 
 # Addendum 
 
 These models are very basic and likely violate a number of statistical assumptions. (This exercise was focused only on interpretation, and we never even checked model fit.) We will come back to this data set later and fit some more realistic models.
 
-For now, what are some of the major assumptions in the above models that are probably not valid or not ideal? How would you check those assumptions?
+For now, what are some of the major assumptions in the above models that are probably not valid or not ideal? How would you start checking those assumptions?
 
 # Bonus
 
