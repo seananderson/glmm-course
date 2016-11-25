@@ -68,12 +68,18 @@ ggplot(d, aes(week_centered, meta, color = treatment)) +
   ylab("Probability of metamorphosis")
 ```
 
+Take a few minutes to explore the data set yourself with ggplot:
+
+```{r}
+
+```
+
 # Fitting a global model and separate models 
 
 A good first step is to fit a global model with no random effects and separate
 models for each potential random effect level.
 
-We will use the convenience function `lme4::lmList` to fit the separate GLMs.
+We will use the function `lme4::lmList` to fit the separate GLMs. We could also do this with dplyr or with a for loop or with the purrr package.
 
 ```{r}
 library(lme4)
@@ -84,7 +90,17 @@ arm::display(m_global)
 
 m_list <- lme4::lmList(meta ~ week_centered | tank, data = d, 
   family = binomial(link = "logit"))
+```
 
+We now have a list and each element of the list contains a GLM model.
+
+```{r}
+coef(m_list[[1]])
+```
+
+There are lots of different ways we could extract the coefficients from each element of the list. Here we will use one of the `map` functions from Hadley Wickham's purrr package. If you are familiar with the `apply` functions in R, the `map` functions are simply a consistent easy to work with version of the `apply` functions.
+
+```{r}
 intercepts <- map_dbl(m_list, function(x) coef(x)[[1]])
 slopes <- map_dbl(m_list, function(x) coef(x)[[2]])
 ```
@@ -206,34 +222,41 @@ The profile confidence intervals do not assume a quadratic log-likelihood surfac
 
 The bootstrap confidence intervals are the most trustworthy but will take a long time to generate.
 
-We can use the sjPlot package to make some quick plots:
+We can use the sjPlot package to make some quick plots. Take a look at the help for `?sjp.glmer` and try out the various plots that are available through the `type` argument:
 
 ```{r}
-sjPlot::sjp.glmer(m)
-sjPlot::sjp.glmer(m, type = "re.qq")
-sjPlot::sjp.glmer(m, type = "fe")
-p <- sjPlot::sjp.glmer(m, type = "eff", show.ci = T)
-head(p$data)
+library(sjPlot)
+sjp.glmer(m) # exercise
+sjp.glmer(m, type = "re.qq")  # exercise
+sjp.glmer(m, type = "fe")  # exercise
+p <- sjp.glmer(m, type = "eff", show.ci = TRUE)  # exercise
+head(p$data) # exercise
 ```
 
-The sjPlot package has automatically exponentiated the estimates so these are multiplicative effects on the odds of metamorphosing. 
+The sjPlot package has automatically exponentiated estimates so these are multiplicative effects on the odds of metamorphosing. 
 
 # Model comparison 
 
-We can compare our model without a predictor, say species, via AIC or likelihood ratio test:
+We can compare our model without a predictor, say species, via AIC or likelihood ratio test (`anova()`). Try that yourself:
 
 ```{r}
-m1 <- update(m,.~.-species)
-bbmle::AICtab(m, m1)
-anova(m, m1)
+m1 <- update(m,.~.-species) # use the same model but subtract off the species predictor
+bbmle::AICtab(m, m1) # exercise
+anova(m, m1) # exercise
 ```
 
-Perhaps we want to let the effect of time vary by species:
+Perhaps we want to let the effect of time vary by species. Try using the `update()` function to add the interaction `week_centered:species` to our original model (`m`). 
 
 ```{r}
-m2 <- update(m,.~. + week_centered:species) 
+m2 <- update(
+  m,.~. + week_centered:species) # exercise
 summary(m2, correlation = FALSE)
-bbmle::AICtab(m, m2)
+```
+
+Compare the AIC:
+
+```{r}
+bbmle::AICtab(m, m2) # exercise
 ```
 
 So the AIC is substantially lower letting the slope vary by species. 
@@ -281,11 +304,13 @@ m_pql <- MASS::glmmPQL(meta ~ week_centered * species + warming * drying,
 summary(m_pql)
 ```
 
-We would probably also want to consider if the effect of time varies by
-treatment:
+We would probably also want to consider if the effect of time (`week_centered`) 
+varies by treatment. To do that, let's change the model formula to include all 
+two-way interactions. Remember that there is a shortcut for this:
 
 ```{r}
-m4 <- glmmTMB(meta ~ (week_centered + species + warming + drying)^2 + 
+m4 <- glmmTMB(meta ~ 
+    (week_centered + species + warming + drying)^2 + # exercise
   (1 + week_centered | tank), 
   family = binomial(link = "logit"), data = d)
 summary(m4)
