@@ -93,7 +93,7 @@ sjp.glm(m4)
 
 # Interpreting the standardized models 
 
-If a man on the Titanic had paid \$250 for his ticket, what are his odds of surviving compared to another man who paid \$150? (Note that the predictors are in terms of 2 standard deviations of the raw variable. And 2 standard deviations of `fare` is about \$100). I.e.:
+If a man on the Titanic had paid \$250 for his ticket, what are his odds of surviving compared to another man who paid \$150? (Note that a unit change of one of the standardized predictors represents 2 standard deviations of the raw variable. And 2 standard deviations of `fare` is about \$100). I.e.:
 
 ```{r}
 round(sd(d$fare) * 2, 1)
@@ -140,12 +140,18 @@ What are advantages and disadvantages to the approaches taken for `m3` and `m4`?
 
 # Bonus 
 
-If you made it this far, read in the original data frame again and try plotting and modeling some of the other predictors. Are there other interesting patterns to be found? If you need more documentation on the data, have a look at <https://www.kaggle.com/c/titanic/data>.
+If you made it this far, read in the original data frame again and try plotting and modeling some of the other predictors. Are there other interesting patterns to be found? Can you find a model with a lower AIC? If you need more documentation on the data, have a look at <https://www.kaggle.com/c/titanic/data>.
 
 ```{r}
 d <- read_csv("data/raw/titanic.csv")
 d <- mutate(d, female = ifelse(Sex == "female", 1, 0))
 names(d) <- tolower(names(d))
 if (interactive()) View(d)
+```
+
+Your turn:
+
+```{r}
+
 ```
 
