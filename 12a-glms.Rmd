@@ -1,0 +1,151 @@
+# GLM practice 
+
+# Goals
+
+- Gain experience fitting and interpreting a binomial GLM with interactions
+- Gain familiarity with interpreting centered and scaled (standardized) predictors including centered binary predictors
+ 
+# The Titanic data set 
+
+The following data set is from <https://www.kaggle.com/c/titanic/data>. It represents the passengers on the Titanic, whether they survived or not, and a number of characteristics about them. We'll be working with columns that represent passenger age, passenger gender (female = 1, male = 0), and the fare price they paid for their ticket. We'll be using these characteristics to predict if a passenger survived (yes = 1, no = 0).
+
+You can read in the data and clean it up a bit with the following code:
+
+```{r}
+library(tidyverse)
+d <- read_csv("data/raw/titanic.csv")
+d <- mutate(d, female = ifelse(Sex == "female", 1, 0))
+names(d) <- tolower(names(d))
+d <- select(d, survived, age, fare, female)
+d
+```
+
+Start by taking a few minutes to explore the data graphically. What patterns do you see and what might you expect when you model these data? 
+
+```{r}
+ggplot(d, aes(age, survived, colour = as.factor(female), size = fare)) + # exercise
+  geom_point(position = position_jitter(height = 0.2)) # exercise
+
+ggplot(d, aes(fare, survived, colour = as.factor(female), size = age)) +  # exercise
+  geom_point(position = position_jitter(height = 0.2)) # exercise
+
+ggplot(d, aes(age, survived, colour = log(fare))) +  # exercise
+  geom_point(position = position_jitter(height = 0.2)) + # exercise
+  facet_wrap(~female) # exercise
+```
+
+Start with a simple model with the 3 predictors and no interactions. We are working with binary data as a response. What distribution and link would make sense? 
+
+```{r}
+m <- glm(survived ~ 
+    age + fare + female, data = d, family = binomial(link = "logit")) # exercise
+arm::display(m)
+library(sjPlot)
+sjp.glm(m)
+```
+
+In this initial model, how much greater are the odds of surviving for female passengers versus male passengers? 
+
+Now try adding all 2-way interactions. Remember that there is a shortcut for this. Try comparing this model to the model without any interactions via AIC.
+
+```{r}
+m2 <- glm(survived ~
+    (age + fare + female) ^ 2, data = d, family = binomial(link = "logit")) # exercise
+arm::display(m2)
+bbmle::AICtab(m, m2) # exercise
+sjp.glm(m2)
+```
+
+In the above models, most of the coefficients seem really small. Why is that? 
+
+# A standardized model 
+
+Now we're going to refit the above model with versions of the predictors that have been scaled (by dividing by 2 standard deviations) and centered (by dividing their mean value). For the binary predictor (`female`) the variable will be centered by its mean value but not scaled. This standardizing procedure will make the magnitude of the coefficients approximately comparable. 
+
+```{r}
+d$age_scaled <- arm::rescale(d$age)
+d$fare_scaled <- arm::rescale(d$fare)
+d$female_centered <- arm::rescale(d$female)
+# or d$female_centered <- d$female - mean(d$female)
+
+# or:
+# m3 <- arm::standardize(m2)
+# but we will use arm::rescale so it is clear what we are doing 
+```
+
+Now refit the model with all 2-way interactions but with the scaled versions of age and fare: `age_scaled` add `fare_scaled`. This time use the 0-1 version of `female`:
+
+```{r}
+m3 <- glm(survived ~ 
+    (age_scaled + fare_scaled + female)^2, data = d, family = binomial()) # exercise
+arm::display(m3)
+sjp.glm(m3)
+```
+
+Now fit the same model but with `female_centered`:
+
+```{r}
+m4 <- glm(survived ~ 
+    (age_scaled + fare_scaled + female_centered)^2, data = d, family = binomial()) # exercise
+arm::display(m4)
+sjp.glm(m4)
+```
+
+# Interpreting the standardized models 
+
+If a man on the Titanic had paid \$250 for his ticket, what are his odds of surviving compared to another man who paid \$150? (Note that the predictors are in terms of 2 standard deviations of the raw variable. And 2 standard deviations of `fare` is about \$100). I.e.:
+
+```{r}
+round(sd(d$fare) * 2, 1)
+```
+
+```{r}
+exp(coef(m3)["fare_scaled"]) # exercise
+exp(0.89) # exercise
+```
+
+And what would be the odds ratio for 2 women's chances of survival if one had paid an extra \$100?
+
+```{r}
+exp(coef(m3)[["fare_scaled"]] + coef(m3)[["fare_scaled:female"]] * 1) # exercise
+exp(0.89 + 1.31 * 1) # exercise
+```
+
+And now for the model with the centered predictor for gender. Take a look at the data frame again. What are the 2 unique values in the `female_centered` column? Remember that we subtracted the mean value of that column. 
+
+```{r}
+unique(d$female_centered) %>% round(2)
+unique(d$female)
+mean(d$female) %>% round(2)
+```
+
+Why is the effect of `fare_scaled` different from the effect of `fare` (and similarly for the effect of age)? What do these 2 coefficients represent? 
+
+```{r}
+sjp.glm(m3)
+sjp.glm(m4)
+```
+
+How would you derive the same odds ratios as above? (The effect of paying an extra \$100 for a ticket for a man and for women?) Remember that these models make the same predictions, they are just parameterized slightly differently.
+
+```{r}
+exp(coef(m4)[["fare_scaled"]] + coef(m3)[["fare_scaled:female"]] * 0.65) # exercise
+exp(1.35 + 1.31 * 0.65) # exercise
+
+exp(coef(m4)[["fare_scaled"]] + coef(m3)[["fare_scaled:female"]] * -0.35) # exercise
+exp(1.35 + 1.31 * -0.35) # exercise
+```
+
+What are advantages and disadvantages to the approaches taken for `m3` and `m4`? (I.e. centering or not centering the binary predictor `female`.)
+
+# Bonus 
+
+If you made it this far, read in the original data frame again and try plotting and modeling some of the other predictors. Are there other interesting patterns to be found? If you need more documentation on the data, have a look at <https://www.kaggle.com/c/titanic/data>.
+
+```{r}
+d <- read_csv("data/raw/titanic.csv")
+d <- mutate(d, female = ifelse(Sex == "female", 1, 0))
+names(d) <- tolower(names(d))
+if (interactive()) View(d)
+```
+
