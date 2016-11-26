@@ -85,8 +85,8 @@ exp(coef(m2)[1]) # exercise
 For every decade, global life expectancy increased on average `___` fold or `___`%.
 
 ```{r}
-round(exp(coef(m2)[2]), 2)# exercise
-round(exp(coef(m2)[2]) * 100 - 100, 0)# exercise
+round(exp(coef(m2)[2]), 2) # exercise
+round(exp(coef(m2)[2]) * 100 - 100, 0) # exercise
 ```
 
 # Adding an interaction
