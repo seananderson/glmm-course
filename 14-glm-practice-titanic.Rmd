@@ -11,7 +11,7 @@ The following data set is from <https://www.kaggle.com/c/titanic/data>. It repre
 
 You can read in the data and clean it up a bit with the following code:
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 d <- read_csv("data/raw/titanic.csv")
 d <- mutate(d, female = ifelse(Sex == "female", 1, 0))
@@ -19,6 +19,8 @@ names(d) <- tolower(names(d))
 d <- select(d, survived, age, fare, female) %>% na.omit %>% as_data_frame()
 d
 ```
+
+# Explore the data set 
 
 Start by taking a few minutes to explore the data graphically. What patterns do you see and what might you expect when you model these data? 
 
@@ -33,6 +35,8 @@ ggplot(d, aes(age, survived, colour = log(fare))) +  # exercise
   geom_point(position = position_jitter(height = 0.2)) + # exercise
   facet_wrap(~female) # exercise
 ```
+
+# A simple model to start with
 
 Start with a simple model with the 3 predictors and no interactions. We are working with binary data as a response. What distribution and link would make sense? 
 
