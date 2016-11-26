@@ -16,7 +16,7 @@ library(tidyverse)
 d <- read_csv("data/raw/titanic.csv")
 d <- mutate(d, female = ifelse(Sex == "female", 1, 0))
 names(d) <- tolower(names(d))
-d <- select(d, survived, age, fare, female)
+d <- select(d, survived, age, fare, female) %>% na.omit %>% as_data_frame()
 d
 ```
 
@@ -60,13 +60,14 @@ In the above models, most of the coefficients seem really small. Why is that?
 
 # A standardized model 
 
-Now we're going to refit the above model with versions of the predictors that have been scaled (by dividing by 2 standard deviations) and centered (by dividing their mean value). For the binary predictor (`female`) the variable will be centered by its mean value but not scaled. This standardizing procedure will make the magnitude of the coefficients approximately comparable. 
+Now we're going to refit the above model with versions of the predictors that have been scaled (by dividing by 2 standard deviations) and centered (by subtracting their mean value). For the binary predictor (`female`) the variable will be centered by its mean value but not scaled. This standardizing procedure will make the magnitude of the coefficients approximately comparable. (It will make them per 2 SDs of the raw predictor.)
 
 ```{r}
 d$age_scaled <- arm::rescale(d$age)
 d$fare_scaled <- arm::rescale(d$fare)
 d$female_centered <- arm::rescale(d$female)
-# or d$female_centered <- d$female - mean(d$female)
+# or
+# d$female_centered <- d$female - mean(d$female) # same thing
 
 # or:
 # m3 <- arm::standardize(m2)
@@ -104,7 +105,7 @@ exp(coef(m3)["fare_scaled"]) # exercise
 exp(0.89) # exercise
 ```
 
-And what would be the odds ratio for 2 women's chances of survival if one had paid an extra \$100?
+And what would be the odds ratio for 2 women's chances of survival if one had paid an extra \$100 (again, 1 unit change for the scaled variable)?
 
 ```{r}
 exp(coef(m3)[["fare_scaled"]] + coef(m3)[["fare_scaled:female"]] * 1) # exercise

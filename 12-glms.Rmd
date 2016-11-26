@@ -11,6 +11,7 @@ We are going to simulate our own data for this exercise. The following will be c
 ```{r}
 library(ggplot2)
 library(dplyr)
+library(sjPlot)
 set.seed(111)
 N <- 200
 x <- runif(N, -1, 1)
@@ -21,25 +22,6 @@ d
 ```
 
 So our data frame includes a column for one predictor, `x`. This can represent any variable that you might try to predict some other process with. 
-
-# A function to plot our GLM predictions
-
-We will use the following function to quickly plot the predictions from our models. 
-
-```{r}
-plot_glm <- function(model, dat, x = "x", y = "y") {
-  fit <- predict(model, type = "link", se = FALSE)
-  se <- predict(model, type = "link", se = TRUE)$se
-  dat$lwr <- family(model)$linkinv(fit - 1.96 * se)
-  dat$upr <- family(model)$linkinv(fit + 1.96 * se)
-  dat$fit <- family(model)$linkinv(fit)
-  p <- ggplot(dat) + geom_point(aes_string(x, y), alpha = 0.6) + 
-    geom_line(aes_string(x, "fit"), colour = "red", lwd = 1) +
-    geom_ribbon(aes_string(x, ymax = "upr", ymin = "lwr"), alpha = 0.2)
-  print(p)
-  invisible(p)
-}
-```
 
 We will define the following functions to make our code easier to read later:
 
@@ -111,7 +93,13 @@ Let's fit a GLM that reflects these data.
 ```{r}
 (m_gamma <- glm(y ~ x, family = 
     Gamma(link = "log"))) # exercise
-plot_glm(m_gamma, d)
+
+p <- sjp.glm(m_gamma, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
+ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
+  geom_ribbon(size = 1, alpha = 0.2) + geom_line(colour = "red") + 
+  geom_point(data = d, aes(x = x, y = y), inherit.aes = FALSE)
+# or:
+# p$plot + geom_point(data = d, aes(x = x, y = y), inherit.aes = FALSE)
 ```
 
 ## Poisson, log link
@@ -130,7 +118,11 @@ What are some examples of data sets that might resemble this?
 ```{r}
 (m_poisson <- glm(y ~ x, family = 
     poisson(link = "log"))) # exercise
-plot_glm(m_gamma, d)
+
+p <- sjp.glm(m_poisson, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
+ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
+  geom_ribbon(size = 1, alpha = 0.2) + geom_line(colour = "red") + 
+  geom_point(data = d, aes(x = x, y = y), inherit.aes = FALSE)
 ```
 
 ## Negative binomial, log link
@@ -152,7 +144,11 @@ We have to use a special function to fit the negative binomial GLM in R:
 
 ```{r}
 (m_nb <- MASS::glm.nb(y ~ x))
-plot_glm(m_nb, d)
+
+p <- sjp.glm(m_nb, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
+ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
+  geom_ribbon(size = 1, alpha = 0.2) + geom_line(colour = "red") + 
+  geom_point(data = d, aes(x = x, y = y), inherit.aes = FALSE)
 ```
 
 ## Binomial, logit link
@@ -174,7 +170,13 @@ In what scenario might you see this kind of data?
 ```{r}
 (m_bin <- glm(y ~ x, family = 
     binomial(link = "logit"))) # exercise
-g <- plot_glm(m_bin, d)
+
+p <- sjp.glm(m_bin, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
+g <- ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
+  geom_ribbon(size = 1, alpha = 0.2) + geom_line(colour = "red") + 
+  geom_point(data = d, aes(x = x, y = y), inherit.aes = FALSE)
+print(g)
+
 coef(m_bin)
 (slope <- round(coef(m_bin)[[2]], 3)) # slope
 (int <- round(coef(m_bin)[[1]], 3)) # intercept

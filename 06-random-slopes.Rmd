@@ -212,7 +212,7 @@ Here are two quick ways we can look at the partial pooling in our model. We'll c
 ```{r}
 d$predict_slopes_gr <- predict(m_slopes_gr)
 d <- d %>% group_by(taxon) %>% mutate(n = n())
-ggplot(d, aes(log(wingl), log(beakh), colour = taxon, group = taxon)) +
+ggplot(d, aes(log_wingl_centered, log(beakh), colour = taxon, group = taxon)) +
   geom_point(alpha = 0.1) +
   geom_line(aes(y = predict_slopes_gr, size = n), colour = "black") +
   geom_smooth(method = "lm", se = FALSE)
