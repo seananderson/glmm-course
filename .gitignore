@@ -15,3 +15,11 @@ drafts/1230200Database_S1.txt
 Session.vim
 
 data/generated/morph-geospiza-group.rds
+
+*.docx
+
+*.pdf
+
+testimonials-nonames.md
+
+testimonials.md
