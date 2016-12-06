@@ -106,14 +106,12 @@ round(sd(d$fare) * 2, 1)
 
 ```{r}
 exp(coef(m3)["fare_scaled"]) # exercise
-exp(0.89) # exercise
 ```
 
 And what would be the odds ratio for 2 women's chances of survival if one had paid an extra \$100 (again, 1 unit change for the scaled variable)?
 
 ```{r}
 exp(coef(m3)[["fare_scaled"]] + coef(m3)[["fare_scaled:female"]] * 1) # exercise
-exp(0.89 + 1.31 * 1) # exercise
 ```
 
 And now for the model with the centered predictor for gender. Take a look at the data frame again. What are the 2 unique values in the `female_centered` column? Remember that we subtracted the mean value of that column. 
@@ -134,11 +132,9 @@ sjp.glm(m4)
 How would you derive the same odds ratios as above? (The effect of paying an extra \$100 for a ticket for a man and for women?) Remember that these models make the same predictions, they are just parameterized slightly differently.
 
 ```{r}
-exp(coef(m4)[["fare_scaled"]] + coef(m3)[["fare_scaled:female"]] * 0.65) # exercise
-exp(1.35 + 1.31 * 0.65) # exercise
+exp(coef(m4)[["fare_scaled"]] + coef(m4)[["fare_scaled:female_centered"]] * 0.64) # exercise
 
-exp(coef(m4)[["fare_scaled"]] + coef(m3)[["fare_scaled:female"]] * -0.35) # exercise
-exp(1.35 + 1.31 * -0.35) # exercise
+exp(coef(m4)[["fare_scaled"]] + coef(m4)[["fare_scaled:female_centered"]] * -0.37) # exercise
 ```
 
 What are advantages and disadvantages to the approaches taken for `m3` and `m4`? (I.e. centering or not centering the binary predictor `female`.)
