@@ -29,7 +29,7 @@ Bolker, B. M., M. E. Brooks, C. J. Clark, S. W. Geange, J. R. Poulsen, M. H. H. 
 
 I've quoted it below:
 
-1. Specify fixed (treatments or covariates) and random effects (experimental, spatial or temporal blocks, individuals, etc.). Include only important interactions. Restrict the model a priori to a feasible level of complexity, based on rules of thumb (>5–6 random-effect levels per random effect and >10–20 samples per treatment level or experimental unit) and knowledge of adequate sample sizes gained from previous studies. 
+1. Specify fixed (treatments or covariates) and random effects (experimental, spatial or temporal blocks, individuals, etc.). Include only important interactions. Restrict the model a priori to a feasible level of complexity, based on rules of thumb (>5–6 random-effect levels per random effect and >10–20 samples per treatment level or experimental unit) and knowledge of adequate sample sizes gained from previous studies.
 
 2. Choose an error distribution and link function
 

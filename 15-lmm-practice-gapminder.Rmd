@@ -32,7 +32,7 @@ ggplot(gap, aes(log_gdp_percap_cent, lifeExp, colour = continent)) +
 We've already fit a simpler model before to this data set. Let's try fitting a linear mixed effect model (with `lmer()`) predicting `lifeExp` based on `log_gdp_percap_cent` and `decade`. Based on the above plot and your understanding of the world, decide whether to allow just the intercepts to vary or the intercepts and slopes to vary by country.
 
 ```{r}
-m <- lmer(lifeExp ~ 
+m <- lmer(lifeExp ~
     log_gdp_percap_cent + decade + # exercise
     (log_gdp_percap_cent + decade | country), data = gap) # exercise
 arm::display(m)
