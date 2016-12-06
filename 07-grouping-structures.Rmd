@@ -155,7 +155,7 @@ Let's paste those into `lmer()` for proof that they are all the same. First, fil
 ```{r}
 library(lme4)
 (m1 <- lmer(log(frog_dens) ~ vegetation + (1 | pond/transect), data = d))
-(m2 <- lmer(log(frog_dens) ~ vegetation + (1 | pond) + (1 | transect:pond), data = d))
+(m2 <- lmer(log(frog_dens) ~ vegetation + (1 | pond) + (1 | pond:transect), data = d))
 (m3 <- lmer(log(frog_dens) ~ vegetation +  
     (1 | pond) + (1 | transect2), data = d)) # exercise 
 ```
