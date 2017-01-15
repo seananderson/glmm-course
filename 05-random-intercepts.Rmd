@@ -82,7 +82,7 @@ But we are going to fit a mixed effects model where we let each taxon have its o
 
 This is often referred to as a "random intercept" model.
 
-The workhorse function of the lme4 package for fitting mixed effects models is the function `lmer`. You can pronounce it however you like. Some people would say "lemur", others "ell-m-e-4". The syntax is just like `lm` with the addition of a formula for the "random effects".
+The workhorse function of the lme4 package for fitting mixed effects models is the function `lmer`. You can pronounce it however you like. Some people would say "lemur", others "ell-em-ee-are". The syntax is just like `lm` with the addition of a formula for the "random effects".
 
 You can find extensive details in the documentation `?lme4::lmer`.
 
