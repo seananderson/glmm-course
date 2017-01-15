@@ -1,21 +1,31 @@
-
+<!-- 00-schedule is generated from 00-schedule.Rmd. Please edit that file -->
 Schedule
 ========
 
 Day 1
 -----
 
-| Topic             |  Hours|  Time|
-|:------------------|------:|-----:|
-| introduction      |   0.50|  10.0|
-| regression warmup |   0.75|  10.5|
+| Topic                    |  Hours|   Time|
+|:-------------------------|------:|------:|
+| introduction             |   0.50|  10.00|
+| regression warmup        |   0.75|  10.50|
+| random-intercepts / Cis  |   0.45|  11.25|
+| lunch                    |   1.00|  11.70|
+| random-slopes            |   1.25|  12.70|
+| grouping-structures      |   0.50|  13.95|
+| break                    |   0.25|  14.45|
+| temporal-autocorrelation |   0.75|  14.70|
+| spatial-autocorrelation  |   0.25|  15.45|
+| break                    |   0.25|  15.70|
+| variance-structures      |   0.75|  15.95|
+| distributions            |   0.25|  16.70|
+| quick feedback           |   0.05|  16.95|
 
 Day 2
 -----
 
 | Topic                      |  Hours|   Time|
 |:---------------------------|------:|------:|
-| random-intercepts / Cis    |   0.45|  11.25|
 | recap                      |   0.50|  10.00|
 | glms                       |   1.00|  10.50|
 | overdispersed-glms         |   0.75|  11.50|
@@ -40,7 +50,7 @@ Click "Clone or download", "Download ZIP".
 Etherpad collective notes
 -------------------------
 
-<https://public.etherpad-mozilla.org/p/glmm-course1>
+...
 
 Generating the exercises
 ------------------------

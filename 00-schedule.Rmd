@@ -1,3 +1,11 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- 00-schedule is generated from 00-schedule.Rmd. Please edit that file -->
+
 # Schedule
 
 ```{r, echo=FALSE, message=FALSE}
