@@ -29,7 +29,7 @@ Click "Clone or download", "Download ZIP".
 
 ## Etherpad collective notes
 
-<https://public.etherpad-mozilla.org/p/glmm-course1>
+...
 
 ## Generating the exercises
 
