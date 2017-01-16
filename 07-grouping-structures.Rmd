@@ -68,7 +68,30 @@ y ~ 0 + x # exercise
 
 # Random effect syntax
 
-We'll cover random effect syntax in the slides. Below are some exercises.
+We'll cover random effect syntax in the slides. 
+
+Here's a summary for reference:
+
+```{r, eval=FALSE}
+# nlme::lme()
+y ~ x, random = ~1 | group # varying intercepts
+y ~ x, random = ~1 + x | group # varying intercepts and slopes
+y ~ x, random = list(group = pdDiag(~ x)) # uncorrelated varying intercepts and slopes
+y ~ x, random = ~1 | group/subgroup # nested
+# crossed... some structures possible but not easy,
+# e.g. Pinheiro and Bates 2000 p163
+# e.g. http://stackoverflow.com/questions/36643713/how-to-specify-different-random-effects-in-nlme-vs-lme4
+
+# lme4::lmer()
+y ~ x + (1 | group) # varying intercepts
+y ~ x + (1 + x | group) # varying intercepts and slopes
+y ~ x + (1 | group) + (x - 1 | group) # uncorrelated varying intercepts and slopes
+y ~ x + (1 | group/subgroup) # nested
+y ~ x + (1 | group1) + (1 | group2) # varying intercepts, crossed
+y ~ x + (1 + x | group1) + (1 + x | group2) # varying intercepts and slopes, crossed
+```
+
+Below are some exercises.
 
 ## Challenge 2
 
@@ -112,6 +135,7 @@ log(frog_dens) ~ vegetation + (0 + vegetation | transect) # exercise
 Jane measures frog density and vegetation characteristics from 2 transects (`transect`) within 4 ponds (`pond`). Assume her data are structured like this:
 
 ```{r}
+library(dplyr)
 set.seed(99)
 d <- tibble::tibble(
   frog_dens = rlnorm(100), 
