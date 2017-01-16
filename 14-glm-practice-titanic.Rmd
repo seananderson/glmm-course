@@ -14,6 +14,7 @@ You can read in the data and clean it up a bit with the following code:
 ```{r, message=FALSE}
 library(tidyverse)
 d <- read_csv("data/raw/titanic.csv")
+if (interactive()) View(d)
 d <- mutate(d, female = ifelse(Sex == "female", 1, 0))
 names(d) <- tolower(names(d))
 d <- select(d, survived, age, fare, female) %>% na.omit %>% as_data_frame()
@@ -78,7 +79,7 @@ d$female_centered <- arm::rescale(d$female)
 # but we will use arm::rescale so it is clear what we are doing 
 ```
 
-Now refit the model with all 2-way interactions but with the scaled versions of age and fare: `age_scaled` add `fare_scaled`. This time use the 0-1 version of `female`:
+Now refit the model with all 2-way interactions but with the scaled versions of age and fare: `age_scaled` and `fare_scaled`. This time use the 0-1 version of `female`:
 
 ```{r}
 m3 <- glm(survived ~ 
@@ -122,17 +123,19 @@ unique(d$female)
 mean(d$female) %>% round(2)
 ```
 
-Why is the effect of `fare_scaled` different from the effect of `fare` (and similarly for the effect of age)? What do these 2 coefficients represent? 
+Why is the effect of `fare_scaled` different from the effect of `fare`? What do these 2 coefficients represent? 
 
 ```{r}
-sjp.glm(m3)
-sjp.glm(m4)
+sjp.glm(m3) # female
+sjp.glm(m4) # female_centered
 ```
 
-How would you derive the same odds ratios as above? (The effect of paying an extra \$100 for a ticket for a man and for women?) Remember that these models make the same predictions, they are just parameterized slightly differently.
+How would you derive the same odds ratios as above? (I.e. How can we determine the effect of paying an extra \$100 for a ticket for a man and for a woman using the coefficients from `m4`?) 
+
+Remember that these models make the same predictions, they are just parameterized slightly differently.
 
 ```{r}
-exp(coef(m4)[["fare_scaled"]] + coef(m4)[["fare_scaled:female_centered"]] * 0.64) # exercise
+exp(coef(m4)[["fare_scaled"]] + coef(m4)[["fare_scaled:female_centered"]] * 0.63) # exercise
 
 exp(coef(m4)[["fare_scaled"]] + coef(m4)[["fare_scaled:female_centered"]] * -0.37) # exercise
 ```
