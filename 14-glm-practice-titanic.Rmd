@@ -49,6 +49,8 @@ library(sjPlot)
 sjp.glm(m)
 ```
 
+Note that `sjp.glm()` is showing us *odds ratios*, not *log* odds ratios as we see with `summary()` or `arm::display()`.
+
 In this initial model, how much greater are the odds of surviving for female passengers versus male passengers? 
 
 Now try adding all 2-way interactions. Remember that there is a shortcut for this. Try comparing this model to the model without any interactions via AIC.
