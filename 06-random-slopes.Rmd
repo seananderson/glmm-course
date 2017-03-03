@@ -178,7 +178,7 @@ How can we include this information in our model?
 ```{r}
 d <- left_join(d, taxa_dat, by = "taxon")
 d %>% select(taxon, wingl, log_wingl_centered, mean_log_wingl_centered)
-saveRDS(d, file = "data/generated//morph-geospiza-group.rds")
+saveRDS(d, file = "data/generated/morph-geospiza-group.rds")
 m_slopes_gr <- lmer(log(beakh) ~ log_wingl_centered + mean_log_wingl_centered +
     (1 + log_wingl_centered | taxon), data = d)
 ```
