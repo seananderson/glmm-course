@@ -125,8 +125,7 @@ We can add one of these variance structures by passing it to the `weights` argum
 
 # Model checking exercises
 
-In the following challenges, there is something wrong in each case. The solution involves adding one of `varExp`, `varIdent`, or `corAR1` temporal correlation. Note that for `varIdent` you will need to specify the grouping variable `varIdent(form = ~ 1 | group)`. For `varExp`, you can assume the 
-variance is predicted by the fitted values (the default).
+In the following challenges, there is something wrong in each case. The solution involves adding one of `varExp`, `varIdent`, or `corAR1` temporal correlation. Note that for `varIdent` you will need to specify the grouping variable `varIdent(form = ~ 1 | group)`. For `varExp`, you can assume the variance is predicted by the fitted values (the default).
 
 I've started each one off. You will need to plot the residuals and figure out what variance or correlation structure is missing.
 
