@@ -107,6 +107,8 @@ If a man on the Titanic had paid \$250 for his ticket, what are his odds of surv
 round(sd(d$fare) * 2, 1)
 ```
 
+Use `m3`, the model with `female` instead of `female_centered`:
+
 ```{r}
 exp(coef(m3)["fare_scaled"]) # exercise
 ```
