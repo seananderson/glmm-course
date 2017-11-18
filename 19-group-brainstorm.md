@@ -1,6 +1,6 @@
 # Group brainstorm
 
-What is an example of a data set you have worked with, will work with, or are familiar with which could be modeled with mixed-effects models?
+What is an example of a data set you have worked with, will work with, or are familiar with which could be modeled with GLMs or mixed-effects models?
 
 Very briefly(!), what is the nature of the question and the structure of the data?
 

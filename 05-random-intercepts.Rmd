@@ -151,7 +151,7 @@ ggplot(re, aes(x = 1, y = intercept)) + geom_point(alpha = 0.7)
 What is the mean of these random intercepts?
 
 ```{r}
-mean(ranef(m_lmer)$taxon[, 1])
+round(mean(ranef(m_lmer)$taxon[, 1]), 2)
 ```
 
 Is that what you expected? Why or why not?
@@ -223,7 +223,7 @@ A useful alternative is the function `arm::display` which focuses on the importa
 arm::display(m_lmer)
 ```
 
-We will tend to use this function throughout the workshop. I tend not to load the package arm, and instead call its functions directly (e.g. `arm::display`) because the package loads many other functions and packages.
+We will tend to use this function throughout the workshop. I tend not to load the package arm, and instead call its functions directly (e.g. `arm::display`) because the package loads many other functions and packages that we don't need.
 
 # Interpreting the model predictions
 

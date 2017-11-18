@@ -134,7 +134,7 @@ sjp.glm(m3) # female
 sjp.glm(m4) # female_centered
 ```
 
-How would you derive the same odds ratios as above? (I.e. How can we determine the effect of paying an extra \$100 for a ticket for a man and for a woman using the coefficients from `m4`?) 
+How would you derive the same odds ratios as above? (I.e. How can we determine the effect of paying approximately an extra \$100 for a ticket for a man and for a woman using the coefficients from `m4`?) 
 
 Remember that these models make the same predictions, they are just parameterized slightly differently.
 
@@ -162,4 +162,3 @@ Your turn:
 ```{r}
 
 ```
-

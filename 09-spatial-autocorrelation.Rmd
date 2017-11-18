@@ -92,7 +92,7 @@ We have used just one of a number of spatial correlation structures available in
 
 A disadvantage of modeling spatial correlation this way is that there is no easy way to extract a spatial surface of predictions. An alternative and common way of dealing with spatial autocorrelation is to model the spatial process as a two-dimensional smooth term with a GAM. GAMs are beyond the scope of this workshop, but it's important to know that they exist.
 
-GAMs are just like GLMs except that predictors can be allowed to follow a smoothed squiggly line. And the degree of squiggliness can be determined objectively within the fitting algorithm.
+GAMs are just like GLMs except that predictors can be allowed to follow a smooth wiggly line. And the degree of wiggliness can be determined objectively within the fitting algorithm.
 
 As a demonstration, we will fit a version of this model with a GAM. The main package for fitting these models in R is mgcv. We will refit the `gls` model with maximum likelihood so that we can compare it to the GAM.
 
@@ -112,7 +112,7 @@ We can now make it a plot of the spatial predictions:
 plot(m_gam2, pers = TRUE)
 ```
 
-And inspected the residuals spatially as before:
+And inspect the residuals spatially as before:
 
 ```{r}
 d$res_gam2 <- as.numeric(residuals(m_gam2))

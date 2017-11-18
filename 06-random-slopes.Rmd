@@ -203,6 +203,56 @@ p2 <- ggplot(taxa_dat, aes(mean_log_wingl_centered, intercept_with_group_predict
 gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```
 
+What does the coefficient `fixef(m_slopes_gr)[["mean_log_wingl_centered"]]` represent? How might we make this coefficient more interpretable?
+
+# Group-level predictor centering
+
+Another option is to center the predictor with in each group. This separates the across-group effect from the within group effect of the wing length predictor. There it was a good recent discussion on the concept in the literature ending with this paper: Bell and Fairbrother 2017 <https://doi.org/10.1007/s11135-017-0593-5>
+
+To do this we simply subtract the taxon-level mean from the wing length predictor within each taxon:
+
+```{r}
+d <- group_by(d, taxon) %>% 
+  mutate(log_wingl_group_centered = log(wingl) - mean(log(wingl)))
+```
+
+And refit our model with the new group-level centered predictor:
+
+```{r}
+m_slopes_gr_cent <- lmer(log(beakh) ~ log_wingl_group_centered + mean_log_wingl_centered +
+    (1 + log_wingl_group_centered | taxon), data = d)
+```
+
+Now let's compare the 2 models:
+
+```{r}
+arm::display(m_slopes_gr)
+arm::display(m_slopes_gr_cent)
+```
+
+And plot the predictions:
+
+```{r}
+d$predict_slopes_gr <- predict(m_slopes_gr)
+d$predict_slopes_gr_cent <- predict(m_slopes_gr_cent)
+
+across_group_int <- fixef(m_slopes_gr)[["(Intercept)"]]
+across_group_slope <- fixef(m_slopes_gr)[["mean_log_wingl_centered"]]
+across_group_int <- fixef(m_slopes_gr_cent)[["(Intercept)"]]
+across_group_slope_centered <- fixef(m_slopes_gr_cent)[["mean_log_wingl_centered"]]
+
+ggplot(d, aes(log_wingl_centered, log(beakh), colour = taxon, group = taxon)) +
+  geom_point(alpha = 0.1) +
+  geom_line(aes(y = predict_slopes_gr_cent), colour = "black") +
+  geom_line(aes(y = predict_slopes_gr), colour = "red") +
+  geom_abline(intercept = across_group_int, slope = across_group_slope, colour = "black", lwd = 2) +
+  geom_abline(intercept = across_group_int, slope = across_group_slope_centered, colour = "red", lwd = 2)
+```
+
+What's the most striking difference between the black lines (no group-level centering) and the red lines (group-level centering)?
+
+Which do you find most interpretable?
+
 # Illustrating partial-pooling/shrinkage
 
 One of the major benefits of mixed-effects modeling is something we call "shrinkage". The mixed-effects model should partially pool information across groups allowing us to make better predictions for all groups, and especially for groups that we have less information about.
@@ -210,11 +260,10 @@ One of the major benefits of mixed-effects modeling is something we call "shrink
 Here are two quick ways we can look at the partial pooling in our model. We'll compare our predictions from our full mixed-effects model (black) against the predictions from separate linear models (coloured). We'll indicate the sample size by the width of the mixed-effects model prediction lines.
 
 ```{r}
-d$predict_slopes_gr <- predict(m_slopes_gr)
 d <- d %>% group_by(taxon) %>% mutate(n = n())
 ggplot(d, aes(log_wingl_centered, log(beakh), colour = taxon, group = taxon)) +
   geom_point(alpha = 0.1) +
-  geom_line(aes(y = predict_slopes_gr, size = n), colour = "black") +
+  geom_line(aes(y = predict_slopes_gr_cent, size = n), colour = "black") +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
@@ -228,7 +277,7 @@ filter(d, taxon %in% c("Geospiza scandens", "Geospiza scandens scandens")) %>%
   facet_wrap(~taxon) +
   geom_point(alpha = 0.6) +
   geom_smooth(aes(colour = taxon), method = "lm", se = FALSE) +
-  geom_line(aes(y = predict_slopes_gr), colour = "black", lwd = 1.5)
+  geom_line(aes(y = predict_slopes_gr_cent), colour = "black", lwd = 1.5)
 ```
 
 The following is a common way to show shrinkage. Hopefully it makes a bit more sense after seeing the above plot. 
@@ -238,8 +287,8 @@ estimates <- d %>% group_by(taxon) %>%
   do(mod = lm(log(beakh) ~ log_wingl_centered, data = .)) %>%
   mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
   select(-mod)
-estimates$re_int <- coef(m_slopes_gr)$taxon[,1]
-estimates$re_slope <- coef(m_slopes)$taxon[,2]
+estimates$re_int <- coef(m_slopes_gr_cent)$taxon[,1]
+estimates$re_slope <- coef(m_slopes_gr_cent)$taxon[,2]
 
 sample_sizes <- d %>% group_by(taxon) %>%
   summarise(n = n())
@@ -250,6 +299,8 @@ ggplot(estimates, aes(x = "lm()", y = slope, xend = "lmer()", yend = re_slope)) 
   geom_point(aes(size = n)) +
   xlab("")
 ```
+
+Bonus question: in a typical shrinkage plot the estimates are all pulled towards the mean. That isn't always the case here (see the crossing lines above). Why is that happening with this model?
 
 # Addendum 
 

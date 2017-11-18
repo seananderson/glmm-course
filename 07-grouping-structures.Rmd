@@ -20,7 +20,7 @@ We covered R's formula syntax in the slides. Below are some exercises to solidif
 
 ## Challenge 1
 
-For this course, I'm assuming you're already somewhat familiar with R formulas. Let's review some more edge-case R formula syntax quickly. Read `?formula` if needed.
+For this course, I'm assuming you're already somewhat familiar with R formulas. Let's review some more edge-case R formula syntax quickly. (Hint: read `?formula` as needed.)
 
 Re-write the following in shortform:
 

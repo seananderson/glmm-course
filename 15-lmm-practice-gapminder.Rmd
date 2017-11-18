@@ -68,7 +68,7 @@ Check that the random effects look approximately normally distributed with the f
 sjPlot::sjp.lmer(m, type = "re.qq") # exercise
 ```
 
-Try plotting the model predictions. Let's focus on the effect of GDP per capita. Therefore, we will have to set the predictor `decade` to some value. Let's set it to `0`, which represents 1990 how we calculated this column. 
+Try plotting the model predictions. Let's focus on the effect of GDP per capita. Therefore, we will have to set the predictor `decade` to some value. Let's set it to `0`, which represents 1990 because of how we calculated this column by  subtracting 1990.
 
 ```{r}
 newdata <- mutate(gap, decade = 0)
@@ -82,20 +82,21 @@ ggplot(newdata, aes(log_gdp_percap_cent, lifeExp, colour = continent)) +
   geom_line(aes(y = predict, group = country), alpha = 0.5)
 ```
 
-This looks similar to our example with Galapagos finches. What do you notice about the height of the lines as they go from left to right? How can we add that information to our model? 
+This looks similar to our example with Galapagos finches. What do you notice about the height of the lines as they go from left to right? How can we add that information to our model?
 
-Let's add a group-level predictor representing the mean log GDP per capita for each country. 
+Let's add a group-level predictor representing the mean log GDP per capita for each country. At the same time, let's center the GDP per capita within each country. Why do we do this again?
 
 ```{r}
 gap <- group_by(gap, country) %>% 
-  mutate(mean_log_gdp_percap_cent = mean(log_gdp_percap_cent)) %>%
+  mutate(mean_log_gdp_percap_cent = mean(log_gdp_percap_cent), 
+    log_gdp_percap_group_cent = log_gdp_percap_cent - mean(log_gdp_percap_cent)) %>%
   ungroup()
 ```
 
 Now add this to the initial model you fit. This model would not converge for me with nested random effects within continents. So, just let the effects vary by country:
 
 ```{r}
-m3 <- lmer(lifeExp ~ log_gdp_percap_cent + decade + 
+m3 <- lmer(lifeExp ~ log_gdp_percap_group_cent + decade + 
     mean_log_gdp_percap_cent + # exercise
     (log_gdp_percap_cent + decade |  country), data = gap) # exercise
 ```
@@ -118,22 +119,17 @@ arm::display(m3)
 
 What do you notice when comparing these models? Some things to look at:
 
-- In which model does the effect of GDP within a country (`log_gdp_percap_cent` overall slope) look stronger? Why is that? 
-- What does the slope on the group-level predictor `mean_log_gdp_percap_cent` tell us? 
-- What happened to the standard deviations on all of the random effect distributions when we added the group-level predictor? Why is that? 
-
-What are we looking at in the above plot?
-
+- In which model does the effect of GDP within a country (the `log_gdp_percap_cent` and `log_gdp_percap_group_cent` overall slopes) look stronger? Why is that? 
+- What does the slope on the group-level predictor `mean_log_gdp_percap_cent` tell us?
+- What happened to the standard deviations on the random effect distributions when we added the group-level predictor? Why is that? 
 ## Model interpretation 
 
 Let's make sure we understand what our last model is telling us. Try answering the following questions:
 
-Controlling for changes in GDP per capita, what is the average increase in life expectancy per decade? 
+Controlling for changes in GDP per capita, what is the average increase in life expectancy (in years) per decade?
 
 ```{r}
-fixef(m3)["decade"] %>% # exercise
-  round(1) %>%  # exercise
-  paste("years") # exercise
+round(fixef(m3)["decade"], 1) # exercise
 ```
 
 By looking at the standard errors in `arm::display(m3)` or by using the function `arm::se.fixef(m3)`, what is an approximate 95% confidence interval on the average increase in life expectancy per decade? (Bonus: can you get the same values from `broom::tidy()`?)
@@ -142,7 +138,7 @@ By looking at the standard errors in `arm::display(m3)` or by using the function
 fe <- fixef(m3)["decade"] # exercise
 se <- arm::se.fixef(m3)["decade"] # exercise
 round(fe + c(-1.96, 1.96) * se, 1) %>% paste("years") # exercise
-broom::tidy(m3, conf.int = T) # exercise
+broom::tidy(m3, conf.int = TRUE) # exercise
 ```
 
 Is the effect of GDP per capita stronger within or across countries? How do you know this and what does this mean?
@@ -151,7 +147,7 @@ Is the effect of GDP per capita stronger within or across countries? How do you 
 arm::display(m3)
 ```
 
-Controlling for differences in GDP, what is the estimated change in life expectancy per decade in Canada, China, and Zimbabwe? (Hint: either use `coef()` or combine the fixed and random effects from `fixef()` and `ranef()`. Just look at the output, you don't need to extract the values with R code.)
+Controlling for differences in GDP, what is the estimated change in life expectancy per decade in Canada, China, and Zimbabwe? (Hint: either use `coef()` or combine the fixed and random effects from `fixef()` and `ranef()`. Just look at the output, you don't need to extract the values with R code here.)
 
 ```{r}
 re <- coef(m3)$country # exercise
@@ -161,6 +157,8 @@ filter(re, country == "China") %>% select(decade) %>% round(1) # exercise
 filter(re, country == "Zimbabwe") %>% select(decade) %>% round(1) # exercise
 ```
 
-# Bonus 
+# Bonus
+
+The final plot we made works because because we only have one predictor (GDP per capita). How might we make a similar plot if we had multiple predictors?
 
 If you made it this far, great! There's a lot more you could do with this data set. Try modeling something else with this data set or consider adding interactions or quadratic terms to the above model.
