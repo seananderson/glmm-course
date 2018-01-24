@@ -136,7 +136,7 @@ How do these plots help build our intuition about what we expect to find when we
 Let's try fitting a binomial GLMM with a random intercept for each tank:
 
 ```{r}
-m2 <- glmer(meta ~ week_centered + species + warming * drying + (1 | tank), 
+m <- glmer(meta ~ week_centered + species + warming * drying + (1 | tank), 
   family = binomial(link = "logit"), data = d)
 ```
 
