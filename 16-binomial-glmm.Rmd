@@ -33,7 +33,7 @@ dat <- bind_rows(dat)
 d <- filter(dat, day %in% unique(dt$time)) # downsample to the observed days 
 species_letters <- tibble(species = c("spadefoot", "treefrog", "redlegged"),
   sp = c("b", "c", "a"))
-d <- inner_join(d, species_letters) %>%
+d <- inner_join(d, species_letters, by = "species") %>%
   rename(species_true = species, species = sp) %>%
   mutate(treatment = paste(climate, drying, sep = "+")) %>% 
   mutate(warming = ifelse(climate == "warming", 1, 0),
@@ -46,14 +46,9 @@ d <- mutate(d, day_centered = day - day_reference, week_centered = day_centered/
 
 # Plot the data 
 
-We are going to model the expected probability of a randomly chosen amphibian
-having reached metamorphosis at any given point in time and for each of the
-treatments.
+We are going to model the expected probability of a randomly chosen amphibian having reached metamorphosis at any given point in time and for each of the treatments.
 
-In other words, `meta` (1 = metamorphosis) will be our response, and the
-predictors will be `week_centered`, `warming`, `drying`, and `species`. I've
-also included columns for `treatment` (warming and drying combination) and
-`species_true` to make plotting easier. 
+In other words, `meta` (1 = metamorphosis) will be our response, and the predictors will be `week_centered`, `warming`, `drying`, and `species`. I've also included columns for `treatment` (warming and drying combination) and `species_true` to make plotting easier. 
 
 Why might I have chosen to work with `week_centered` instead of `day`?
 
@@ -76,8 +71,7 @@ Take a few minutes to explore the data set yourself with ggplot:
 
 # Fitting a global model and separate models 
 
-A good first step is to fit a global model with no random effects and separate
-models for each potential random effect level.
+A good first step is to fit a global model with no random effects and separate models for each potential random effect level.
 
 We will use the function `lme4::lmList` to fit the separate GLMs. We could also do this with dplyr or with a for loop or with the purrr package.
 
@@ -98,7 +92,7 @@ We now have a list and each element of the list contains a GLM model.
 coef(m_list[[1]])
 ```
 
-There are lots of different ways we could extract the coefficients from each element of the list. Here we will use one of the `map` functions from Hadley Wickham's purrr package. If you are familiar with the `apply` functions in R, the `map` functions are simply a consistent easy to work with version of the `apply` functions.
+There are lots of different ways we could extract the coefficients from each element of the list. Here we will use one of the `map` functions from Hadley Wickham's purrr package. If you are familiar with the `apply` functions in R, the `map` functions are a consistent and easy-to-work-with version of the `apply` family of functions.
 
 ```{r}
 intercepts <- map_dbl(m_list, function(x) coef(x)[[1]])
@@ -135,15 +129,14 @@ ggplot(d, aes(day, meta, group = tank, color = treatment)) +
       se = FALSE, colour = "black")
 ```
 
-How do these plots help build our intuition about what we expect to find when
-we fit more complicated GLMMs?
+How do these plots help build our intuition about what we expect to find when we fit more complicated GLMMs?
 
 # Fitting an initial GLMM
 
 Let's try fitting a binomial GLMM with a random intercept for each tank:
 
 ```{r}
-m <- glmer(meta ~ week_centered + species + warming * drying + (1 | tank), 
+m2 <- glmer(meta ~ week_centered + species + warming * drying + (1 | tank), 
   family = binomial(link = "logit"), data = d)
 ```
 
@@ -154,15 +147,13 @@ summary(m)
 VarCorr(m)
 ```
 
-Default residual plots are not particularly useful for a binomial response,
-although adding a smooth function helps a little bit. 
+Default residual plots are not particularly useful for a binomial response, although adding a smooth function helps a little bit. 
 
 ```{r}
 plot(m, type = c("p", "smooth"), ylim = c(-3, 3))
 ```
 
-Looking at the residuals by group can also be useful. What are we looking for
-here? 
+Looking at the residuals by group can also be useful. What are we looking for here? 
 
 ```{r}
 plot(m, species~resid(.,type = "pearson"), xlim = c(-5, 5))
@@ -171,13 +162,9 @@ plot(m, treatment~resid(.,type = "pearson"), xlim = c(-5, 5))
 
 # Binned residuals
 
-One useful way of checking residuals for a binomial response is by using
-a binned residual plot. Gelman and Hill (2007) cover this type of plot in their
-textbook on multilevel modeling. 
+One useful way of checking residuals for a binomial response is by using a binned residual plot. Gelman and Hill (2007) cover this type of plot in their textbook on multilevel modeling. 
 
-The idea is to group the residuals into bins based on the predictor values. The
-trick is picking an appropriate number of bins for this to be useful. We can
-make all the same types of plots with these binned residuals. 
+The idea is to group the residuals into bins based on the predictor values. The trick is picking an appropriate number of bins for this to be useful. We can make all the same types of plots with these binned residuals. 
 
 ```{r}
 aug <- broom::augment(m)
@@ -218,9 +205,9 @@ We won't calculate profile or bootstrap confidence intervals here because they w
 # confint(m, method = "boot")
 ```
 
-The profile confidence intervals do not assume a quadratic log-likelihood surface but ignore "finite-size" issues. (They assume a very large number of groups, e.g. > 50.)
+The profile confidence intervals do not assume a quadratic log-likelihood surface but ignore "finite-size" issues. (They assume a "very large" number of groups.)
 
-The bootstrap confidence intervals are the most trustworthy but will take a long time to generate.
+The bootstrap confidence intervals are the most trustworthy but may take a very long time to generate.
 
 We can use the sjPlot package to make some quick plots. Take a look at the help for `?sjp.glmer` and try out the various plots that are available through the `type` argument:
 
@@ -278,13 +265,9 @@ ggplot(new_data, aes(day, prediction, group = tank, color = treatment)) +
 
 # Expanding the model with glmmTMB
 
-We might want to consider letting some of these effects vary by tank. This
-model will not fit with lme4. Instead we will rely on TMB.
+We might want to consider letting some of these effects vary by tank. This model will not fit with lme4. Instead we will rely on TMB.
 
-If I was publishing this analysis I would want to be extra careful that the
-model had converged given that it failed with default settings in lme4. I might
-play with the control settings for lme4 or try fitting the model with glmmADMB
-or `MASS::glmmPQL`. 
+If I was publishing this analysis I would want to be extra careful that the model had converged given that it failed with default settings in lme4. I might play with the control settings for lme4 or try fitting the model with glmmADMB or `MASS::glmmPQL`. 
 
 ```{r}
 library(glmmTMB)
@@ -378,9 +361,7 @@ ggplot(binned4, aes(mean_fitted, mean_residual, colour = species)) +
   geom_smooth(se = FALSE, method = "loess", colour = "black")
 ```
 
-This looks better, although not perfect. It's possible that
-a different link function would fit the data better although none of the
-obvious alternatives looked much better to me. For example:
+This looks better, although not perfect. It's possible that a different link function would fit the data better although none of the obvious alternatives looked much better to me. For example:
 
 ```{r, eval=FALSE}
 # m5 <- glmmTMB(meta ~ (week_centered + species + warming + drying)^2 + 
