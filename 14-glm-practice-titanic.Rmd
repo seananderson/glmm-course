@@ -127,7 +127,7 @@ unique(d$female)
 mean(d$female) %>% round(2)
 ```
 
-Why is the effect of `fare_scaled` different from the effect of `fare`? What do these 2 coefficients represent? 
+Why is the effect of `female_centered` different from the effect of `female`? What do these 2 coefficients represent? 
 
 ```{r}
 sjp.glm(m3) # female

@@ -121,7 +121,8 @@ What do you notice when comparing these models? Some things to look at:
 
 - In which model does the effect of GDP within a country (the `log_gdp_percap_cent` and `log_gdp_percap_group_cent` overall slopes) look stronger? Why is that? 
 - What does the slope on the group-level predictor `mean_log_gdp_percap_cent` tell us?
-- What happened to the standard deviations on the random effect distributions when we added the group-level predictor? Why is that? 
+- What happened to the standard deviations on the random effect distributions when we added the group-level predictor? Why is that?
+
 ## Model interpretation 
 
 Let's make sure we understand what our last model is telling us. Try answering the following questions:
