@@ -23,9 +23,6 @@ d <- readRDS("data/raw/conflict-salmon-for-modelling.rds") %>%
     gbpu,
     salmon_biomass_geo_mean, 
     prev_3yr_conflict_scaled,
-    mean_annual_temp_scaled,
-    mean_temp_scaled,
-    total_log_precip_scaled,
     year_centered,
     log_humanpop_scaled,
     log_grizzly_pop_est_scaled,
@@ -43,9 +40,6 @@ We are going to use the below formula a number of times. So let's store it in a 
 f <- late_kills ~ 
   salmon_scaled + 
   prev_3yr_conflict_scaled +
-  mean_annual_temp_scaled +
-  mean_temp_scaled +
-  total_log_precip_scaled +
   year_scaled +
   log_humanpop_scaled +
   log_grizzly_pop_est_scaled +
@@ -130,7 +124,7 @@ We have count data. So one obvious place to start is with the Poisson distributi
 
 ```{r}
 library(lme4)
-f_lme4 <- paste(c(f, "+ (1 | gbpu)"), collapse = " ")
+f_lme4 <- paste(c(f, "+ (1 | gbpu)"), collapse = " ") %>% as.formula()
 f_lme4
 m_glmer <- glmer(f_lme4, data = d, family = poisson(link = "log"))
 summary(m_glmer, correlation = FALSE)
@@ -167,6 +161,16 @@ One useful summary function is
 coef(summary(m_glmer))
 ```
 
+Let's quickly look at some plots we can get out of the sjPlot package. Remember, these confidence intervals shouldn't be trusted because we haven't dealt with overdispersion yet.
+
+```{r}
+sjPlot::sjp.glmer(m_glmer)
+sjPlot::sjp.glmer(m_glmer, type = "fe")
+sjPlot::sjp.glmer(m_glmer, type = "re.qq")
+p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = T)
+head(p$data)
+```
+
 # Checking for overdispersion 
 
 Now we should check for overdispersion. We can do that by comparing the residual deviance and the sum of the pearson residuals squared with the residual degrees of freedom. These should be approximately the same. If the degrees of freedom are considerably smaller then we have evidence of over dispersion. If the residual deviance and sum of Pearson residuals squared  disagree, then use the Pearson residuals. See Ben Bolker's worked examples here for more details <https://rpubs.com/bbolker/glmmchapter>.
@@ -184,9 +188,8 @@ We can try dealing with this by adding an observation-level random intercept or 
 
 Theoretically, we could fit a negative binomial GLMM with the function `lme4::glmer.nb`, but the following fails to converge for me.
 
-```{r}
-# m_glmer_nb <- glmer.nb(f_lme4, data = d)
-# summary(m_glmer_nb)
+```{r, eval=FALSE}
+m_glmer_nb <- glmer.nb(f_lme4, data = d)
 ```
 
 We could try removing the offset term (or simplified by removing any other terms). Removing the offset term did not help with convergence for me. 
@@ -200,26 +203,15 @@ d$obs <- seq_len(nrow(d))
 We then fit the model:
 
 ```{r}
-f_lme4_obs <- paste(c(f, "+ (1 | gbpu) + (1 | obs)"), collapse = " ")
+f_lme4_obs <- paste(c(f, "+ (1 | gbpu) + (1 | obs)"), collapse = " ") %>% 
+  as.formula()
 m_lme4_obs <- glmer(f_lme4_obs, data = d, family = poisson(link = "log"))
 summary(m_lme4_obs)
 ```
 
-That, too, has poor convergence.
-
-Before we move on to other packages, let's quickly look at some plots we can get out of the sjPlot package. Remember, these confidence intervals shouldn't be trusted because we haven't dealt with overdispersion yet.
-
-```{r}
-sjPlot::sjp.glmer(m_glmer)
-sjPlot::sjp.glmer(m_glmer, type = "fe")
-sjPlot::sjp.glmer(m_glmer, type = "re.qq")
-p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = T)
-head(p$data)
-```
-
 # MASS package penalized quasi-likelihood version
 
-We can try the function `glmmPQL` in the package MASS, which lets us fit the model with something fancy called penalized quasi-likelihood. "Penalized quasi-likelihood" doubles as a great conservation starter at cocktail parties.
+We can try the function `glmmPQL` in the package MASS, which lets us fit the model with something called penalized quasi-likelihood. "Penalized quasi-likelihood" doubles as a great conservation starter at cocktail parties.
 
 ```{r}
 m_pql <- MASS::glmmPQL(f, random = ~ 1 | gbpu/obs, data = d, 
@@ -227,25 +219,25 @@ m_pql <- MASS::glmmPQL(f, random = ~ 1 | gbpu/obs, data = d,
 summary(m_pql)
 ```
 
-This one converges. In the background the function is using nlme. Therefore, we have to work with the object as if it was from nlme. E.g.
+This one converges. In the background the function is using nlme. Therefore, we have to work with the object as if it was from nlme. For example:
 
 ```{r}
-nlme::intervals(m_pql)
+nlme::intervals(m_pql, which = "fixed")
 ```
 
 # glmmTMB with negative binomial distributions
 
-It's always a good idea to fit GLMMs with multiple methods if possible to ensure the conclusions are not sensitive to the optimization method or that your model has not converged.
+It's always a good idea to fit GLMMs with multiple methods if possible to ensure the conclusions are not sensitive to the optimization method or that your model has not converged. These are not nearly as simple as GLMs or linear-mixed effect models!
 
-One of the greatest things since sliced bread is the new TMB package for R. TMB normally requires you to write your own model template, but the package glmmTMB comes with a number of pre-written and tested GLMMs.
+One of the greatest things since sliced bread is the TMB package for R. TMB normally requires you to write your own model template, but the package glmmTMB comes with a number of pre-written and tested GLMMs.
 
-TMB, and therefore glmmTMB, is *FAST* and very robust. <https://github.com/glmmTMB>
+TMB, and therefore glmmTMB, is *fast* and very robust. <https://github.com/glmmTMB>
 
 ```{r}
 library(glmmTMB)
 
-m_tmb <- glmmTMB(f_lme4, data = d, family = poisson(link = "log"))
-summary(m_tmb)
+m_tmb_pois <- glmmTMB(f_lme4, data = d, family = poisson(link = "log"))
+summary(m_tmb_pois)
 
 m_tmb_obs <- glmmTMB(f_lme4_obs, data = d, family = poisson(link = "log"))
 summary(m_tmb_obs)
@@ -256,7 +248,7 @@ summary(m_tmb_nb)
 m_tmb_nb1 <- glmmTMB(f_lme4, data = d, family = nbinom1(link = "log"))
 summary(m_tmb_nb1)
 
-bbmle::AICtab(m_tmb, m_tmb_nb, m_tmb_nb1)
+bbmle::AICtab(m_tmb_pois, m_tmb_nb, m_tmb_nb1)
 ```
 
 So the NB2 parameterization has the lowest AIC.
@@ -274,41 +266,32 @@ Let's plot the residuals by group:
 ```{r}
 d$res_nb <- residuals(m_tmb_nb, type = "response")
 ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
-
-d$res_nb <- residuals(m_tmb_nb, type = "pearson")
-ggplot(d, aes(gbpu, res_nb)) + geom_boxplot() + coord_flip()
 ```
 
 # Brief introduction to a Bayesian Stan version
 
-If we want to explore the full probability distribution on all parameters, including what we have been calling random effects, then we can fit a Bayesian version. The new package rstanarm makes this relatively simple with a function that mimics the function `lme4::lmer` but fits a Stan model in the background. Stan is a programming language and software implementation of the Bayesian Hamiltonian Monte Carlo No-U-Turn Sampler (not a good cocktail party topic). Any more than that is well beyond the focus of this workshop.
+If we want to accurately explore the full uncertainty on all parameters, including what we have been calling random effects, then we can fit a Bayesian version. The new package rstanarm makes this relatively simple with a function that mimics the function `lme4::lmer` but fits a Stan model in the background. Stan is a programming language and software implementation of the Bayesian Hamiltonian Monte Carlo No-U-Turn Sampler (not a good cocktail party topic). Any more than that is well beyond the focus of this workshop.
 
-Warning: If you are considering using a similar model yourself you will have to do some considerable reading first or find somebody to work with. Note that because this is a Bayesian model you have to choose prior distributions on your parameters. rstanarm has carefully thought out priors that apply to most conditions, but it's important that you understand what these are and whether they make sense for your data. See the additional information section at the bottom. 
+Warning: If you are considering using a similar model yourself you will have to do some considerable reading first or find somebody to work with. Note that because this is a Bayesian model you have to choose prior distributions on your parameters. rstanarm has carefully thought out priors that apply to most conditions, but it's important that you understand what these are and whether they make sense for your data.
 
-```{r stan, eval=FALSE}
+```{r stan, warning=FALSE}
 library(rstanarm)
-library(rstan)
 options(mc.cores = parallel::detectCores()) # setup parallel processing
 
-# mstan <- rstanarm::stan_glmer(f_lme4, data = d, 
-#   family = poisson(link = "log"), chains = 2, iter = 300)
-# summary(mstan)
-
-mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 3, iter = 300)
+mstan_nb <- rstanarm::stan_glmer.nb(f_lme4, data = d, chains = 4, iter = 400)
 
 summary(mstan_nb)
-stan_plot(mstan_nb)
-stan_trace(mstan_nb)
-stan_rhat(mstan_nb)
-stan_hist(mstan_nb)
+rstan::stan_plot(mstan_nb)
+rstan::stan_trace(mstan_nb)
+rstan::stan_hist(mstan_nb)
+ggplot2::theme_set(theme_grey()) # reset theme
 save(mstan_nb, file = "data/generated/stan-models.rda")
 ```
 
 ```{r}
 load("data/generated/stan-models.rda")
 
-stan_est <- broom::tidyMCMC(mstan_nb, conf.int = TRUE, 
-  estimate.method = "median")
+stan_est <- broom::tidyMCMC(mstan_nb, conf.int = TRUE)
 
 stan_est %>% filter(grepl("gbpu", term)) %>%
   ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
@@ -326,32 +309,33 @@ Let's compare confidence intervals:
 
 ```{r compare}
 get_tmb_cis <- function(x, name) {
-  ci <- list()
-  ci <- data.frame(confint(x), fixef(x)[[1]])
+  ci <- confint(x)
+  ci <- ci[!grepl("Std.Dev|sigma", row.names(ci)), ]
+  ci <- data.frame(ci)
   names(ci) <- c("conf.low", "conf.high", "estimate")
   ci$model <- name
   ci$term <- names(fixef(x)$cond)
   ci
 }
 cis <- list()
-cis[[1]] <- get_tmb_cis(m_tmb, "Poisson")
-cis[[2]] <- get_tmb_cis(m_tmb_obs, "Poisson w obs RE")
-cis[[3]] <- get_tmb_cis(m_tmb_nb, "Negative binomial")
-cis[[4]] <- get_tmb_cis(m_tmb_nb1, "Negative binomial 1")
+cis[[1]] <- get_tmb_cis(m_tmb_pois, "TMB Poisson")
+cis[[2]] <- get_tmb_cis(m_tmb_obs, "TMB Poisson w obs RE")
+cis[[3]] <- get_tmb_cis(m_tmb_nb, "TMB Negative binomial (NB2)")
+cis[[4]] <- get_tmb_cis(m_tmb_nb1, "TMB Negative binomial (NB1)")
 cis[[5]] <- broom::tidy(m_glmer, conf.int = TRUE) %>%
   dplyr::select(conf.low, conf.high, estimate, term) %>%
-  mutate(model = "Poisson (glmer)") %>%
+  mutate(model = "lme4::glmer Poisson") %>%
   filter(term != "sd_(Intercept).gbpu")
 cis[[6]] <- stan_est %>%
   dplyr::select(conf.low, conf.high, estimate, term) %>%
-  filter(!grepl("Intercept", term), term != "overdispersion") %>%
-  mutate(model = "Negative binomial (Stan)")
+  filter(!grepl("Intercept", term), term != "reciprocal_dispersion") %>%
+  mutate(model = "Stan Negative binomial (NB2)")
 
 cis_df <- bind_rows(cis) %>% filter(term != "(Intercept)")
 ```
 
 ```{r plot-comparison}
-ggplot(cis_df, aes(term, estimate, 
+ggplot(cis_df, aes(term, estimate,
   ymin = conf.low, ymax = conf.high, colour = model)) +
   geom_pointrange(position = position_dodge(width = 0.5)) +
   coord_flip() +
@@ -375,11 +359,14 @@ Very useful worked examples of GLMMs by Ben Bolker:
 Using observation-level random effects for overdispersion:
 Harrison, X. A. 2014. Using observation-level random effects to model overdispersion in count data in ecology and evolution. PeerJ 2:e616. https://peerj.com/articles/616/
 
-The Bayesian data analysis bible, but not an easy read:
-Gelman, A., J. B. Carlin, H. S. Stern, D. B. Dunson, A. Vehtari, and D. B. Rubin. 2014. Bayesian Data Analysis. Chapman & Hall, Boca Raton, FL.
+My favourite introduction to Bayesian modelling book:
+Hobbs, N.T., Hooten, M.B. 2015. Bayesian Models: A Statistical Primer for Ecologists.
 
 A good introduction to Bayesian data analysis, although the current version uses WinBUGS/JAGS:
 Gelman, A., and J. Hill. 2006. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press, Cambridge, UK.
+
+The Bayesian data analysis bible, but not an easy read:
+Gelman, A., J. B. Carlin, H. S. Stern, D. B. Dunson, A. Vehtari, and D. B. Rubin. 2014. Bayesian Data Analysis. Chapman & Hall, Boca Raton, FL.
 
 A great recent and modern introduction to Bayesian modeling with Stan:
 McElreath, R. 2016. Statistical rethinking: A Bayesian course with examples in R and Stan. CRC Press.
