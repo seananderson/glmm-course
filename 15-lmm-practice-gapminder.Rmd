@@ -1,4 +1,4 @@
-# GLM and linear mixed-effect model exercises 
+# Linear mixed-effect model exercises 
 
 # Goals
 
@@ -62,13 +62,13 @@ plot(m, resid(.) ~ decade | continent, abline = 0) # exercise
 plot(m, resid(.) ~ log_gdp_percap_cent | continent, abline = 0) # exercise
 ```
 
-Check that the random effects look approximately normally distributed with the function `sjPlot::sjp.lmer()`, using the argument `type = "re.qq"`:
+Check that the random effects look approximately normally distributed with the function `sjPlot::sjp.lmer()` using the argument `type = "re.qq"`:
 
 ```{r}
 sjPlot::sjp.lmer(m, type = "re.qq") # exercise
 ```
 
-Try plotting the model predictions. Let's focus on the effect of GDP per capita. Therefore, we will have to set the predictor `decade` to some value. Let's set it to `0`, which represents 1990 because of how we calculated this column by  subtracting 1990.
+Try plotting the model predictions. Let's focus on the effect of GDP per capita. Therefore, we will have to set the predictor `decade` to some value. Let's set it to `0`, which represents 1990 because of how we calculated this column by subtracting 1990 earlier.
 
 ```{r}
 newdata <- mutate(gap, decade = 0)
@@ -84,7 +84,7 @@ ggplot(newdata, aes(log_gdp_percap_cent, lifeExp, colour = continent)) +
 
 This looks similar to our example with Galapagos finches. What do you notice about the height of the lines as they go from left to right? How can we add that information to our model?
 
-Let's add a group-level predictor representing the mean log GDP per capita for each country. At the same time, let's center the GDP per capita within each country. Why do we do this again?
+Let's add a group-level predictor representing the mean log GDP per capita for each country. At the same time, let's center the GDP per capita within each country. Why do we do this again? (Hint: look back to `06-random-slopes.Rmd`)
 
 ```{r}
 gap <- group_by(gap, country) %>% 
@@ -138,7 +138,7 @@ By looking at the standard errors in `arm::display(m3)` or by using the function
 ```{r}
 fe <- fixef(m3)["decade"] # exercise
 se <- arm::se.fixef(m3)["decade"] # exercise
-round(fe + c(-1.96, 1.96) * se, 1) %>% paste("years") # exercise
+fe + c(-1.96, 1.96) * se # exercise
 broom::tidy(m3, conf.int = TRUE) # exercise
 ```
 
@@ -153,13 +153,13 @@ Controlling for differences in GDP, what is the estimated change in life expecta
 ```{r}
 re <- coef(m3)$country # exercise
 re$country <- row.names(re) # exercise
-filter(re, country == "Canada") %>% select(decade) %>% round(1) # exercise
-filter(re, country == "China") %>% select(decade) %>% round(1) # exercise
-filter(re, country == "Zimbabwe") %>% select(decade) %>% round(1) # exercise
+filter(re, country == "Canada") %>% pull(decade) # exercise
+filter(re, country == "China") %>% pull(decade) # exercise
+filter(re, country == "Zimbabwe") %>% pull(decade) # exercise
 ```
 
 # Bonus
 
-The final plot we made works because because we only have one predictor (GDP per capita). How might we make a similar plot if we had multiple predictors?
+The final plot shows the effect of one predictor (GDP per capita). How might we make a similar plot to show the effect of time (decade)?
 
 If you made it this far, great! There's a lot more you could do with this data set. Try modeling something else with this data set or consider adding interactions or quadratic terms to the above model.
