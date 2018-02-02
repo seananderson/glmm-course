@@ -177,9 +177,9 @@ We can do that here manually for a comparison between the 180mm and 210mm
 chopsticks:
 
 ```{r}
-coef(summary(m4))
-fe <- fixef(m4)
-se <- arm::se.fixef(m4)
+coef(summary(m4_reml))
+fe <- fixef(m4_reml)
+se <- arm::se.fixef(m4_reml)
 fe_comp <- fe[["chp_fct210"]] - fe[["chp_fct180"]]
 se_comp <- sqrt(se[["chp_fct210"]]^2 + se[["chp_fct180"]]^2)
 fe_comp
@@ -213,8 +213,8 @@ comparison_effect <- function(model, base_par, comparison_par) {
 Let's try applying our function to a couple examples:
 
 ```{r}
-comparison_effect(m4, "chp_fct180", "chp_fct210") # same as above
-comparison_effect(m4, "chp_fct240", "chp_fct330")
+comparison_effect(m4_reml, "chp_fct180", "chp_fct210") # same as above
+comparison_effect(m4_reml, "chp_fct240", "chp_fct330")
 ```
 
 With a little bit of extra code, we can iterate over all comparisons and
