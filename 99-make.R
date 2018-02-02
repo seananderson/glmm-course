@@ -9,4 +9,4 @@ remove_exercises <- function(x) {
 purrr::walk(files, remove_exercises)
 
 ## knit all exercises (slow)
-purrr::walk(files, rmarkdown::render)
+# purrr::walk(files, rmarkdown::render)
