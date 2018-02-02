@@ -291,10 +291,14 @@ something called a "random field". I've been developing an R package to make it
 easy to fit these kinds of models. Below is an example of the Gamma GLM fit with
 glmmfields. <https://github.com/seananderson/glmmfields#readme>
 
-```{r glmmfields, eval=TRUE, cache=TRUE, dependson="data"}
+```{r, include=FALSE}
+has_glmmfields <- require("glmmfields") 
+```
+
+```{r glmmfields, eval=has_glmmfields, cache=TRUE}
 # install.packages("devtools")
 # devtools::install_github("seananderson/glmmfields")
-library(glmmfields)
+library("glmmfields")
 
 options(mc.cores = parallel::detectCores())
 m_pos <- glmmfields(density ~ arm::rescale(depth) + I(arm::rescale(depth)^2),

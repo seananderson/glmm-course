@@ -92,7 +92,7 @@ Let's fit a GLM that reflects these data.
 
 ```{r}
 (m_gamma <- glm(y ~ x, family = 
-    Gamma(link = "log"))) # exercise
+    Gamma(link = "log"), data = d)) # exercise
 
 p <- sjp.glm(m_gamma, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
 ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
@@ -117,7 +117,7 @@ What are some examples of data sets that might resemble this?
 
 ```{r}
 (m_poisson <- glm(y ~ x, family = 
-    poisson(link = "log"))) # exercise
+    poisson(link = "log"), data = d)) # exercise
 
 p <- sjp.glm(m_poisson, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
 ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
@@ -143,7 +143,7 @@ Notice the much larger values on the right side of the graph.
 We have to use a special function to fit the negative binomial GLM in R:
 
 ```{r}
-(m_nb <- MASS::glm.nb(y ~ x))
+(m_nb <- MASS::glm.nb(y ~ x, data = d))
 
 p <- sjp.glm(m_nb, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
 ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
@@ -169,7 +169,7 @@ In what scenario might you see this kind of data?
 
 ```{r}
 (m_bin <- glm(y ~ x, family = 
-    binomial(link = "logit"))) # exercise
+    binomial(link = "logit"), data = d)) # exercise
 
 p <- sjp.glm(m_bin, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
 g <- ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +

@@ -45,7 +45,7 @@ We can clearly see that the residuals have spatial clumping patterns. Why is thi
 The nlme package comes with a built-in function for plotting a semivariogram. This represents half the average squared difference between residuals at increasing distances from each other. So this is inversely related to correlation. Small values mean that the residuals are very similar to each other. This is a common plot in spatial statistics and there are plenty of references on the topic you can find online. 
 
 ```{r}
-plot(Variogram(m1, form = ~ latitude + longitude))
+plot(Variogram(m1, form = ~ latitude + longitude, data = d))
 ```
 
 If we look at the semivariogram, we can take a guess at good initial starting values for a range value and nugget effect. For the `nlme::corSpher()` correlation structure, the nugget represents the intercept value and the range represents the distance at which the semivariogram reaches 1.

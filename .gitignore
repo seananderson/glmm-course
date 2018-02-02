@@ -25,3 +25,4 @@ whale*
 admin/
 *.xlsx
 *_cache/
+cache/
