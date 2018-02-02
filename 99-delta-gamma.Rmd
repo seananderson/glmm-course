@@ -90,7 +90,8 @@ ggplot(qcs, aes(X, Y, fill = positive_prediction)) +
 
 ggplot(qcs, aes(X, Y, fill = binary_prediction)) +
   geom_raster() +
-  scale_fill_gradient2(midpoint = 0.5) +
+  scale_fill_gradient2(midpoint = 0.5, 
+    low = scales::muted("blue"), high = scales::muted("red")) +
   coord_equal()
 
 ggplot(qcs, aes(X, Y, fill = combined_prediction)) +
@@ -111,7 +112,8 @@ ggplot(pop, aes(X, Y, colour = residual_pos, shape = present, size = density)) +
   scale_shape_manual(values = c("TRUE" = 20, "FALSE" = 4)) +
   scale_size_continuous(range = c(3, 8)) +
   coord_equal() +
-  scale_color_gradient2(midpoint = 0.5)
+  scale_fill_gradient2(midpoint = 0.5, 
+    low = scales::muted("blue"), high = scales::muted("red"))
 ```
 
 Do you see any problems?
@@ -169,7 +171,8 @@ ggplot(qcs, aes(X, Y, fill = positive_prediction)) +
 
 ggplot(qcs, aes(X, Y, fill = binary_prediction)) +
   geom_raster() +
-  scale_fill_gradient2(midpoint = 0.5) +
+  scale_fill_gradient2(midpoint = 0.5, 
+    low = scales::muted("blue"), high = scales::muted("red")) +
   coord_equal()
 ```
 
@@ -288,7 +291,7 @@ something called a "random field". I've been developing an R package to make it
 easy to fit these kinds of models. Below is an example of the Gamma GLM fit with
 glmmfields. <https://github.com/seananderson/glmmfields#readme>
 
-```{r, eval=TRUE, cache=TRUE, dependson="data"}
+```{r glmmfields, eval=TRUE, cache=TRUE, dependson="data"}
 # install.packages("devtools")
 # devtools::install_github("seananderson/glmmfields")
 library(glmmfields)
