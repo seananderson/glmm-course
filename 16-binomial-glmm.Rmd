@@ -216,6 +216,9 @@ library(sjPlot)
 sjp.glmer(m) # exercise
 sjp.glmer(m, type = "re.qq")  # exercise
 sjp.glmer(m, type = "fe")  # exercise
+```
+
+```{r, eval=FALSE}
 p <- sjp.glmer(m, type = "eff", show.ci = TRUE)  # exercise
 head(p$data) # exercise
 ```

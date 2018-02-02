@@ -73,7 +73,7 @@ Let's try plotting the residuals spatially and making another semivariogram. Not
 d$res2 <- as.numeric(residuals(m2, type = "normalized"))
 ggplot(d, aes(longitude, latitude, colour = res2)) + geom_point(size = 5) +
   scale_color_gradient2()
-plot(Variogram(m2, form = ~ latitude + longitude, resType = "normalized"))
+plot(Variogram(m2, form = ~ latitude + longitude, resType = "normalized", data = d))
 ```
 
 That looks much better. 

@@ -167,7 +167,10 @@ Let's quickly look at some plots we can get out of the sjPlot package. Remember,
 sjPlot::sjp.glmer(m_glmer)
 sjPlot::sjp.glmer(m_glmer, type = "fe")
 sjPlot::sjp.glmer(m_glmer, type = "re.qq")
-p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = T)
+```
+
+```{r, eval=FALSE}
+p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = TRUE)
 head(p$data)
 ```
 
