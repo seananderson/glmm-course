@@ -1,0 +1,278 @@
+# Data
+
+Hsu, S.-H., and Wu, S.-P. (1991). An investigation for determining the optimum
+length of chopsticks. Appl. Ergon. 22, 395–400.
+
+Let's read in the data and rescale the main predictor so that the effects are
+per 10cm of chopstick and the predictor is centered so that the intercept will
+be at the mean chopstick value (and this will help some of the more
+complicated models to fit).
+
+```{r}
+library(tidyverse)
+d <- read_csv("data/raw/chopstick-effectiveness.csv") %>%
+  mutate(Individual = as.factor(Individual))
+names(d) <- tolower(names(d))
+names(d) <- gsub("\\.", "_", names(d))
+
+d <- mutate(d, chopstick_length_10cm = chopstick_length / 100,
+  chopstick_length_10cm = chopstick_length_10cm - mean(chopstick_length_10cm))
+```
+
+Take a moment to plot the data and wrap your head around it.
+
+```{r}
+ggplot(d, aes(chopstick_length, food_pinching_efficiency, colour = individual)) + # exercise
+  geom_line() # exercise
+
+ggplot(d, aes(chopstick_length_10cm, food_pinching_efficiency)) + # exercise
+  geom_line() + # exercise
+  facet_wrap(~individual) # exercise
+```
+
+# Starting models
+
+Given what we know about the experiment and the process generating the response
+data, what would be a reasonable form of a model to choose? A GLM? A linear
+regression? A GLMM?
+
+```{r}
+m1 <- lm(food_pinching_efficiency ~ poly(chopstick_length_10cm, 2),
+  data = d)
+arm::display(m1)
+d$resids <- residuals(m1)
+ggplot(d, aes(chopstick_length_10cm, resids)) +
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_line(position = position_jitter(width = 0.02)) +
+  facet_wrap(~individual)
+```
+
+What do you notice about those residuals? How can we deal with that?
+
+Let's fit a model with a random intercept for individual. I also tried with
+a random slope for individual but there doesn't appear to be enough information
+in the data to estimate that.
+
+For now we will fit the models with maximum likelihood (as opposed to `REML`)
+so that we can compare models with different fixed effect structures with AIC.
+
+```{r}
+library(lme4)
+m2 <- lmer(food_pinching_efficiency ~ poly(chopstick_length_10cm, 2) +
+    (1 | individual), data = d, REML = FALSE) # exercise
+arm::display(m2)
+```
+
+Let's look at the residuals again:
+
+```{r}
+d$resids <- residuals(m2)
+ggplot(d, aes(chopstick_length_10cm, resids)) +
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_line(position = position_jitter(width = 0.02)) +
+  facet_wrap(~individual)
+
+ggplot(d, aes(chopstick_length_10cm, resids)) +
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_point(position = position_jitter(width = 0.02)) +
+  geom_smooth(se = FALSE, method = 'loess')
+```
+
+The first residual plots look considerably better.
+
+Did you notice anything in the last residual plot?
+
+Let's show the model predictions across a range of chopstick lengths. We will
+make one set of predictions at the overall "population" level and another
+set of predictions at the levels of the random intercepts (the level of the
+individual).
+
+```{r}
+nd <- tibble(chopstick_length_10cm = seq(min(d$chopstick_length_10cm),
+  max(d$chopstick_length_10cm), length.out = 100))
+nd$p <- predict(m2, newdata = nd, re.form = NA)
+
+nd_re <- expand.grid(chopstick_length_10cm = seq(min(d$chopstick_length_10cm),
+  max(d$chopstick_length_10cm), length.out = 100),
+  individual = unique(d$individual))
+nd_re$p <- predict(m2, newdata = nd_re)
+
+ggplot(nd_re, aes(chopstick_length_10cm, p, group = individual)) +
+  geom_line(alpha = 0.3) +
+  geom_point(data = d, aes(y = food_pinching_efficiency)) +
+  geom_line(data = nd, aes(chopstick_length_10cm, p),
+    colour = "red", lwd = 1, inherit.aes = FALSE)
+```
+
+# Comparing alternative models with AIC
+
+We might consider whether a 3rd-order polynomial would provide a better fit:
+
+```{r}
+m3 <- lmer(food_pinching_efficiency ~ 
+    poly(chopstick_length_10cm, 3) + # exercise
+    (1 | individual), data = d, REML = FALSE)
+arm::display(m3)
+bbmle::AICctab(m2, m3)
+```
+
+What does the AIC table tell us?
+
+The last residual plot didn't look ideal. How are some ways we might go
+about fixing that?
+
+One method would be to treat the different lengths of sticks as independent levels or factors. <!-- exercise -->
+
+```{r}
+d$chp_fct <- as.factor(d$chopstick_length)
+m4 <- lmer(food_pinching_efficiency ~ 0 + chp_fct +
+    (1 | individual), data = d, REML = FALSE)
+```
+
+Now how do the residuals look?
+
+```{r}
+d$resids <- residuals(m4)
+ggplot(d, aes(chopstick_length_10cm, resids)) + geom_point() +
+  geom_smooth(se = FALSE, method = 'loess')
+```
+
+And what does AIC tell us when comparing these models? 
+
+```{r}
+bbmle::AICctab(m2, m3, m4)
+```
+
+```{r}
+arm::display(m4)
+```
+
+If we wanted to use this model for final inference, we should refit it with
+`REML = TRUE`:
+
+```{r}
+m4_reml <- lmer(food_pinching_efficiency ~ 0 + chp_fct + (1 | individual), 
+  data = d, REML = TRUE) # exercise
+arm::display(m4)
+arm::display(m4_reml)
+```
+
+What do you notice changes the most between the 2 models?
+
+## Interpreting the factor coefficients
+
+What do the `chp_fct` coefficients represent in the model? 
+
+How would we go about comparing the coefficients between 2 levels? Can we
+simply check whether their confidence intervals overlap? Why or why not?
+
+There is a great explanation of how to go about such comparisons in the
+following paper:
+
+Schielzeth, H. (2010). Simple means to improve the interpretability of
+regression coefficients. Methods Ecol. Evol. 1, 103–113.
+<https://doi.org/10.1111/j.2041-210X.2010.00012.x>
+
+We can do that here manually for a comparison between the 180mm and 210mm
+chopsticks:
+
+```{r}
+coef(summary(m4))
+fe <- fixef(m4)
+se <- arm::se.fixef(m4)
+fe_comp <- fe[["chp_fct210"]] - fe[["chp_fct180"]]
+se_comp <- sqrt(se[["chp_fct210"]]^2 + se[["chp_fct180"]]^2)
+fe_comp
+fe_comp - 1.96 * se_comp
+fe_comp + 1.96 * se_comp
+```
+
+That would get tedious to write out for all comparisons, so we can write a little
+function to help:
+
+```{r}
+comparison_effect <- function(model, base_par, comparison_par) {
+  if (class(model) %in% c("lmerMod", "glmerMod")) {
+    fe <- fixef(model)
+    se <- arm::se.fixef(model)
+  } else {
+    fe <- coef(model)
+    se <- arm::se.coef(model)
+  }
+
+  fe_comp <- fe[[comparison_par]] - fe[[base_par]]
+  se_comp <- sqrt(se[[comparison_par]]^2 + se[[base_par]]^2)
+
+  data.frame(
+    est = round(fe_comp, 2),
+    lwr = round(fe_comp - 1.96 * se_comp, 2),
+    upr = round(fe_comp + 1.96 * se_comp, 2))
+}
+```
+
+Let's try applying our function to a couple examples:
+
+```{r}
+comparison_effect(m4, "chp_fct180", "chp_fct210") # same as above
+comparison_effect(m4, "chp_fct240", "chp_fct330")
+```
+
+With a little bit of extra code, we can iterate over all comparisons and
+plot the output.
+
+```{r}
+coefs <- row.names(coef(summary(m4_reml)))
+coefs <- expand.grid(base_par = coefs,
+  comparison_par = coefs,
+  stringsAsFactors = FALSE) %>%
+  filter(base_par != comparison_par)
+
+comparisons <- plyr::mdply(coefs, comparison_effect, model = m4_reml) %>%
+  mutate(comparison = paste(comparison_par, base_par),
+    comparison = fct_reorder(comparison, est))
+
+ggplot(comparisons, aes(x = comparison, y = est, ymin = lwr, ymax = upr)) +
+  geom_pointrange() +
+  coord_flip()
+```
+
+Why does our earlier quadratic model have such tight confidence intervals on the
+parameters whereas in this model with independent factors only 1 or 2 of the
+comparisons do not overlap zero? Which model is "right"? Is there one "right" model? 
+
+# A GLMM
+
+We decided to simplify and assume the observation model was a Gaussian
+distribution. In reality, the response variable (mean number of peanuts) is a
+positive-only value, originally derived from a count. If we had the original
+data we could fit a model with an observation model that allows for whole
+numbers only. Since we have the mean number we are forced to use a different
+observation model such as a Gamma distribution.
+
+What happens if instead of the linear mixed effects model we fit a GLMM? An
+alternative would be to fit a linear mixed effects model to a log-transformed
+response. They should give very similar inference. 
+
+```{r}
+m5 <- glmer(food_pinching_efficiency ~ 0 + chp_fct +
+    (1 | individual), data = d, 
+  family = Gamma(link = "log")) # exercise
+```
+
+```{r}
+arm::display(m5)
+```
+
+```{r}
+co <- plyr::mdply(coefs, comparison_effect, model = m5) %>%
+  mutate(comparison = paste(comparison_par, base_par),
+    comparison = fct_reorder(comparison, est))
+
+ggplot(co, aes(x = comparison, y = est, ymin = lwr, ymax = upr)) +
+  geom_pointrange() +
+  coord_flip()
+```
+
+How has our inference changed?
+
+Again, which model is "right"? Is there one "right" model?
