@@ -1,3 +1,11 @@
+# A mixed-effects model for chopstick efficiency
+
+# Goals:
+
+- Practice fitting, interpreting, criticizing, and plotting the output from mixed-effect models
+- Practice model selection with mixed-effect models
+- Practice comparing levels of factor predictor coefficients
+
 # Data
 
 Hsu, S.-H., and Wu, S.-P. (1991). An investigation for determining the optimum
@@ -49,9 +57,16 @@ ggplot(d, aes(chopstick_length_10cm, resids)) +
 
 What do you notice about those residuals? How can we deal with that?
 
-Let's fit a model with a random intercept for individual. I also tried with
-a random slope for individual but there doesn't appear to be enough information
-in the data to estimate that.
+Let's fit a model with a random intercept for individual.
+
+Before we do that, let's try fitting individual models for each individual so we have a feeling what to expect:
+
+```{r}
+ggplot(d, aes(chopstick_length_10cm, food_pinching_efficiency)) +
+  geom_line() +
+  facet_wrap(~individual) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
+```
 
 For now we will fit the models with maximum likelihood (as opposed to `REML`)
 so that we can compare models with different fixed effect structures with AIC.
@@ -82,6 +97,27 @@ The first residual plots look considerably better.
 
 Did you notice anything in the last residual plot?
 
+# Considering random slopes
+
+We could consider different random effect structures. Here we can let the slope and quadratic effect also vary by individual. Zuur claims that we can compare these with AIC if the fixed effects are the same and we set `REML = TRUE`
+
+```{r}
+m2.1 <- lmer(food_pinching_efficiency ~ poly(chopstick_length_10cm, 2) +
+    (1 | individual), data = d, REML = TRUE)
+
+m2.2 <- lmer(food_pinching_efficiency ~ poly(chopstick_length_10cm, 2) +
+    (1 + poly(chopstick_length_10cm, 2) | individual), # exercise
+  data = d, REML = TRUE)
+
+bbmle::AICctab(m2.1, m2.2)
+```
+
+In the above table, the `df` column represents (one definition of) the number of parameters. We only added 2 random slopes. Why are there 5 extra parameters in the calculation? So, according to this procedure, we should prefer the model with only the random intercept.
+
+Although I won't show it here, the random slopes don't substantially improve the appearance of the residuals either.
+
+# Plotting the model predictions 
+
 Let's show the model predictions across a range of chopstick lengths. We will
 make one set of predictions at the overall "population" level and another
 set of predictions at the levels of the random intercepts (the level of the
@@ -104,7 +140,7 @@ ggplot(nd_re, aes(chopstick_length_10cm, p, group = individual)) +
     colour = "red", lwd = 1, inherit.aes = FALSE)
 ```
 
-# Comparing alternative models with AIC
+# Comparing alternative (fixed-effect) models with AIC
 
 We might consider whether a 3rd-order polynomial would provide a better fit:
 
@@ -159,7 +195,7 @@ arm::display(m4_reml)
 
 What do you notice changes the most between the 2 models?
 
-## Interpreting the factor coefficients
+# Interpreting the factor coefficients
 
 What do the `chp_fct` coefficients represent in the model? 
 
@@ -239,40 +275,3 @@ ggplot(comparisons, aes(x = comparison, y = est, ymin = lwr, ymax = upr)) +
 Why does our earlier quadratic model have such tight confidence intervals on the
 parameters whereas in this model with independent factors only 1 or 2 of the
 comparisons do not overlap zero? Which model is "right"? Is there one "right" model? 
-
-# A GLMM
-
-We decided to simplify and assume the observation model was a Gaussian
-distribution. In reality, the response variable (mean number of peanuts) is a
-positive-only value, originally derived from a count. If we had the original
-data we could fit a model with an observation model that allows for whole
-numbers only. Since we have the mean number we are forced to use a different
-observation model such as a Gamma distribution.
-
-What happens if instead of the linear mixed effects model we fit a GLMM? An
-alternative would be to fit a linear mixed effects model to a log-transformed
-response. They should give very similar inference. 
-
-```{r}
-m5 <- glmer(food_pinching_efficiency ~ 0 + chp_fct +
-    (1 | individual), data = d, 
-  family = Gamma(link = "log")) # exercise
-```
-
-```{r}
-arm::display(m5)
-```
-
-```{r}
-co <- plyr::mdply(coefs, comparison_effect, model = m5) %>%
-  mutate(comparison = paste(comparison_par, base_par),
-    comparison = fct_reorder(comparison, est))
-
-ggplot(co, aes(x = comparison, y = est, ymin = lwr, ymax = upr)) +
-  geom_pointrange() +
-  coord_flip()
-```
-
-How has our inference changed?
-
-Again, which model is "right"? Is there one "right" model?
