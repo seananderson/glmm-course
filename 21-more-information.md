@@ -2,7 +2,7 @@
 
 ## Just about everything esoteric about GLMMs in R
 
-<http://glmm.wikidot.com/faq>
+<http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html>
 
 ## Ben Bolker worked examples of GLMMs in R
 
