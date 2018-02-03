@@ -44,6 +44,8 @@ Given what we know about the experiment and the process generating the response
 data, what would be a reasonable form of a model to choose? A GLM? A linear
 regression? A GLMM?
 
+Let's start with a linear model with a quadratic predictor:
+
 ```{r}
 m1 <- lm(food_pinching_efficiency ~ poly(chopstick_length_10cm, 2),
   data = d)
@@ -99,7 +101,7 @@ Did you notice anything in the last residual plot?
 
 # Considering random slopes
 
-We could consider different random effect structures. Here we can let the slope and quadratic effect also vary by individual. Zuur claims that we can compare these with AIC if the fixed effects are the same and we set `REML = TRUE`
+We could consider different random effect structures. Here we can let the slope and quadratic effect also vary by individual. Following, Zuur's books, we can compare these with AIC if the fixed effects are the same and we set `REML = TRUE`:
 
 ```{r}
 m2.1 <- lmer(food_pinching_efficiency ~ poly(chopstick_length_10cm, 2) +
