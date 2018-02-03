@@ -24,8 +24,7 @@ What are some situations that could cause this?
 
 Let's try fitting models with a zero-inflation parameter. To keep this example small we will work with a simulated data set.
 
-
-If our zero inflation parameter is `pz`, then our model will that with probability 1-pz, the response data comes from a Poisson (or negative binomial) distribution, and with probability pz, the data is zero.
+If our zero inflation parameter is `pz`, then our model assumes a probability of `1-pz` that the response data comes from a Poisson (or negative binomial) distribution, and a probability of `pz` that the data is an excess zero.
 
 To avoid reinventing the wheel we will work with a modified version of a small simulation written by Ben Bolker <https://stat.ethz.ch/pipermail/r-sig-mixed-models/2012q3/018874.html>
 
@@ -46,7 +45,7 @@ d$y <- ifelse(zi, 0, rpois(100, lambda = exp(d$eta)))
 d$zi <- zi
 ```
 
-In the next plot, the open circles are access zeros and the closed circles are the ones derived from the Poisson.
+In the next plot, the open circles are excess zeros and the closed circles are the data derived from the Poisson.
 
 ```{r}
 ggplot(d, aes(x, y, colour = f, shape = as.factor(zi))) + geom_point() +
@@ -60,7 +59,7 @@ ggplot(d, aes(x, y, colour = f)) + geom_point() +
   facet_wrap(~zi)
 ```
 
-The glmmADMB package lets you fit zero-inflated GLMMs, but we are going to use glmmTMB, which is newer, usually faster, and less likely to cause strange errors. 
+The glmmADMB package lets you fit zero-inflated GLMMs, but we are going to use glmmTMB, which is newer, usually faster, and less likely to return strange errors.
 
 ```{r, eval=FALSE}
 # zip_admb <- glmmADMB::glmmadmb(y ~ x + (1 | f), 
@@ -117,7 +116,7 @@ ggplot(d, aes(x, y, colour = f)) + geom_point() +
   facet_wrap(~zi)
 ```
 
-Let's fit 2 separate models. First a truncated Poisson to the positive values. This is a Poisson distribution that starts at one instead zero.
+Let's fit 2 separate models. First a truncated Poisson to the positive values. This is a Poisson distribution that starts at one instead of zero.
 
 ```{r, eval=FALSE}
 hurd_a <- glmmTMB(y ~ x + (1 | f), data = filter(d, y > 0), 
@@ -162,12 +161,13 @@ AIC(hurd_a) + AIC(hurd_b)
 A relatively common scenario is to have positive continuous data that also has zeros. 
 
 For example, maybe you are calculating density of sea urchins in quadrats, but some of your quadrats are empty. 
-
 Another example is fish trawl survey data where we have a positive continuous measure of catch per unit effort but sometimes a trawl doesn't bring up any of a given species, so we have zeros.
 
 We can apply a similar concept to above where we model the zeros versus non-zeros and the positive values separately. The difference is that you don't have to worry about a truncated distribution for the positive values. You could use a Gamma distribution for the positive values or use a linear model on a log scale. Again, you can combine your predictions at the end as we did above.
 
 I have written more about this here <http://seananderson.ca/2014/05/18/gamma-hurdle.html>
+
+**Update 2018-02-03: see the delta-Gamma lesson.**
 
 # Additional information 
 
