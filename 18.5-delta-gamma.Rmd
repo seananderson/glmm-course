@@ -9,18 +9,9 @@
 
 # Data
 
-We will start by reading in example trawl survey data for Pacific ocean perch
-(POP) in Queen Charlotte Sound from the 2015 survey. These surveys are
-conducted by DFO out of Pacific biological station. The coordinates have been
-converted into UTMs so that the distance between coordinates is constant. There
-are many ways of doing this. One way is with the `PBSmapping::convUL()`
-function.
+We will start by reading in example trawl survey data for Pacific ocean perch (POP) in Queen Charlotte Sound from the 2015 survey. These surveys are conducted by DFO out of Pacific biological station. The coordinates have been converted into UTMs so that the distance between coordinates is constant. There are many ways of doing this. One way is with the `PBSmapping::convUL()` function.
 
-We will work with 2 data frames. The first, `pop` contains the collect the data
-that we will model. The second, `qcs` contains a grid of coordinates and depths
-across the entire survey area in Queen Charlotte Sound. We will use this second
-data frame to make predictions about the density of fish across the entire
-survey area.
+We will work with 2 data frames. The first, `pop` contains the collect the data that we will model. The second, `qcs` contains a grid of coordinates and depths across the entire survey area in Queen Charlotte Sound. We will use this second data frame to make predictions about the density of fish across the entire survey area.
 
 ```{r data}
 library(tidyverse)
@@ -33,9 +24,7 @@ qcs <- readRDS("data/raw/prediction-grid-qcs.rds") %>%
 pop <- mutate(pop, present = density > 0)
 ```
 
-Let's plot the data. We will plot the locations where there were none of the
-fish caught with x's. We will use circles with the area proportional to the
-density of the fish caught for when they were caught.
+Let's plot the data. We will plot the locations where there were none of the fish caught with x's. We will use circles with the area proportional to the density of the fish caught for when they were caught.
 
 ```{r}
 ggplot(pop) +
@@ -47,8 +36,7 @@ ggplot(pop) +
 
 # Delta-Gamma GLM
 
-Let's start by fitting a Gamma GLM with a log link to the tows where we do
-observe fish.
+Let's start by fitting a Gamma GLM with a log link to the tows where we do observe fish.
 
 ```{r}
 m_pos <- glm(density ~ poly(depth, 2), data = filter(pop, density > 0),
@@ -56,8 +44,7 @@ m_pos <- glm(density ~ poly(depth, 2), data = filter(pop, density > 0),
 arm::display(m_pos)
 ```
 
-And we can fit a binomial GLM with a logit link to whether or not we observed
-fish in a given tow.
+And we can fit a binomial GLM with a logit link to whether or not we observed fish in a given tow.
 
 ```{r}
 m_bin <- glm(present ~ poly(depth, 2), data = pop,
@@ -65,16 +52,14 @@ m_bin <- glm(present ~ poly(depth, 2), data = pop,
 arm::display(m_bin)
 ```
 
-Let's make predictions from these models on the full grid data set so we can
-plot them:
+Let's make predictions from these models on the full grid data set so we can plot them:
 
 ```{r}
 qcs$positive_prediction <- predict(m_pos, newdata = qcs, type = "response")
 qcs$binary_prediction <- predict(m_bin, newdata = qcs, type = "response")
 ```
 
-We can combine these 2 predictions by multiplying the probability from the
-binary model with the expected density from the positive model.
+We can combine these 2 predictions by multiplying the probability from the binary model with the expected density from the positive model.
 
 ```{r}
 qcs <- mutate(qcs, combined_prediction = binary_prediction * positive_prediction)
@@ -90,7 +75,7 @@ ggplot(qcs, aes(X, Y, fill = positive_prediction)) +
 
 ggplot(qcs, aes(X, Y, fill = binary_prediction)) +
   geom_raster() +
-  scale_fill_gradient2(midpoint = 0.5, 
+  scale_fill_gradient2(midpoint = 0.5,
     low = scales::muted("blue"), high = scales::muted("red")) +
   coord_equal()
 
@@ -100,8 +85,7 @@ ggplot(qcs, aes(X, Y, fill = combined_prediction)) +
   coord_equal()
 ```
 
-We know these data are spatially collected. Let's check the residuals from the
-positive model in space.
+We know these data are spatially collected. Let's check the residuals from the positive model in space.
 
 ```{r}
 pop$positive_prediction_log <- predict(m_pos, type = "link", newdata = pop)
@@ -112,7 +96,7 @@ ggplot(pop, aes(X, Y, colour = residual_pos, shape = present, size = density)) +
   scale_shape_manual(values = c("TRUE" = 20, "FALSE" = 4)) +
   scale_size_continuous(range = c(3, 8)) +
   coord_equal() +
-  scale_fill_gradient2(midpoint = 0.5, 
+  scale_fill_gradient2(midpoint = 0.5,
     low = scales::muted("blue"), high = scales::muted("red"))
 ```
 
@@ -120,18 +104,9 @@ Do you see any problems?
 
 # Delta-Gamma GAM
 
-One method of dealing with the spatial autocorrelation (residuals closer to
-each other are more similar than residuals further apart from each other) is to
-include a 2-dimensional smoother with a GAM. Why might we want to use a GAM
-here? What are some other options?
+One method of dealing with the spatial autocorrelation (residuals closer to each other are more similar than residuals further apart from each other) is to include a 2-dimensional smoother with a GAM. Why might we want to use a GAM here? What are some other options?
 
-Let's fit the same models as before but this time we will substitute
-`mgcv::gam` for `glm` and we will add a 2-dimension smoother with `mgcv::te`.
-The `te`, as opposed to `s`, which you might have seen before, allows for the
-wiggliness to be different in the 2 dimensions. You typically would want to
-allow for this in a spatial model if you think moving south to north is
-different than moving east to west. That certainly is the case in the ocean
-when we are close to the coast.
+Let's fit the same models as before but this time we will substitute `mgcv::gam` for `glm` and we will add a 2-dimension smoother with `mgcv::te`. The `te`, as opposed to `s`, which you might have seen before, allows for the wiggliness to be different in the 2 dimensions. You typically would want to allow for this in a spatial model if you think moving south to north is different than moving east to west. That certainly is the case in the ocean when we are close to the coast.
 
 ```{r}
 library(mgcv)
@@ -152,8 +127,7 @@ plot(m_bin, scheme = 2)
 plot(m_bin, pers = TRUE)
 ```
 
-We can make our individual model predictions and our combined predictions the
-same way as before:
+We can make our individual model predictions and our combined predictions the same way as before:
 
 ```{r}
 qcs$positive_prediction <- predict(m_pos, newdata = qcs, type = "response")
@@ -171,7 +145,7 @@ ggplot(qcs, aes(X, Y, fill = positive_prediction)) +
 
 ggplot(qcs, aes(X, Y, fill = binary_prediction)) +
   geom_raster() +
-  scale_fill_gradient2(midpoint = 0.5, 
+  scale_fill_gradient2(midpoint = 0.5,
     low = scales::muted("blue"), high = scales::muted("red")) +
   coord_equal()
 ```
@@ -203,33 +177,20 @@ ggplot(pop, aes(X, Y, colour = residual_pos, shape = present, size = density)) +
   scale_color_gradient2(midpoint = 0.5)
 ```
 
-That looks considerably better than before, although perhaps not perfect. Note
-that we are only looking at the positive component of the model here, partly
-because that is the easiest one to inspect in this case.
+That looks considerably better than before, although perhaps not perfect. Note that we are only looking at the positive component of the model here, partly because that is the easiest one to inspect in this case.
 
 ## Plotting the effects of predictors
 
-One useful plot we could make would be the marginal effect of an individual
-predictor. In this case, we would probably be interested in plotting the effect
-of various depths on the probability of observing a fish, on the density of
-fish given that we observe some, and on the overall expected density of fish.
+One useful plot we could make would be the marginal effect of an individual predictor. In this case, we would probably be interested in plotting the effect of various depths on the probability of observing a fish, on the density of fish given that we observe some, and on the overall expected density of fish.
 
-To do that, we will create a new data frame with a sequence of depths to predict
-on. Because our model also includes latitude and longitude coordinates, and we
-are going to make predictions, we will also have to set these predictors at
-a given level. Because they do not interact with the depth predictors, they will
-not change the slope within a given model but they will shift the predictions
-up or down. In this case it will also have a slight effect on the overall shape
-because we are combining the 2 models on the 'natural' or 'raw' response scale
-not the link scale.
+To do that, we will create a new data frame with a sequence of depths to predict on. Because our model also includes latitude and longitude coordinates, and we are going to make predictions, we will also have to set these predictors at a given level. Because they do not interact with the depth predictors, they will not change the slope within a given model but they will shift the predictions up or down. In this case it will also have a slight effect on the overall shape because we are combining the 2 models on the 'natural' or 'raw' response scale not the link scale.
 
 ```{r}
 nd <- tibble::tibble(depth = seq(min(pop$depth), max(pop$depth), length.out = 100),
   X = mean(pop$X), Y = mean(pop$Y))
 ```
 
-Let's extract the estimates and standard errors from both predictions on our new
-data frame.
+Let's extract the estimates and standard errors from both predictions on our new data frame.
 
 ```{r}
 p_pos <- predict(m_pos, newdata = nd, type = "link", se.fit = TRUE)
@@ -255,8 +216,7 @@ ggplot(nd, aes(depth, plogis(bin))) + geom_line() +
     ymax = plogis(bin + 1.96 * bin_se)), alpha = 0.3)
 ```
 
-Again, we can combine the predictions into our overall expected fish density for
-a given depth and at our mean latitude and longitude:
+Again, we can combine the predictions into our overall expected fish density for a given depth and at our mean latitude and longitude:
 
 ```{r}
 ggplot(nd, aes(depth, plogis(bin) * exp(pos))) +
@@ -264,35 +224,24 @@ ggplot(nd, aes(depth, plogis(bin) * exp(pos))) +
   geom_line(aes(y = exp(pos)), lty = 2)
 ```
 
-Can we easily combine the standard errors to come up with the confidence
-interval in the last plot? Why or why not? How could we go about calculating
-the confidence intervals on those predictions?
+Can we easily combine the standard errors to come up with the confidence interval in the last plot? Why or why not? How could we go about calculating the confidence intervals on those predictions?
 
 - Bootstrap, e.g. <http://seananderson.ca/2014/05/18/gamma-hurdle.html>
-- MCMC (Markov chain Monte Carlo) (perhaps via the rstanarm package; simply
-  multiply the MCMC samples from the 2 models together and summarize them)
+- MCMC (Markov chain Monte Carlo) (perhaps via the rstanarm package; simply multiply the MCMC samples from the 2 models together and summarize them)
 - The Delta method, perhaps implemented through something like TMB (contact me
   if you're interested, I have working examples of this)
 
 # More information
 
 - http://seananderson.ca/2014/05/18/gamma-hurdle.html
-- Shelton, A.O., Thorson, J.T., Ward, E.J., and Feist, B.E. (2014). Spatial
-  semiparametric models improve estimates of species abundance and distribution.
-  Can. J. Fish. Aquat. Sci.
-  <https://doi.org/10.1139/cjfas-2013-0508>
-
+- Shelton, A.O., Thorson, J.T., Ward, E.J., and Feist, B.E. (2014). Spatial semiparametric models improve estimates of species abundance and distribution. Can. J. Fish. Aquat. Sci. <https://doi.org/10.1139/cjfas-2013-0508>
 
 ## glmmfields
 
-Although it's beyond the scope of the current lesson, we could also fit our
-models with a model that treats the spatial pattern as random effects through
-something called a "random field". I've been developing an R package to make it
-easy to fit these kinds of models. Below is an example of the Gamma GLM fit with
-glmmfields. <https://github.com/seananderson/glmmfields#readme>
+Although it's beyond the scope of the current lesson, we could also fit our models with a model that treats the spatial pattern as random effects through something called a "random field". I've been developing an R package to make it easy to fit these kinds of models. Below is an example of the Gamma GLM fit with glmmfields. <https://github.com/seananderson/glmmfields#readme>
 
 ```{r, include=FALSE}
-has_glmmfields <- require("glmmfields") 
+has_glmmfields <- require("glmmfields")
 ```
 
 ```{r glmmfields, eval=has_glmmfields, cache=TRUE}
