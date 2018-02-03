@@ -207,7 +207,7 @@ What does the coefficient `fixef(m_slopes_gr)[["mean_log_wingl_centered"]]` repr
 
 # Group-level predictor centering
 
-Another option is to center the predictor with in each group. This separates the across-group effect from the within group effect of the wing length predictor. There was a good recent discussion on the concept in the literature ending with this paper: Bell and Fairbrother 2017 <https://doi.org/10.1007/s11135-017-0593-5>
+Another option is to center the predictor within each group. This separates the across-group effect from the within group effect of the wing length predictor. There was a good recent discussion on the concept in the literature ending with this paper: Bell and Fairbrother 2017 <https://doi.org/10.1007/s11135-017-0593-5>
 
 To do this we simply subtract the taxon-level mean from the wing length predictor within each taxon:
 

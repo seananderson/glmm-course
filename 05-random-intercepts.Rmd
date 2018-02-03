@@ -237,7 +237,19 @@ We have assumed that the relationship between log(wing length) and log(beak heig
 
 Remember that we are modelling a log(predictor) and a log(response). So we are assuming that an X% change in the predictor relates to a Y% change in the response.
 
-Here, our slope indicates that a 1% change in wing length corresponds to a `r slope`% change in beak length.
+Here, our slope indicates that a 1% change in wing length corresponds to an (approximate) `r slope`% change in beak length.
+
+To get the precise value, a 1% change in wing length corresponds to the following percent change in the beak length:
+
+```{r}
+100 * (1.01^slope - 1)
+```
+
+Or a 23% increase in wing length corresponds to the following percentage change in beak length:
+
+```{r}
+100 * (1.23^slope - 1)
+```
 
 What does our intercept mean?
 
@@ -257,4 +269,4 @@ For example: <!-- exercise -->
 - we might want to consider letting the slopes vary as well <!-- exercise -->
 - we've combined all the islands together, and it's possible there is some variation by island <!-- exercise -->
 - some islands are closer to each other than others, so we might want to check for spatial autocorrelation <!-- exercise -->
-- we might want to try centering the predictor to reduce correlation between the intercept and slope and make the intercept more interpretable <!-- exercise -->
+- we might want to try centering the predictor to reduce correlation between the intercept and slope and make the intercept more interpretable <!-- exercise -->^
