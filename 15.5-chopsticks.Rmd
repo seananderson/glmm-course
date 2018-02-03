@@ -275,3 +275,11 @@ ggplot(comparisons, aes(x = comparison, y = est, ymin = lwr, ymax = upr)) +
 Why does our earlier quadratic model have such tight confidence intervals on the
 parameters whereas in this model with independent factors only 1 or 2 of the
 comparisons do not overlap zero? Which model is "right"? Is there one "right" model? 
+
+# Addendum
+
+How larger the effect sizes in these models? Are they meaningful?
+
+How else could you model these data?
+
+How would you go about determining the statistical power of this study?
