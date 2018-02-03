@@ -117,7 +117,7 @@ log(frog_dens) ~ vegetation +
   (1 + vegetation | transect) # exercise
 ```
 
-Bonus: what are 2 ways you can write the above models that have a random slope? Hint: do you need to specify the random intercept explicitely? Are there advantages/disadvantages to each syntax?
+Bonus: what are 2 ways you can write the above models that have a random slope? Hint: do you need to specify the random intercept explicitly? Are there advantages/disadvantages to each syntax?
 
 ```{r}
 log(frog_dens) ~ vegetation + (1 + vegetation | transect) # exercise
