@@ -8,13 +8,9 @@
 
 # Data
 
-Hsu, S.-H., and Wu, S.-P. (1991). An investigation for determining the optimum
-length of chopsticks. Appl. Ergon. 22, 395–400.
+Hsu, S.-H., and Wu, S.-P. (1991). An investigation for determining the optimum length of chopsticks. Appl. Ergon. 22, 395–400.
 
-Let's read in the data and rescale the main predictor so that the effects are
-per 10cm of chopstick and the predictor is centered so that the intercept will
-be at the mean chopstick value (and this will help some of the more
-complicated models to fit).
+Let's read in the data and rescale the main predictor so that the effects are per 10cm of chopstick and the predictor is centered so that the intercept will be at the mean chopstick value (and this will help some of the more complicated models to fit).
 
 ```{r}
 library(tidyverse)
@@ -40,9 +36,7 @@ ggplot(d, aes(chopstick_length_10cm, food_pinching_efficiency)) + # exercise
 
 # Starting models
 
-Given what we know about the experiment and the process generating the response
-data, what would be a reasonable form of a model to choose? A GLM? A linear
-regression? A GLMM?
+Given what we know about the experiment and the process generating the response data, what would be a reasonable form of a model to choose? A GLM? A linear regression? A GLMM?
 
 Let's start with a linear model with a quadratic predictor:
 
@@ -70,8 +64,7 @@ ggplot(d, aes(chopstick_length_10cm, food_pinching_efficiency)) +
   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE)
 ```
 
-For now we will fit the models with maximum likelihood (as opposed to `REML`)
-so that we can compare models with different fixed effect structures with AIC.
+For now we will fit the models with maximum likelihood (as opposed to `REML`) so that we can compare models with different fixed effect structures with AIC.
 
 ```{r}
 library(lme4)
@@ -118,12 +111,9 @@ In the above table, the `df` column represents (one definition of) the number of
 
 Although I won't show it here, the random slopes don't substantially improve the appearance of the residuals either.
 
-# Plotting the model predictions 
+# Plotting the model predictions
 
-Let's show the model predictions across a range of chopstick lengths. We will
-make one set of predictions at the overall "population" level and another
-set of predictions at the levels of the random intercepts (the level of the
-individual).
+Let's show the model predictions across a range of chopstick lengths. We will make one set of predictions at the overall "population" level and another set of predictions at the levels of the random intercepts (the level of the individual).
 
 ```{r}
 nd <- tibble(chopstick_length_10cm = seq(min(d$chopstick_length_10cm),
@@ -147,7 +137,7 @@ ggplot(nd_re, aes(chopstick_length_10cm, p, group = individual)) +
 We might consider whether a 3rd-order polynomial would provide a better fit:
 
 ```{r}
-m3 <- lmer(food_pinching_efficiency ~ 
+m3 <- lmer(food_pinching_efficiency ~
     poly(chopstick_length_10cm, 3) + # exercise
     (1 | individual), data = d, REML = FALSE)
 arm::display(m3)
@@ -156,8 +146,7 @@ bbmle::AICctab(m2, m3)
 
 What does the AIC table tell us?
 
-The last residual plot didn't look ideal. How are some ways we might go
-about fixing that?
+The last residual plot didn't look ideal. How are some ways we might go about fixing that?
 
 One method would be to treat the different lengths of sticks as independent levels or factors. <!-- exercise -->
 
@@ -175,7 +164,7 @@ ggplot(d, aes(chopstick_length_10cm, resids)) + geom_point() +
   geom_smooth(se = FALSE, method = 'loess')
 ```
 
-And what does AIC tell us when comparing these models? 
+And what does AIC tell us when comparing these models?
 
 ```{r}
 bbmle::AICctab(m2, m3, m4)
@@ -185,11 +174,10 @@ bbmle::AICctab(m2, m3, m4)
 arm::display(m4)
 ```
 
-If we wanted to use this model for final inference, we should refit it with
-`REML = TRUE`:
+If we wanted to use this model for final inference, we should refit it with `REML = TRUE`:
 
 ```{r}
-m4_reml <- lmer(food_pinching_efficiency ~ 0 + chp_fct + (1 | individual), 
+m4_reml <- lmer(food_pinching_efficiency ~ 0 + chp_fct + (1 | individual),
   data = d, REML = TRUE) # exercise
 arm::display(m4)
 arm::display(m4_reml)
@@ -199,20 +187,15 @@ What do you notice changes the most between the 2 models?
 
 # Interpreting the factor coefficients
 
-What do the `chp_fct` coefficients represent in the model? 
+What do the `chp_fct` coefficients represent in the model?
 
-How would we go about comparing the coefficients between 2 levels? Can we
-simply check whether their confidence intervals overlap? Why or why not?
+How would we go about comparing the coefficients between 2 levels? Can we simply check whether their confidence intervals overlap? Why or why not?
 
-There is a great explanation of how to go about such comparisons in the
-following paper:
+There is a great explanation of how to go about such comparisons in the following paper:
 
-Schielzeth, H. (2010). Simple means to improve the interpretability of
-regression coefficients. Methods Ecol. Evol. 1, 103–113.
-<https://doi.org/10.1111/j.2041-210X.2010.00012.x>
+Schielzeth, H. (2010). Simple means to improve the interpretability of regression coefficients. Methods Ecol. Evol. 1, 103–113. <https://doi.org/10.1111/j.2041-210X.2010.00012.x>
 
-We can do that here manually for a comparison between the 180mm and 210mm
-chopsticks:
+We can do that here manually for a comparison between the 180mm and 210mm chopsticks:
 
 ```{r}
 coef(summary(m4_reml))
@@ -225,8 +208,7 @@ fe_comp - 1.96 * se_comp
 fe_comp + 1.96 * se_comp
 ```
 
-That would get tedious to write out for all comparisons, so we can write a little
-function to help:
+That would get tedious to write out for all comparisons, so we can write a little function to help:
 
 ```{r}
 comparison_effect <- function(model, base_par, comparison_par) {
@@ -255,8 +237,7 @@ comparison_effect(m4_reml, "chp_fct180", "chp_fct210") # same as above
 comparison_effect(m4_reml, "chp_fct240", "chp_fct330")
 ```
 
-With a little bit of extra code, we can iterate over all comparisons and
-plot the output.
+With a little bit of extra code, we can iterate over all comparisons and plot the output.
 
 ```{r}
 coefs <- row.names(coef(summary(m4_reml)))
@@ -274,9 +255,7 @@ ggplot(comparisons, aes(x = comparison, y = est, ymin = lwr, ymax = upr)) +
   coord_flip()
 ```
 
-Why does our earlier quadratic model have such tight confidence intervals on the
-parameters whereas in this model with independent factors only 1 or 2 of the
-comparisons do not overlap zero? Which model is "right"? Is there one "right" model? 
+Why does our earlier quadratic model have such tight confidence intervals on the parameters whereas in this model with independent factors only 1 or 2 of the comparisons do not overlap zero? Which model is "right"? Is there one "right" model?
 
 # Addendum
 

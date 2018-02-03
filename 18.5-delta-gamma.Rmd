@@ -128,7 +128,7 @@ here? What are some other options?
 Let's fit the same models as before but this time we will substitute
 `mgcv::gam` for `glm` and we will add a 2-dimension smoother with `mgcv::te`.
 The `te`, as opposed to `s`, which you might have seen before, allows for the
-wiggliness us to be different in the 2 dimensions. You typically would want to
+wiggliness to be different in the 2 dimensions. You typically would want to
 allow for this in a spatial model if you think moving south to north is
 different than moving east to west. That certainly is the case in the ocean
 when we are close to the coast.
