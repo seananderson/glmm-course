@@ -96,7 +96,7 @@ ggplot(pop, aes(X, Y, colour = residual_pos, shape = present, size = density)) +
   scale_shape_manual(values = c("TRUE" = 20, "FALSE" = 4)) +
   scale_size_continuous(range = c(3, 8)) +
   coord_equal() +
-  scale_fill_gradient2(midpoint = 0.5,
+  scale_colour_gradient2(midpoint = 0.5,
     low = scales::muted("blue"), high = scales::muted("red"))
 ```
 
