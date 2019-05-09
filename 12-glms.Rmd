@@ -171,11 +171,12 @@ In what scenario might you see this kind of data?
 (m_bin <- glm(y ~ x, family = 
     binomial(link = "logit"), data = d)) # exercise
 
-ggeffects::ggpredict(m_bin, "x", full.data = TRUE) %>%
+g <- ggeffects::ggpredict(m_bin, "x", full.data = TRUE) %>%
   ggplot(aes(x, predicted)) +
   geom_line(colour = "red") + 
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .2) +
   geom_point(aes(y = observed))
+g
 
 coef(m_bin)
 (slope <- round(coef(m_bin)[[2]], 3)) # slope
