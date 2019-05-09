@@ -23,7 +23,6 @@ We'll start by generating count data that we know are overdispersed for a Poisso
 ```{r}
 library(ggplot2)
 library(dplyr)
-library(sjPlot)
 set.seed(111)
 N <- 500
 x <- runif(N, -1, 1)
@@ -73,10 +72,11 @@ Let's fit a GLM with a Poisson distribution and a log link even though we know t
 ```{r}
 (m_poisson <- glm(y ~ x, family = poisson(link = "log"), data = d))
 
-p <- sjp.glm(m_poisson, type = "eff", show.ci = TRUE, prnt.plot = FALSE)
-ggplot(p$data, aes(x, y, ymin = conf.low, ymax = conf.high)) +
-  geom_ribbon(size = 1, alpha = 0.2) + geom_line(colour = "red") + 
-  geom_point(data = d, aes(x = x, y = y), inherit.aes = FALSE)
+ggeffects::ggpredict(m_poisson, "x", full.data = TRUE) %>%
+  ggplot(aes(x, predicted)) +
+  geom_line(colour = "red") + 
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .2) +
+  geom_point(aes(y = observed))
 ```
 
 If we look at the residuals, these should be constant with the predicted mean value. It can be hard to see these patterns in the residuals. There is not a lot to see here even though we know there is overdispersion.  

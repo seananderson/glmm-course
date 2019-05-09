@@ -161,19 +161,6 @@ One useful summary function is
 coef(summary(m_glmer))
 ```
 
-Let's quickly look at some plots we can get out of the sjPlot package. Remember, these confidence intervals shouldn't be trusted because we haven't dealt with overdispersion yet.
-
-```{r}
-sjPlot::sjp.glmer(m_glmer)
-sjPlot::sjp.glmer(m_glmer, type = "fe")
-sjPlot::sjp.glmer(m_glmer, type = "re.qq")
-```
-
-```{r, eval=FALSE}
-p <- sjPlot::sjp.glmer(m_glmer, type = "eff", show.ci = TRUE)
-head(p$data)
-```
-
 # Checking for overdispersion 
 
 Now we should check for overdispersion. We can do that by comparing the residual deviance and the sum of the pearson residuals squared with the residual degrees of freedom. These should be approximately the same. If the degrees of freedom are considerably smaller then we have evidence of over dispersion. If the residual deviance and sum of Pearson residuals squared  disagree, then use the Pearson residuals. See Ben Bolker's worked examples here for more details <https://rpubs.com/bbolker/glmmchapter>.

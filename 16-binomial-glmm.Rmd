@@ -209,22 +209,6 @@ The profile confidence intervals do not assume a quadratic log-likelihood surfac
 
 The bootstrap confidence intervals are the most trustworthy but may take a very long time to generate.
 
-We can use the sjPlot package to make some quick plots. Take a look at the help for `?sjp.glmer` and try out the various plots that are available through the `type` argument:
-
-```{r}
-library(sjPlot)
-sjp.glmer(m) # exercise
-sjp.glmer(m, type = "re.qq")  # exercise
-sjp.glmer(m, type = "fe")  # exercise
-```
-
-```{r, eval=FALSE}
-p <- sjp.glmer(m, type = "eff", show.ci = TRUE)  # exercise
-head(p$data) # exercise
-```
-
-The sjPlot package has automatically exponentiated estimates so these are multiplicative effects on the odds of metamorphosing. 
-
 # Model comparison 
 
 We can compare our model without a predictor, say species, via AIC or likelihood ratio test (`anova()`). Try that yourself:

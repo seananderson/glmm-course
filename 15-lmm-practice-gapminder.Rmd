@@ -62,10 +62,15 @@ plot(m, resid(.) ~ decade | continent, abline = 0) # exercise
 plot(m, resid(.) ~ log_gdp_percap_cent | continent, abline = 0) # exercise
 ```
 
-Check that the random effects look approximately normally distributed with the function `sjPlot::sjp.lmer()` using the argument `type = "re.qq"`:
+Check that the random effects look approximately normally distributed:
 
 ```{r}
-sjPlot::sjp.lmer(m, type = "re.qq") # exercise
+re <- ranef(m)
+qqnorm(re$country[,"(Intercept)"])
+qqline(re$country[,"(Intercept)"])
+
+qqnorm(re$country[,"log_gdp_percap_cent"])
+qqline(re$country[,"log_gdp_percap_cent"])
 ```
 
 Try plotting the model predictions. Let's focus on the effect of GDP per capita. Therefore, we will have to set the predictor `decade` to some value. Let's set it to `0`, which represents 1990 because of how we calculated this column by subtracting 1990 earlier.

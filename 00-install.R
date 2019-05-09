@@ -20,7 +20,7 @@ sessionInfo()
 # Install the following packages:
 install.packages(c("tidyverse", "lme4", "nlme", "manipulate", "rstanarm",
   "simr", "TMB", "gapminder", "aods3", "emdbook", "AER", "arm", "rmarkdown",
-  "sjPlot", "bbmle", "MuMIn"), dependencies = TRUE)
+  "ggeffects", "sjPlot", "bbmle", "MuMIn"), dependencies = TRUE)
 
 # Also, if you are on Mac OS X:
 install.packages("http://seananderson.ca/bin/glmmTMB_0.0.2.tgz", repos = NULL)
