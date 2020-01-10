@@ -259,7 +259,7 @@ Why does our earlier quadratic model have such tight confidence intervals on the
 
 # Addendum
 
-How larger the effect sizes in these models? Are they meaningful?
+How large are the effect sizes in these models? Are they meaningful?
 
 How else could you model these data?
 
