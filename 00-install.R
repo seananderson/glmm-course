@@ -20,34 +20,8 @@ sessionInfo()
 # Install the following packages:
 install.packages(c("tidyverse", "lme4", "nlme", "manipulate", "rstanarm",
   "simr", "TMB", "gapminder", "aods3", "emdbook", "AER", "arm", "rmarkdown",
-  "ggeffects", "sjPlot", "bbmle", "MuMIn"), dependencies = TRUE)
-
-# Also, if you are on Mac OS X:
-install.packages("http://seananderson.ca/bin/glmmTMB_0.0.2.tgz", repos = NULL)
-
-# If you are on Windows:
-install.packages("http://seananderson.ca/bin/glmmTMB_0.0.2.zip", repos = NULL)
-
-# You can ignore a warning about
-# "In checkMatrixPackageVersion() : Package version inconsistency detected."...
-
-# Now check that the following runs:
-data(sleepstudy, package = "lme4")
-m <- glmmTMB::glmmTMB(Reaction ~ Days + (1 | Subject), sleepstudy)
-m
-
-## If glmmTMB did not install with the above, then you will need to set up
-## a C++ compiler and install it from GitHub.
-##
-## Read about the prerequisites here:
-## https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites
-
-## Ultimately, once you have installed a C++ compiler, you will run
-## the following to install the package:
-
-# install.packages("devtools")
-# devtools::setup_rtools() # should return TRUE
-# devtools::install_github("glmmTMB/glmmTMB", subdir = "glmmTMB")
+  "ggeffects", "sjPlot", "bbmle", "MuMIn", "broom", "broom.mixed", "glmmTMB"),
+  dependencies = TRUE)
 
 ## Please get in touch if you have not been successful at
 ## installing any of these packages.
