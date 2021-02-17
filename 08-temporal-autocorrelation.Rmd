@@ -54,9 +54,9 @@ arm::display(m1)
 Let's look at the model fit.
 
 ```{r}
-aug <- broom::augment(m1)
+aug <- broom.mixed::augment(m1)
 
-ggplot(aug, aes(temperature_centered, log.depth_mean_day.)) +
+ggplot(aug, aes(temperature_centered, `log(depth_mean_day)`)) +
   geom_point(alpha = 0.3) +
   facet_wrap(~fish) +
   geom_line(aes(x = temperature_centered, y = .fitted), colour = "red")

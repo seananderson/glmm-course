@@ -44,10 +44,10 @@ Some of the most important ways that we can check our model are to:
 
 What are the model assumptions that these various plots help us check? What are we looking for when we make these plots?
 
-We will plot the residuals various ways now using the augment function from the broom package.
+We will plot the residuals various ways now using the augment function from the broom.mixed package.
 
 ```{r}
-aug <- broom::augment(m)
+aug <- broom.mixed::augment(m)
 
 ggplot(aug, aes(x, y)) + geom_point() + facet_wrap(~group) +
   geom_line(aes(x, .fitted), colour = "red")

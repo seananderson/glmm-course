@@ -281,7 +281,7 @@ save(mstan_nb, file = "data/generated/stan-models.rda")
 ```{r}
 load("data/generated/stan-models.rda")
 
-stan_est <- broom::tidyMCMC(mstan_nb, conf.int = TRUE)
+stan_est <- broom.mixed::tidyMCMC(mstan_nb, conf.int = TRUE)
 
 stan_est %>% filter(grepl("gbpu", term)) %>%
   ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
@@ -312,10 +312,10 @@ cis[[1]] <- get_tmb_cis(m_tmb_pois, "TMB Poisson")
 cis[[2]] <- get_tmb_cis(m_tmb_obs, "TMB Poisson w obs RE")
 cis[[3]] <- get_tmb_cis(m_tmb_nb, "TMB Negative binomial (NB2)")
 cis[[4]] <- get_tmb_cis(m_tmb_nb1, "TMB Negative binomial (NB1)")
-cis[[5]] <- broom::tidy(m_glmer, conf.int = TRUE) %>%
+cis[[5]] <- broom.mixed::tidy(m_glmer, conf.int = TRUE) %>%
   dplyr::select(conf.low, conf.high, estimate, term) %>%
   mutate(model = "lme4::glmer Poisson") %>%
-  filter(term != "sd_(Intercept).gbpu")
+  filter(term != "sd__(Intercept)")
 cis[[6]] <- stan_est %>%
   dplyr::select(conf.low, conf.high, estimate, term) %>%
   filter(!grepl("Intercept", term), term != "reciprocal_dispersion") %>%

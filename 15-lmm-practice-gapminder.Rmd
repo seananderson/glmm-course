@@ -51,7 +51,7 @@ arm::display(m2)
 
 Take a look at the fitted values versus the residuals for the first model you fit. 
 
-You might want to split these up by continent to make them easier to look at. You can do this using `broom::augment()` and plotting them yourself with ggplot, or you can use the shortcut syntax like we were using in the variance structure exercises. 
+You might want to split these up by continent to make them easier to look at. You can do this using `broom.mixed::augment()` and plotting them yourself with ggplot, or you can use the shortcut syntax like we were using in the variance structure exercises. 
 
 Also plot your residuals against the predictors in the model and any other projectors that were not included in the model but were in the data set. How do these look to you? 
 
@@ -138,13 +138,13 @@ Controlling for changes in GDP per capita, what is the average increase in life 
 round(fixef(m3)["decade"], 1) # exercise
 ```
 
-By looking at the standard errors in `arm::display(m3)` or by using the function `arm::se.fixef(m3)`, what is an approximate 95% confidence interval on the average increase in life expectancy per decade? (Bonus: can you get the same values from `broom::tidy()`?)
+By looking at the standard errors in `arm::display(m3)` or by using the function `arm::se.fixef(m3)`, what is an approximate 95% confidence interval on the average increase in life expectancy per decade? (Bonus: can you get the same values from `broom.mixed::tidy()`?)
 
 ```{r}
 fe <- fixef(m3)["decade"] # exercise
 se <- arm::se.fixef(m3)["decade"] # exercise
 fe + c(-1.96, 1.96) * se # exercise
-broom::tidy(m3, conf.int = TRUE) # exercise
+broom.mixed::tidy(m3, conf.int = TRUE) # exercise
 ```
 
 Is the effect of GDP per capita stronger within or across countries? How do you know this and what does this mean?

@@ -167,7 +167,7 @@ One useful way of checking residuals for a binomial response is by using a binne
 The idea is to group the residuals into bins based on the predictor values. The trick is picking an appropriate number of bins for this to be useful. We can make all the same types of plots with these binned residuals. 
 
 ```{r}
-aug <- broom::augment(m)
+aug <- broom.mixed::augment(m)
 aug <- aug %>% mutate(week_binned = findInterval(week_centered, 
       seq(min(week_centered), max(week_centered), length.out = 25)))
 binned <- group_by(aug, species, week_binned, tank) %>%

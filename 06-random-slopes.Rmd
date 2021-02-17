@@ -63,12 +63,12 @@ arm::display(m_int)
 arm::display(m_slopes)
 ```
 
-A useful package that we will use repeatedly is the broom package. This package provides a set of consistent functions for extracting information from nearly any type of model in R. In particular, we will use the function `broom::tidy`, which returns information about parameter estimates in a tidy data frame, and the function `broom::augment`, which returns a tidy data frame of predictions, residuals, and other useful columns.
+A useful package that we will use repeatedly is the broom (and broom.mixed) package. These packages provide a set of consistent functions for extracting information from nearly any type of model in R. In particular, we will use the function `broom.mixed::tidy`, which returns information about parameter estimates in a tidy data frame, and the function `broom.mixed::augment`, which returns a tidy data frame of predictions, residuals, and other useful columns.
 
-To read the documentation for the functions as they apply to `lme4`, see `?broom::tidy.merMod` or `?broom::augment.merMod`.
+To read the documentation for the functions as they apply to `lme4`, see `?broom.mixed::tidy.merMod` or `?broom.mixed::augment.merMod`.
 
 ```{r}
-library(broom)
+library(broom.mixed)
 tidy(m_slopes, conf.int = TRUE)
 tidy(m_int, conf.int = TRUE)
 ```
@@ -79,7 +79,7 @@ What has changed? In particular, what has changed about the main effect slope es
 
 # Criticizing the models 
 
-Let's extract residuals, predictions, and fitted values from the model objects using the `broom::augment` functions.
+Let's extract residuals, predictions, and fitted values from the model objects using the `broom.mixed::augment` functions.
 
 ```{r}
 aug_int <- augment(m_int)
