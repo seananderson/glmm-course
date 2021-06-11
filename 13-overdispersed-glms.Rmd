@@ -72,11 +72,11 @@ Let's fit a GLM with a Poisson distribution and a log link even though we know t
 ```{r}
 (m_poisson <- glm(y ~ x, family = poisson(link = "log"), data = d))
 
-ggeffects::ggpredict(m_poisson, "x", full.data = TRUE) %>%
+ggeffects::ggpredict(m_poisson, "x") %>%
   ggplot(aes(x, predicted)) +
   geom_line(colour = "red") + 
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .2) +
-  geom_point(aes(y = observed))
+  geom_point(data = d, aes(x = x, y = y))
 ```
 
 If we look at the residuals, these should be constant with the predicted mean value. It can be hard to see these patterns in the residuals. There is not a lot to see here even though we know there is overdispersion.  
