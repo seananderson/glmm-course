@@ -63,7 +63,7 @@ m2 <- glm(survived ~
     (age + fare + female) ^ 2, data = d, family = binomial(link = "logit")) # exercise
 arm::display(m2)
 bbmle::AICtab(m, m2) # exercise
-sjp.glm(m2)
+sjPlot::plot_model(m2)
 ```
 
 In the above models, most of the coefficients seem really small. Why is that? 
@@ -90,7 +90,7 @@ Now refit the model with all 2-way interactions but with the scaled versions of 
 m3 <- glm(survived ~ 
     (age_scaled + fare_scaled + female)^2, data = d, family = binomial()) # exercise
 arm::display(m3)
-sjp.glm(m3)
+sjPlot::plot_model(m3)
 ```
 
 Now fit the same model but with `female_centered`:
@@ -99,7 +99,7 @@ Now fit the same model but with `female_centered`:
 m4 <- glm(survived ~ 
     (age_scaled + fare_scaled + female_centered)^2, data = d, family = binomial()) # exercise
 arm::display(m4)
-sjp.glm(m4)
+sjPlot::plot_model(m4)
 ```
 
 # Interpreting the standardized models 
@@ -133,8 +133,8 @@ mean(d$female) %>% round(2)
 Why is the effect of `female_centered` different from the effect of `female`? What do these 2 coefficients represent? 
 
 ```{r}
-sjp.glm(m3) # female
-sjp.glm(m4) # female_centered
+sjPlot::plot_model(m3) # female
+sjPlot::plot_model(m4) # female_centered
 ```
 
 How would you derive the same odds ratios as above? (I.e. How can we determine the effect of paying approximately an extra \$100 for a ticket for a man and for a woman using the coefficients from `m4`?) 
