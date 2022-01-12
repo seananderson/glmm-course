@@ -1,4 +1,6 @@
-# GLM practice 
+---
+title: "GLM practice"
+---
 
 # Goals
 
@@ -130,15 +132,23 @@ unique(d$female)
 mean(d$female) %>% round(2)
 ```
 
-Why is the effect of `female_centered` different from the effect of `female`? What do these 2 coefficients represent? 
+Why is the effect of `fare_scaled` different between the 2 models? What do these 2 coefficients represent?
 
 ```{r}
-sjPlot::plot_model(m3) # female
-sjPlot::plot_model(m4) # female_centered
+exp(coef(m3)[["fare_scaled"]]) # uncentered model
+exp(coef(m4)[["fare_scaled"]]) # centered model
 ```
 
-How would you derive the same odds ratios as above? (I.e. How can we determine the effect of paying approximately an extra \$100 for a ticket for a man and for a woman using the coefficients from `m4`?) 
+In `m3`, the male/female variable is 0/1 and so `exp(coef(m3)[["fare_scaled"]])` represents the multiplicative effect on the odds of survival for `female = 0`, i.e., male. <!-- exercise -->
 
+In `m4`, the male/female variable is -0.37/0.63 and so `exp(coef(m4)[["fare_scaled"]])` represents the multiplicative effect on the odds of survival for an average individual (male or female) across the whole dataset. <!-- exercise -->
+
+```{r}
+sjPlot::plot_model(m3) # uncentered model
+sjPlot::plot_model(m4) # centered model
+```
+
+How would you derive the same odds ratios as above? (I.e. How can we determine the effect of paying approximately an extra \$100 for a ticket for a man and for a woman using the coefficients from the centered moel `m4`?) 
 Remember that these models make the same predictions, they are just parameterized slightly differently.
 
 ```{r}
@@ -148,6 +158,12 @@ exp(coef(m4)[["fare_scaled"]] + coef(m4)[["fare_scaled:female_centered"]] * -0.3
 ```
 
 What are advantages and disadvantages to the approaches taken for `m3` and `m4`? (I.e. centering or not centering the binary predictor `female`.)
+
+- In the centered model, the main effect of fare is immediately apparent. <!-- exercise -->
+- In the centered model, intercept is the average log odds of survival, which may be of interest. <!-- exercise -->
+- In the uncentered model, the effect of fare for males and the effect of fare on females is easier to derive but it takes work to figure out the average effect. <!-- exercise -->
+- In the uncentered model, intercept is the log odds of survival for males and the equivalent for females can be calculated more easily. <!-- exercise -->
+- You can always fit the model both ways (or calculate the equivalent effects, as above) after the fact if you'd like. <!-- exercise -->
 
 # Bonus 
 
