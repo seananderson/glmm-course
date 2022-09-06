@@ -81,7 +81,7 @@ glimpse(morph)
 `geom_violin()`     | Violin plot (another name for a beanplot)
 `geom_map()`        | Polygons on a map
 
-Open the ggplot2 web documentation <http://docs.ggplot2.org/> and keep it open to refer back to it throughout these exercises.
+Open the ggplot2 web documentation <https://ggplot2.tidyverse.org/reference/index.html> and keep it open to refer back to it throughout these exercises.
 
 First, let's experiment with some geoms using the `morph` dataset that you downloaded and cleaned up above. I'll start by setting up a basic scatterplot of beak height vs. wing length:
 
@@ -147,7 +147,7 @@ ggplot(morph, aes(wingl, beakh)) +
 
 ## Challenge 2
 
-Explore the `morph` dataset yourself by applying some aesthetics. You can see all the available aesthetics for a given geom by looking at the documentation, e.g. `?geom_point`, or at <http://docs.ggplot2.org/current/>.
+Explore the `morph` dataset yourself by applying some aesthetics. You can see all the available aesthetics for a given geom by looking at the documentation, e.g. `?geom_point`, or at <https://ggplot2.tidyverse.org/reference/index.html>.
 
 Try the same scatterplot but show upper beak length (`ubeakl`) with size. I've started the code:
 
