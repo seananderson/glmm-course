@@ -248,7 +248,7 @@ Note that `ymax` and `ymin` refer to the maximum and minimum line segment values
 
 The full version of this document with substantially more ggplot is available as an interactive exercise at <http://seananderson.ca/ggplot2-FISH554/>
 
-The best (and nearly essential) help source is the website, which is based off the package help files. However, the website also shows the example plots and is easier to navigate: <http://docs.ggplot2.org/>. Don’t be afraid to keep it open when you're using ggplot2.
+The best (and nearly essential) help source is the website, which is based off the package help files. However, the website also shows the example plots and is easier to navigate: <https://ggplot2.tidyverse.org/reference/index.html>. Don’t be afraid to keep it open when you're using ggplot2.
 
 RStudio has a great [ggplot2 cheat sheet](http://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
