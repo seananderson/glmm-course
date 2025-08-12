@@ -191,71 +191,13 @@ What do the `chp_fct` coefficients represent in the model?
 
 How would we go about comparing the coefficients between 2 levels? Can we simply check whether their confidence intervals overlap? Why or why not?
 
-There is a great explanation of how to go about such comparisons in the following paper:
+This is a great reference:
 
 Schielzeth, H. (2010). Simple means to improve the interpretability of regression coefficients. Methods Ecol. Evol. 1, 103–113. <https://doi.org/10.1111/j.2041-210X.2010.00012.x>
 
-We can do that here manually for a comparison between the 180mm and 210mm chopsticks:
+We can (1) relevel our factor and refit, (2) do that manually with the variance-covariance matrix, or (3) have the emmeans package do that for us with the pairs or constrast function.
 
-```{r}
-coef(summary(m4_reml))
-fe <- fixef(m4_reml)
-se <- arm::se.fixef(m4_reml)
-fe_comp <- fe[["chp_fct210"]] - fe[["chp_fct180"]]
-se_comp <- sqrt(se[["chp_fct210"]]^2 + se[["chp_fct180"]]^2)
-fe_comp
-fe_comp - 1.96 * se_comp
-fe_comp + 1.96 * se_comp
-```
-
-That would get tedious to write out for all comparisons, so we can write a little function to help:
-
-```{r}
-comparison_effect <- function(model, base_par, comparison_par) {
-  if (class(model) %in% c("lmerMod", "glmerMod")) {
-    fe <- fixef(model)
-    se <- arm::se.fixef(model)
-  } else {
-    fe <- coef(model)
-    se <- arm::se.coef(model)
-  }
-
-  fe_comp <- fe[[comparison_par]] - fe[[base_par]]
-  se_comp <- sqrt(se[[comparison_par]]^2 + se[[base_par]]^2)
-
-  data.frame(
-    est = round(fe_comp, 2),
-    lwr = round(fe_comp - 1.96 * se_comp, 2),
-    upr = round(fe_comp + 1.96 * se_comp, 2))
-}
-```
-
-Let's try applying our function to a couple examples:
-
-```{r}
-comparison_effect(m4_reml, "chp_fct180", "chp_fct210") # same as above
-comparison_effect(m4_reml, "chp_fct240", "chp_fct330")
-```
-
-With a little bit of extra code, we can iterate over all comparisons and plot the output.
-
-```{r}
-coefs <- row.names(coef(summary(m4_reml)))
-coefs <- expand.grid(base_par = coefs,
-  comparison_par = coefs,
-  stringsAsFactors = FALSE) %>%
-  filter(base_par != comparison_par)
-
-comparisons <- plyr::mdply(coefs, comparison_effect, model = m4_reml) %>%
-  mutate(comparison = paste(comparison_par, base_par),
-    comparison = fct_reorder(comparison, est))
-
-ggplot(comparisons, aes(x = comparison, y = est, ymin = lwr, ymax = upr)) +
-  geom_pointrange() +
-  coord_flip()
-```
-
-Why does our earlier quadratic model have such tight confidence intervals on the parameters whereas in this model with independent factors only 1 or 2 of the comparisons do not overlap zero? Which model is "right"? Is there one "right" model?
+E.g. <https://gist.github.com/seananderson/9ec42a6ee9fb84a61737b631dd57e7a1>
 
 # Addendum
 
